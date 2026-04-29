@@ -4,7 +4,7 @@ Canonical home for the Zer0pa Materials work stream. Multi-agent handoff: synthe
 
 ## Boundary
 
-Research infrastructure for in silico materials science discovery. Outputs (predicted properties, candidate compositions, AlabOS-compatible synthesis recipes) are research artifacts. No regulatory certification claims. No clinical or human-subject use.
+Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).
 
 ## What is in here
 
@@ -15,7 +15,9 @@ Research infrastructure for in silico materials science discovery. Outputs (pred
 | `ORCHESTRATOR-STARTUP-PROMPT.md` | The exact prompt the user pastes into a fresh agent session to spin up the materials orchestrator | Synthesis agent |
 | `source-briefs/` | Inherited research input — the research-agent handover note plus two technology-landscape briefs | External (consumer of synthesis) |
 | `synthesis/` | Fresh-eyes reading of the briefs and handover note — what is not yet seen, the variational-unification reframe, what an orchestrator should pressure-test | Synthesis agent |
-| `PRD.md` (to be written) | The PRD that drives the overnight long-horizon execution on a Runpod-bound machine | Materials orchestrator |
+| `PRD.md` | The PRD that drives the overnight long-horizon execution on a Runpod-bound machine | Materials orchestrator |
+| `HANDOFF-TO-OVERNIGHT-EXECUTOR.md` | Materials-specific brief for the overnight executor — defines what they inherit, what they must produce, and the no-user-engagement execution mandate | Materials orchestrator |
+| `OVERNIGHT-EXECUTOR-STARTUP-PROMPT.md` | Paste-ready startup prompt for the dedicated overnight executor agent on another machine | Materials orchestrator |
 
 ## Read order for the next agent
 
@@ -25,14 +27,16 @@ Research infrastructure for in silico materials science discovery. Outputs (pred
 4. `source-briefs/01-full-technology-landscape.md` — the full seven-layer pipeline catalogue.
 5. `source-briefs/02-corrections-and-architecture.md` — corrections, the eight gaps, the master tool selection table that supersedes Brief #1, the eight intersectional signals.
 6. `synthesis/01-fresh-eyes-on-materials-briefs.md` — synthesis-agent reframe; this is the substrate for your own fresh-eyes augmentation.
+7. `PRD.md` — overnight execution specification.
+8. `HANDOFF-TO-OVERNIGHT-EXECUTOR.md` — operational handoff for the next role.
 
 ## Provenance
 
 - Initial commit: 2026-04-30.
 - Research agent: Perplexity (Briefs #1 and #2 plus handover note).
 - Synthesis agent: Claude Opus 4.7 (1M context), 2026-04-29.
-- Next agent: materials orchestrator (writes `PRD.md`).
-- Following: overnight executor on a Runpod-bound machine.
+- Materials orchestrator: wrote `PRD.md`, `HANDOFF-TO-OVERNIGHT-EXECUTOR.md`, and `OVERNIGHT-EXECUTOR-STARTUP-PROMPT.md`, 2026-04-30.
+- Next agent: overnight executor on a Runpod-bound machine.
 
 ## Cross-workstream principle (deliberate)
 
