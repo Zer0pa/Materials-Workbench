@@ -174,9 +174,11 @@ class TestUmaBlockedManifestContent:
         m = adapter.blocked_manifests()[0]
         assert "South Africa" in m["blocker_detail"]
 
-    def test_manifest_mentions_apache_library(self, adapter):
+    def test_manifest_mentions_mit_library(self, adapter):
+        # CORRECTION 2026-04-30: live verification of facebookresearch/fairchem
+        # LICENSE shows MIT, not Apache-2.0 as Brief #2 originally stated.
         m = adapter.blocked_manifests()[0]
-        assert "Apache-2.0" in m["blocker_detail"]
+        assert "MIT" in m["blocker_detail"]
 
     def test_manifest_retry_strategy_mentions_enable_uma(self, adapter):
         m = adapter.blocked_manifests()[0]

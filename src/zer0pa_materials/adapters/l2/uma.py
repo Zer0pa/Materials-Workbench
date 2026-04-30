@@ -1,7 +1,7 @@
 """Meta UMA calculator adapter — L2 MLIP (FAIR Chemistry License v1).
 
 License position (PRD §L2 license correction and Section B Issue 1):
-    fairchem library:   Apache-2.0
+    fairchem library:   MIT
     UMA weights:        FAIR Chemistry License v1 (custom)
         - Geographic:   Available globally except comprehensively sanctioned
                         jurisdictions, China, Russia, and Belarus.
@@ -73,7 +73,7 @@ class UmaCalculatorAdapter(L2MlipAdapter):
     """
 
     MODEL_ID = "UMA-s"
-    LIBRARY_LICENSE = "Apache-2.0"
+    LIBRARY_LICENSE = "MIT"
     WEIGHTS_LICENSE = "FAIR Chemistry License v1"
 
     def __init__(self) -> None:
@@ -223,7 +223,7 @@ class UmaCalculatorAdapter(L2MlipAdapter):
             blocker_detail=(
                 "UMA weights require FAIR Chemistry License v1 acceptance and "
                 "verified HuggingFace org registration. "
-                "Library (fairchem): Apache-2.0. "
+                "Library (fairchem): MIT. "
                 "Weights: custom FAIR Chemistry License v1. "
                 "Geographic restrictions: China, Russia, Belarus, OFAC-sanctioned. "
                 "South Africa: unrestricted. "

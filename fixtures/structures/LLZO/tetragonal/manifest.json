@@ -12,7 +12,7 @@
     },
     {
       "type": "mp_id",
-      "locator": "mp-942790",
+      "locator": "mp-942733",
       "license": "CC-BY-4.0"
     }
   ],
@@ -22,5 +22,5 @@
   "novelty_status": "known",
   "negative_falsifier_target": null,
   "verified": false,
-  "notes": "REDUCED FIXTURE — same Li:La:Zr:O = 7:3:2:12 ratio as cubic sibling but with tetragonal lattice (a = b = 13.07 Å; c = 12.66 Å) and slightly perturbed O positions. Real I41/acd (#142) crystallography with 192 atoms recovered downstream. Not for production DFT."
+  "notes": "REDUCED FIXTURE — same Li:La:Zr:O = 7:3:2:12 ratio as cubic sibling but with tetragonal lattice (a = b = 13.07 Å; c = 12.66 Å) and slightly perturbed O positions. Real I41/acd (#142) crystallography with 192 atoms recovered downstream. Not for production DFT. CITATION CORRECTION 2026-04-30: deep-research verified mp-942733 is the I4_1/acd tetragonal polymorph; an earlier draft had it on the cubic manifest. mp-942790 (previously cited here) could not be independently verified and was replaced."
 }

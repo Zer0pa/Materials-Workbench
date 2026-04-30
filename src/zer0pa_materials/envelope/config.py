@@ -174,6 +174,11 @@ class MaterialsConfig(BaseSettings):
 
     L7_ORCHESTRATOR_BACKEND: L7OrchestratorBackend = Field(default="local_prefect")
 
+    # PRD §L7 Falsifiers: plain qExpectedImprovement is forbidden as default.
+    # This flag (default False) is the only opt-in path; the BoTorch
+    # acquisition adapter consults it before raising ForbiddenAcquisitionError.
+    allow_legacy_qei: bool = Field(default=False)
+
     ALABOS_MODE: AlabOSMode = Field(default="recipe_only")
 
     # Optional Runpod cutover envelope (lookup at cutover time).

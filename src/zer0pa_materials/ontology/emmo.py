@@ -45,6 +45,19 @@ overnight-execution must be CPU-only and offline, the UUIDs we encode here
 are taken from the published EMMO 1.x stable terms. If a downstream wave
 imports a richer ontology, it can map our short Zer0pa-extension IRIs to
 the canonical EMMO IRIs without breaking the chain.
+
+Verification status (deep-research, 2026-04-30 — see
+``phases/Deep-Research/emmo-iri-verification.md``):
+* Live-verified against EMMO 1.0.3 / domain ontologies: ``Material``,
+  ``Property``, ``Process``, ``Measurement``.
+* UUID resolution unverified (annotation-only, runtime not affected):
+  ``Composition``, ``Structure``, ``Phase``, ``Model``, ``Simulation``,
+  ``Reasoning``. Pending Wave 4c EMMOntoPy-based resolution; downstream
+  waves can patch the UUIDs in place without code changes elsewhere
+  because the KG ``MAPS_TO_ONTOLOGY`` edge layer references these
+  constants by name.
+* See ``audit/runtime/sources.jsonl`` for per-IRI ``SourceManifest`` /
+  ``BlockedSourceManifest`` rows from the deep-research subagent.
 """
 
 from __future__ import annotations

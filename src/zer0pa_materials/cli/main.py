@@ -43,11 +43,17 @@ from zer0pa_materials.audit import (
     SourceManifest,
     reconstruct_from_repo,
 )
-from zer0pa_materials.cli.phase0 import phase0_app  # phase0 wave (kept)
-from zer0pa_materials.cli.l6 import l6_app  # l6 wave (kept)
+from zer0pa_materials.cli.phase0 import phase0_app  # phase0 wave
+from zer0pa_materials.cli.l6 import l6_app  # l6 wave
+from zer0pa_materials.cli.l1 import app as l1_app  # l1 wave
+from zer0pa_materials.cli.quantum import app as quantum_app  # quantum wave
+from zer0pa_materials.cli.l2 import l2_app  # l2 wave
 from zer0pa_materials.cli.ionic import app as ionic_app  # ionic wave
+from zer0pa_materials.cli.l1_5 import app as l1_5_app  # L1.5 phonon wave
 from zer0pa_materials.cli.l3 import l3_app  # l3 wave
 from zer0pa_materials.cli.l4 import l4_app  # l4 wave
+from zer0pa_materials.cli.l5 import l5_app  # l5 wave
+from zer0pa_materials.cli.l7 import l7_app  # L7 orchestration wave (4a)
 from zer0pa_materials.envelope import (
     LAYER_OUTPUT_REGISTRY,
     Envelope,
@@ -257,9 +263,15 @@ def audit_reconstruct(
 
 app.add_typer(phase0_app, name="phase0")
 app.add_typer(l6_app, name="l6")
+app.add_typer(l1_app, name="l1")
+app.add_typer(quantum_app, name="quantum")
+app.add_typer(l2_app, name="l2")
 app.add_typer(ionic_app, name="ionic")
+app.add_typer(l1_5_app, name="l15")  # PRD writes "L1.5" but typer doesn't accept dots
 app.add_typer(l3_app, name="l3")
 app.add_typer(l4_app, name="l4")
+app.add_typer(l5_app, name="l5")
+app.add_typer(l7_app, name="l7")
 
 # Allow ``python -m zer0pa_materials.cli.main`` invocation.
 if __name__ == "__main__":  # pragma: no cover

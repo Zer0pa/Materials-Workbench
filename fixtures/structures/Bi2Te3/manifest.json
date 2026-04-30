@@ -18,7 +18,20 @@
     {
       "type": "paper",
       "locator": "10.1088/2515-7639/acc550",
-      "license": "operator-cited"
+      "license": "operator-cited",
+      "summary": "Pecunia 2023 J. Phys.: Mater. roadmap on energy harvesting; covers thermoelectrics in §5 (not Bi2Te3-specific)."
+    },
+    {
+      "type": "paper",
+      "locator": "10.1038/nmat2090",
+      "license": "operator-cited",
+      "summary": "Snyder & Toberer 2008 Nature Materials: canonical thermoelectric figure-of-merit review (added 2026-04-30 per deep-research)."
+    },
+    {
+      "type": "paper",
+      "locator": "10.1126/science.1156446",
+      "license": "operator-cited",
+      "summary": "Poudel 2008 Science: nanostructured Bi2Te3 ZT=1.4 record (added 2026-04-30 per deep-research)."
     }
   ],
   "expected_use_layers": ["L1", "L1.5"],

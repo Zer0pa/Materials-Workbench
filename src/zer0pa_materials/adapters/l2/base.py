@@ -8,7 +8,7 @@ License positions (PRD §L2 license correction — do NOT propagate inherited la
     DPA-3.1-3M weights    CC-BY-4.0
     DeePMD-kit library    LGPL-3.0
     MACE checkpoints      pinned per checkpoint (not inherited MIT)
-    UMA library           Apache-2.0
+    UMA library           MIT (corrected 2026-04-30; was Apache-2.0 per Brief #2; live LICENSE verified MIT)
     UMA weights           FAIR Chemistry License v1 (custom, restricted geo)
 """
 

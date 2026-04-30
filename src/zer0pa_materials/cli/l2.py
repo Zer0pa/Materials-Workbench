@@ -126,7 +126,7 @@ if _TYPER_AVAILABLE:
                 "       adapter = UmaCalculatorAdapter()",
                 "       adapter.enable_uma(hf_org='<org>', hf_token='hf_...', aup_accepted_at='<iso-utc>')",
                 "",
-                "License: fairchem library = Apache-2.0; UMA weights = FAIR Chemistry License v1.",
+                "License: fairchem library = MIT; UMA weights = FAIR Chemistry License v1.",
                 "Geographic: Available globally EXCEPT China, Russia, Belarus, OFAC-sanctioned.",
                 "South Africa: UNRESTRICTED.",
                 "AUP: Military/warfare/ITAR/weapons EXCLUDED. Energy/battery: NOT restricted.",
