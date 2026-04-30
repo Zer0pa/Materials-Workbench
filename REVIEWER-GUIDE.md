@@ -16,13 +16,15 @@ cd Materials
 # 2. Create venv (Python 3.10+; we used 3.13.12)
 python3.13 -m venv .venv
 
-# 3. Install editable + dev extras
+# 3. Install editable + dev extras (the [runpod] extra is needed only by
+#    operators doing the real Runpod cutover; [dev,runpod] is the
+#    fully-featured reviewer install).
 .venv/bin/pip install --upgrade pip
-.venv/bin/pip install -e '.[dev]'
+.venv/bin/pip install -e '.[dev,runpod]'
 
 # 4. Run the full test suite
 .venv/bin/python -m pytest tests -q
-# expected: 3407 passed, 2 skipped (pycalphad-not-installed), 0 failed
+# expected: 3547 passed (post-Wave-F latest), 2 skipped (pycalphad-not-installed), 0 failed
 
 # 5. Try the CLI
 .venv/bin/zer0pa-materials --help
@@ -37,7 +39,7 @@ If anything in steps 1–4 fails, that is a build-environment bug we want to kno
 
 A complete CPU-side, audit-trailed, falsifiable, replayable materials discovery pipeline. The 11-layer architecture (Phase 0 / L1 DFT / L1.5 phonon / L2 MLIP / L3 CALPHAD / L4 phase field / L5 FEM-CFD / L6 generative / L7 orchestration / Quantum slot / Ionic transport service) is fully scaffolded with adapters, REST stubs, falsifiers, contract tests, plug-swap tests, and parity tests for every layer. Runpod migration is a per-layer config-flag swap, not architecture work.
 
-The single most important fact: **3,407 tests pass; the 16-case PRD falsification wave fires correctly with hash-chained audit proof; all three hard gates pass.** Everything else in this guide is navigation.
+The single most important fact: **3,547 tests pass post-Wave-F (the count grows as adversarial tests are added); the 16-case PRD falsification wave fires correctly with hash-chained audit proof; all three hard gates pass.** Everything else in this guide is navigation. Run `pytest -q | tail -3` for the canonical current count.
 
 ## Repo layout
 

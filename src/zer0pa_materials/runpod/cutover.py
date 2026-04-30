@@ -158,6 +158,12 @@ class ParityReport:
         boundary_failures: Seeds/layers where boundary block was wrong.
         resource_metric_failures: Seeds/layers where metrics were missing.
         disagreement_failures: Seeds/layers where disagreement metrics absent.
+        mock_envelope_in_rest_report: Seeds/layers where the sentinel
+            report claimed ``backend="runpod_rest"`` but a cell envelope
+            carried ``tool_adapter.backend == "runpod_mock"`` (or any
+            non-rest label).  This is the deception the user audit caught
+            in Wave F: a relabelled mock under a runpod_rest report.  Any
+            non-empty list HARD-FAILS parity.
         boundary: Verbatim boundary block.
     """
 
@@ -167,6 +173,7 @@ class ParityReport:
     boundary_failures: list[str]
     resource_metric_failures: list[str]
     disagreement_failures: list[str]
+    mock_envelope_in_rest_report: list[str] = field(default_factory=list)
     boundary: str = RESEARCH_BOUNDARY
 
     def to_dict(self) -> dict[str, Any]:
@@ -179,6 +186,7 @@ class ParityReport:
             "boundary_failures": self.boundary_failures,
             "resource_metric_failures": self.resource_metric_failures,
             "disagreement_failures": self.disagreement_failures,
+            "mock_envelope_in_rest_report": self.mock_envelope_in_rest_report,
         }
 
     def to_json(self, indent: int = 2) -> str:
@@ -524,12 +532,22 @@ class RunpodCutover:
     ) -> SentinelCampaignReport:
         """Run the sentinel campaign on all GPU-bound layers.
 
-        Generates a ``runpod_mock`` (or ``runpod_rest``) envelope for each seed
-        ×  layer combination.
+        Routing semantics (honest-block invariant):
+
+        * ``backend="runpod_mock"``: every seed × layer cell is generated via
+          :func:`build_runpod_mock_envelope`.  Envelopes carry
+          ``tool_adapter.backend == "runpod_mock"``.
+
+        * ``backend="runpod_rest"``: every seed × layer cell is dispatched
+          through :class:`RunpodDispatcher`.  When credentials are valid the
+          dispatcher invokes the real REST client and records
+          ``tool_adapter.backend == "runpod_rest"``.  When credentials are
+          MISSING the cell records a structured failure (NOT a mock relabelled
+          as ``runpod_rest``) and a :class:`BlockedSourceManifest` is emitted
+          via the dispatcher.  This is the failure the user's audit demanded.
 
         Args:
-            backend: Which backend to simulate: ``"runpod_mock"`` (default) or
-                ``"runpod_rest"`` (the real cutover).
+            backend: ``"runpod_mock"`` (default) or ``"runpod_rest"``.
             seeds: Sentinel seed dicts.
 
         Returns:
@@ -538,11 +556,72 @@ class RunpodCutover:
         started_at = _now_iso()
         seed_results: dict[str, dict[str, Any]] = {}
 
+        # When the operator asks for ``runpod_rest`` we route through the
+        # dispatcher so credential gates and BlockedSourceManifest emission
+        # match the production cutover path.  We construct the dispatcher
+        # lazily (it pulls in tenacity, which lives in the [runpod] extra).
+        dispatcher: Any = None
+        rest_credentials_blocker: str | None = None
+        if backend == "runpod_rest":
+            try:
+                from zer0pa_materials.runpod.dispatcher import RunpodDispatcher  # noqa: PLC0415
+                dispatcher = RunpodDispatcher(self.config)
+            except Exception as exc:  # noqa: BLE001
+                rest_credentials_blocker = (
+                    f"failed to construct dispatcher: {type(exc).__name__}: {exc}"
+                )
+            else:
+                creds_ok, missing = dispatcher.credentials_ok()
+                if not creds_ok:
+                    rest_credentials_blocker = (
+                        "RunpodCredentialsError — required environment variables "
+                        f"missing: {', '.join(missing)}.  "
+                        "Honest-block: NO mock fallback under runpod_rest label."
+                    )
+
         for seed in seeds:
             seed_name = seed["name"]
             seed_results[seed_name] = {}
             for layer in RUNPOD_MOCK_LAYERS:
-                # Use the seed as the input payload (deterministic hash).
+                if backend == "runpod_rest":
+                    # Honest-block: when creds are absent, every cell records a
+                    # blocked failure.  We do NOT silently emit a mock-shaped
+                    # envelope and label it runpod_rest.
+                    if rest_credentials_blocker is not None:
+                        seed_results[seed_name][layer] = {
+                            "blocked": True,
+                            "backend_requested": "runpod_rest",
+                            "layer": layer,
+                            "seed": seed_name,
+                            "blocker": rest_credentials_blocker,
+                            "remediation": (
+                                "Set RUNPOD_BASE_URL and RUNPOD_API_TOKEN; "
+                                "see docs/RUNPOD-CUTOVER.md."
+                            ),
+                        }
+                        continue
+                    # Credentials present: route through the dispatcher (REST call).
+                    try:
+                        endpoint = _layer_default_endpoint(layer)
+                        rest_response = dispatcher.dispatch(
+                            layer=layer,
+                            endpoint=endpoint,
+                            payload={**seed, "layer": layer},
+                        )
+                        seed_results[seed_name][layer] = rest_response
+                    except Exception as exc:  # noqa: BLE001
+                        seed_results[seed_name][layer] = {
+                            "error": (
+                                f"runpod_rest dispatch raised "
+                                f"{type(exc).__name__}: {exc}"
+                            ),
+                            "layer": layer,
+                            "seed": seed_name,
+                            "backend_requested": "runpod_rest",
+                        }
+                    continue
+
+                # backend == "runpod_mock" (or anything else not yet supported).
                 input_payload = {**seed, "layer": layer, "backend": "runpod_mock"}
                 try:
                     env_dict = build_runpod_mock_envelope(
@@ -567,14 +646,26 @@ class RunpodCutover:
             started_at=started_at,
             completed_at=completed_at,
         )
+
+        if backend == "runpod_rest" and rest_credentials_blocker is not None:
+            outcome = "blocked_no_credentials"
+            rationale = (
+                f"Sentinel campaign blocked at construction: {rest_credentials_blocker}. "
+                "All seed × layer cells recorded the blocker; no envelopes generated."
+            )
+        else:
+            outcome = "completed"
+            rationale = (
+                f"Sentinel campaign completed: {len(seeds)} seeds × "
+                f"{len(RUNPOD_MOCK_LAYERS)} layers = "
+                f"{len(seeds) * len(RUNPOD_MOCK_LAYERS)} cells; backend={backend}."
+            )
+
         self._record_decision(
             decision_id=f"decision:sentinel:{uuid.uuid4().hex[:12]}",
             action="run_sentinel_campaign",
-            outcome="completed",
-            rationale=(
-                f"Sentinel campaign completed: {len(seeds)} seeds × {len(RUNPOD_MOCK_LAYERS)} layers = "
-                f"{len(seeds) * len(RUNPOD_MOCK_LAYERS)} envelopes generated."
-            ),
+            outcome=outcome,
+            rationale=rationale,
         )
         return report
 
@@ -608,12 +699,38 @@ class RunpodCutover:
         boundary_failures: list[str] = []
         resource_metric_failures: list[str] = []
         disagreement_failures: list[str] = []
+        mock_in_rest_report: list[str] = []
+
+        # Hard-reject (Wave F.4): any cell labelled ``runpod_mock`` (or any
+        # non-rest backend) inside a sentinel_report whose top-level
+        # ``backend`` field claims ``runpod_rest`` is the deception the user
+        # audit caught.  Surface every such cell.
+        sentinel_claims_rest = sentinel_report.backend == "runpod_rest"
 
         for seed_name, layer_envs in sentinel_report.seed_results.items():
             baseline_seed = mock_baseline.seed_results.get(seed_name, {})
             for layer, env in layer_envs.items():
                 baseline_env = baseline_seed.get(layer, {})
                 key = f"{seed_name}/{layer}"
+
+                # Mock-in-rest deception check runs FIRST so the failure is
+                # visible even when the cell otherwise looks fine.
+                if sentinel_claims_rest and isinstance(env, dict):
+                    cell_backend = env.get("tool_adapter", {}).get("backend")
+                    cell_blocked = env.get("blocked") is True
+                    # Honest-block cells (blocked=true) are correct; only
+                    # cells that appear to be successful envelopes but
+                    # carry a non-rest backend label leak the deception.
+                    if (
+                        not cell_blocked
+                        and cell_backend is not None
+                        and cell_backend != "runpod_rest"
+                    ):
+                        mock_in_rest_report.append(
+                            f"{key}: tool_adapter.backend={cell_backend!r} "
+                            f"in a runpod_rest sentinel report"
+                        )
+
                 if not isinstance(env, dict) or "error" in env:
                     schema_drifts[key] = [f"sentinel envelope error: {env.get('error', '?')}"]
                     continue
@@ -657,6 +774,7 @@ class RunpodCutover:
             and not boundary_failures
             and not resource_metric_failures
             and not disagreement_failures
+            and not mock_in_rest_report
         )
 
         report = ParityReport(
@@ -666,6 +784,7 @@ class RunpodCutover:
             boundary_failures=boundary_failures,
             resource_metric_failures=resource_metric_failures,
             disagreement_failures=disagreement_failures,
+            mock_envelope_in_rest_report=mock_in_rest_report,
         )
         self._record_decision(
             decision_id=f"decision:parity:{uuid.uuid4().hex[:12]}",
@@ -676,7 +795,9 @@ class RunpodCutover:
                 f"hash_mismatches={len(hash_mismatches)}, "
                 f"boundary_failures={len(boundary_failures)}, "
                 f"resource_failures={len(resource_metric_failures)}, "
-                f"disagreement_failures={len(disagreement_failures)}."
+                f"disagreement_failures={len(disagreement_failures)}, "
+                f"mock_in_rest_report={len(mock_in_rest_report)} "
+                "(hard-fail when non-zero — Wave F.4)."
             ),
         )
         return report
@@ -894,29 +1015,60 @@ def _run_pytest_subprocess(
 
 
 def _check_uma_manifest() -> tuple[bool, str]:
-    """Look for ``phases/UMA-license/manifest.json`` and verify ``aup_accepted_at``.
+    """Verify ``phases/UMA-license/manifest.json`` via the Wave D verifier.
 
-    Wave D will populate the manifest; until then this helper returns
-    ``(False, "<concrete reason>")`` rather than synthesising a pass.
+    Wave F.6 hardening: this used to do a shape-only check (file exists,
+    JSON parses, ``aup_accepted_at`` non-empty) — which trivially passed
+    the committed *starter* manifest with placeholder values.  The user
+    audit caught the deception.
+
+    The hardened path delegates to
+    :func:`zer0pa_materials.falsifiers.uma_manifest.verify_uma_manifest`
+    which:
+
+    * Schema-validates against :class:`UmaAupLicenseManifest` (rejects
+      placeholder strings, missing fields, wrong literal values).
+    * Recomputes the manifest hash and rejects tampering.
+    * Confirms the jurisdiction is not in
+      :data:`RESTRICTED_JURISDICTIONS`.
+    * Confirms ``geographic_jurisdiction_verified_against_aup`` and
+      ``derivative_works_ownership_acknowledged`` are both ``True``.
+    * Confirms ``library_license_spdx == "MIT"`` and
+      ``weights_license == "FAIR-Chemistry-License-v1"``.
+
+    The committed starter manifest at ``phases/UMA-license/manifest.json``
+    is intentionally a failing-state placeholder (per Wave D), so the
+    starter MUST cause this check to fail.  Operators copy
+    ``manifest.template.json`` and fill the placeholders to produce a
+    passing manifest; the precheck then gives a green P2.
     """
+    from zer0pa_materials.falsifiers.uma_manifest import verify_uma_manifest
+
     try:
         manifest_path = phase_dir("UMA-license") / "manifest.json"
     except Exception as exc:  # noqa: BLE001
         return False, f"phase_dir() failed: {type(exc).__name__}: {exc}"
     if not manifest_path.is_file():
         return False, (
-            f"manifest at {manifest_path} not present "
-            "(Wave D pending — UMA AUP manifest will be added there)"
+            f"manifest at {manifest_path} not present; "
+            "copy phases/UMA-license/manifest.template.json to manifest.json "
+            "and fill the placeholders before enabling UMA"
         )
-    try:
-        data = json.loads(manifest_path.read_text(encoding="utf-8"))
-    except (json.JSONDecodeError, OSError) as exc:
-        return False, f"manifest at {manifest_path} unreadable: {type(exc).__name__}: {exc}"
-    if not data.get("aup_accepted_at"):
-        return False, (
-            f"manifest at {manifest_path} present but missing 'aup_accepted_at' field"
+
+    item = verify_uma_manifest(manifest_path)
+    passed = item.status == "pass"
+    if passed:
+        return True, (
+            f"manifest at {manifest_path} verified by "
+            f"verify_uma_manifest (status=pass, threshold={item.threshold!r})"
         )
-    return True, f"manifest at {manifest_path} valid (aup_accepted_at={data['aup_accepted_at']!r})"
+
+    # Surface the concrete failure reason — the verifier's rationale plus
+    # the actual fields it inspected — so the operator can pinpoint the gap.
+    return False, (
+        f"verify_uma_manifest({manifest_path}) returned "
+        f"status={item.status!r}; rationale={item.rationale!r}"
+    )
 
 
 def _append_precheck_jsonl(report: CutoverPrecheckReport, *, fast: bool) -> None:
@@ -935,6 +1087,26 @@ def _append_precheck_jsonl(report: CutoverPrecheckReport, *, fast: bool) -> None
     }
     with target.open("a", encoding="utf-8") as fh:
         fh.write(json.dumps(row, sort_keys=True) + "\n")
+
+
+def _layer_default_endpoint(layer: str) -> str:
+    """Default endpoint per layer for the sentinel campaign's REST routing.
+
+    The mapping mirrors the per-layer FastAPI service surfaces.  These are
+    the canonical "smoke" endpoints — production callers can override.
+    """
+    return {
+        "L1": "dft/jobs",
+        "L2": "predict",
+        "ionic": "neb",
+        "L1.5": "phonopy-harmonic",
+        "L3": "equilibrium",
+        "L4": "runs",
+        "L5": "continuum-runs",
+        "L6": "generate",
+        "quantum": "vqe/jobs",
+        "L7": "campaigns",
+    }.get(layer, "smoke")
 
 
 def _minimal_layer_output(layer: str, seed: dict[str, Any]) -> dict[str, Any]:

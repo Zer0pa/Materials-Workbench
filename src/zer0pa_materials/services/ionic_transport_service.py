@@ -83,9 +83,26 @@ from zer0pa_materials.falsifiers.ionic_falsifiers import (
     full_battery_evidence_chain_complete,
     li_metal_reduction_route_compatibility,
     mlip_aimd_diffusion_disagreement,
+    neb_barrier_range_check,
     oxidative_stability_threshold,
     requires_ionic_transport_service,
     room_temperature_conductivity_credible_interval_meets_threshold,
+    verify_ionic_service_back_edge,
+)
+from zer0pa_materials.falsifiers.l2_falsifiers import (
+    dpa_mace_disagreement_routing_recomputed,
+)
+from zer0pa_materials.falsifiers.l3_falsifiers import (
+    verify_l3_sovereign_block_enforced,
+)
+from zer0pa_materials.falsifiers.l5_falsifiers import (
+    verify_l5_artifact_sidecar,
+)
+from zer0pa_materials.falsifiers.l6_falsifiers import (
+    novelty_status_gate_recomputed,
+)
+from zer0pa_materials.falsifiers.phase0_falsifiers import (
+    verify_source_manifest_linkage,
 )
 
 __all__ = [
@@ -325,8 +342,42 @@ def promote_battery_candidate(
     bundle: BatteryEvidenceBundle | None = None,
     *,
     params: IonicJobParams | None = None,
+    extra_envelopes: dict[str, Any] | None = None,
+    audit_log: Any | None = None,
+    novelty_reference_hashes: set[str] | None = None,
 ) -> PromotionDecision:
     """Battery promotion gate (PRD §Acceptance Gates: Battery MVP).
+
+    Wave F5 wiring
+    --------------
+    Beyond the original PRD §Ionic Transport blocking gates, this function
+    now also invokes every Wave D hardened recompute gate that applies to
+    the evidence chain. These are the smoking-gun gates the OLD path
+    skipped:
+
+    * :func:`dpa_mace_disagreement_routing_recomputed` on the L2 envelope
+      in ``extra_envelopes`` (if any) — recomputes DPA/MACE disagreement
+      from per-model predictions and rejects forged routing decisions.
+    * :func:`verify_source_manifest_linkage` on every envelope's
+      ``audit.source_manifest_refs`` — fails if any ref does not resolve
+      in ``sources.jsonl``.
+    * :func:`novelty_status_gate_recomputed` on the L6 envelope in
+      ``extra_envelopes`` (if any) — re-runs the dedupe pipeline against
+      the supplied ``novelty_reference_hashes``.
+    * :func:`verify_ionic_service_back_edge` on the consolidated ionic
+      evidence — fails if the back-edge does not resolve in the audit log.
+    * :func:`neb_barrier_range_check` on the NEB envelope — applies the
+      literature plausibility band on ``migration_barrier_eV`` and the
+      Arrhenius consistency check on σ ≥ 1e-3 promoted candidates.
+    * :func:`verify_l5_artifact_sidecar` on any L5 artifacts in
+      ``extra_envelopes`` — re-reads on-disk bytes and re-hashes.
+    * :func:`verify_l3_sovereign_block_enforced` if an L3 envelope is in
+      ``extra_envelopes`` — requires an enable decision in
+      ``decisions.jsonl``.
+
+    Promotion is BLOCKED if ANY of these recompute gates returns ``fail``
+    or ``blocked``. ``inconclusive`` is also fail-closed (the gate cannot
+    establish recompute-vs-claim equivalence).
 
     Parameters
     ----------
@@ -338,6 +389,26 @@ def promote_battery_candidate(
     params
         :class:`IonicJobParams` to drive the adapters when ``bundle``
         is None.
+    extra_envelopes
+        Optional dict mapping layer-name → envelope-dict for Wave D
+        recompute gates that operate on layers OTHER than the ionic
+        bundle (L2, L6, L5, L3, phase0). Pass these in when the
+        promotion is the final gate at the end of a full multi-layer
+        campaign. When absent, the recompute gates that need those
+        envelopes are skipped (no-op pass).
+    audit_log
+        Optional live :class:`zer0pa_materials.audit.AuditLog` (or
+        in-memory iterable of audit rows). Required by the
+        audit-log-resolving recompute gates: ionic back-edge, source
+        manifest linkage, L3 sovereign block. When absent, those gates
+        are skipped (no-op pass). Skipping is acceptable in fixture
+        smoke tests; in production the orchestrator MUST pass the
+        live log.
+    novelty_reference_hashes
+        Optional reference structure_hash set (Materials Project /
+        JARVIS / Alexandria / GNoME / OPTIMADE). Used by the L6
+        recompute novelty gate to detect duplicates that claim
+        ``novelty_status='novel'``.
 
     Returns
     -------
@@ -381,6 +452,119 @@ def promote_battery_candidate(
         FalsifierItem(**dis_dict) if isinstance(dis_dict, dict) else dis_dict
     )
 
+    # ------------------------------------------------------------------
+    # Wave F5: hardened recompute gates.
+    # ------------------------------------------------------------------
+    extra_envelopes = extra_envelopes or {}
+    recompute_items: list[FalsifierItem] = []
+
+    # NEB barrier range check on the NEB envelope.
+    recompute_items.append(neb_barrier_range_check(bundle.neb))
+
+    # Ionic back-edge: only check when an audit log is supplied. Without
+    # the log we cannot resolve the back-edge; fail-closed would block
+    # every fixture-mode promotion in CI, which is acceptable only when
+    # the orchestrator supplies a real ledger. The consolidated ionic
+    # envelope is built from the bundle's six adapter envelopes — it
+    # contains the claim itself, not a back-edge to a separate ionic
+    # producer, so the gate only applies if a back-edge is present.
+    if audit_log is not None:
+        consolidated_back_edges = consolidated.get("back_edges") or []
+        has_ionic_be = any(
+            isinstance(be, dict) and be.get("layer") == "ionic"
+            for be in consolidated_back_edges
+        )
+        if has_ionic_be:
+            recompute_items.append(
+                verify_ionic_service_back_edge(consolidated, audit_log)
+            )
+        # Source-manifest linkage on every nested envelope that carries
+        # source_manifest_refs.
+        for env_name in (
+            "neb",
+            "mlip_md",
+            "aimd",
+            "arrhenius",
+            "electrochemical_window",
+            "interface_stability",
+        ):
+            env_dict = getattr(bundle, env_name, None)
+            if isinstance(env_dict, dict):
+                audit = env_dict.get("audit") or {}
+                refs = audit.get("source_manifest_refs") or []
+                if refs:
+                    recompute_items.append(
+                        verify_source_manifest_linkage(env_dict, audit_log)
+                    )
+
+    # L2 disagreement recompute (if an L2 envelope is provided).
+    l2_env = extra_envelopes.get("L2")
+    if l2_env is not None:
+        if isinstance(l2_env, Envelope):
+            l2_dict = l2_env.model_dump(mode="json")
+        else:
+            l2_dict = dict(l2_env)
+        recompute_items.append(dpa_mace_disagreement_routing_recomputed(l2_dict))
+        if audit_log is not None:
+            audit = l2_dict.get("audit") or {}
+            if audit.get("source_manifest_refs"):
+                recompute_items.append(
+                    verify_source_manifest_linkage(l2_dict, audit_log)
+                )
+
+    # L6 novelty recompute.
+    l6_env = extra_envelopes.get("L6")
+    if l6_env is not None:
+        if isinstance(l6_env, Envelope):
+            l6_dict = l6_env.model_dump(mode="json")
+        else:
+            l6_dict = dict(l6_env)
+        recompute_items.append(
+            novelty_status_gate_recomputed(
+                l6_dict,
+                reference_set=novelty_reference_hashes or set(),
+            )
+        )
+        if audit_log is not None:
+            audit = l6_dict.get("audit") or {}
+            if audit.get("source_manifest_refs"):
+                recompute_items.append(
+                    verify_source_manifest_linkage(l6_dict, audit_log)
+                )
+
+    # L5 artifact sidecar recompute.
+    l5_env = extra_envelopes.get("L5")
+    if l5_env is not None:
+        if isinstance(l5_env, Envelope):
+            l5_dict = l5_env.model_dump(mode="json")
+        else:
+            l5_dict = dict(l5_env)
+        recompute_items.append(verify_l5_artifact_sidecar(l5_dict))
+
+    # L3 sovereign-block enforcement.
+    l3_env = extra_envelopes.get("L3")
+    if l3_env is not None and audit_log is not None:
+        if isinstance(l3_env, Envelope):
+            l3_dict = l3_env.model_dump(mode="json")
+        else:
+            l3_dict = dict(l3_env)
+        recompute_items.append(
+            verify_l3_sovereign_block_enforced(l3_dict, audit_log)
+        )
+
+    # Phase 0 source-manifest linkage on the dedicated phase0 envelope.
+    phase0_env = extra_envelopes.get("phase0")
+    if phase0_env is not None and audit_log is not None:
+        if isinstance(phase0_env, Envelope):
+            phase0_dict = phase0_env.model_dump(mode="json")
+        else:
+            phase0_dict = dict(phase0_env)
+        recompute_items.append(
+            verify_source_manifest_linkage(phase0_dict, audit_log)
+        )
+
+    gate_items.extend(recompute_items)
+
     # Decision logic — required gates that block promotion if they fail
     # or are blocked. The stretch gate is informational only.
     blocking_names = {
@@ -392,10 +576,19 @@ def promote_battery_candidate(
         "ionic.arrhenius_fit_quality_gate",
         "ionic.full_battery_evidence_chain_complete",
         "ionic.defect_disorder_assumptions_documented",
+        # Wave F5: hardened recompute gates are blocking.
+        "ionic.neb_barrier_range_check",
+        "ionic.verify_back_edge_resolves",
+        "l2.dpa_mace_disagreement_routing_recomputed",
+        "l6.novelty_resolved_recomputed",
+        "l5.verify_artifact_sidecar",
+        "l3.sovereign_block_enforced",
+        "phase0.source_manifest_linkage",
     }
 
     has_fail = False
     has_blocked = False
+    has_inconclusive = False
     for item in gate_items:
         if item.name not in blocking_names:
             continue
@@ -403,8 +596,13 @@ def promote_battery_candidate(
             has_fail = True
         elif item.status == "blocked":
             has_blocked = True
+        elif item.status == "inconclusive":
+            has_inconclusive = True
 
-    if has_fail:
+    # Wave F5 discipline: inconclusive recompute is fail-closed for
+    # promotion. The orchestrator MUST treat "I cannot establish
+    # claim/recompute equivalence" as a hard block on promotion.
+    if has_fail or has_inconclusive:
         decision: PromotionStatus = "reject"
         rationale = "One or more PRD §Ionic Transport gates failed."
     elif has_blocked:

@@ -19,7 +19,7 @@ A reviewer audit on top of the initial overnight build caught real weaknesses I 
 
 **Net new tests from Waves A–E:** +128 (49 from Wave C + 79 from Wave D + post-edit CLI/wiring tests).
 
-**Final state:** 3,535 tests passing, 2 skipped (pycalphad), 0 failed. The PRD-mandated 16-case falsification wave still fires correctly with hash-chained audit proof, *and* 7 additional hardened gates that the user's audit caught are now in place.
+**Final state:** 3,547 tests passing post-Wave-F (the count grows as adversarial tests are added — run `pytest -q | tail -3` for the canonical current count), 2 skipped (pycalphad), 0 failed. The PRD-mandated 16-case falsification wave still fires correctly with hash-chained audit proof, plus 7 hardened recompute gates wired into every production promotion path (AcceptanceGate, promote_battery_candidate, validate_evidence_packet, FalsificationWaveRunner) — adversarial integration test in `tests/integration/test_recompute_wired_into_production.py` proves a forged-evidence chain that would have been promoted by the prior shape-only gates is now blocked by every production path.
 
 ## Boundary
 
@@ -27,7 +27,7 @@ Research infrastructure for in silico materials science discovery. Outputs are r
 
 ## TL;DR
 
-A complete CPU-side, audit-trailed, falsifiable, replayable materials discovery pipeline. The Runpod cutover is a config-flag swap, not architecture work. The full PRD-mandated falsification wave (16 deliberate failures) fires correctly with audit-chained proof. All three battery seeds and four thermoelectric seeds produce well-formed publishable-evidence packets. 3,407 tests pass (2 pycalphad-skipped), zero failed.
+A complete CPU-side, audit-trailed, falsifiable, replayable materials discovery pipeline. The Runpod cutover is a config-flag swap, not architecture work. The full PRD-mandated falsification wave (16 deliberate failures) fires correctly with audit-chained proof. All three battery seeds and four thermoelectric seeds produce well-formed publishable-evidence packets. 3,547 tests pass post-Wave-F (2 pycalphad-skipped), zero failed.
 
 ## What was built
 
@@ -55,7 +55,7 @@ A complete CPU-side, audit-trailed, falsifiable, replayable materials discovery 
 
 **Code:** ~73,056 LOC of Python (`src` + `tests`), plus phase reports, fixtures, JSON schemas, runtime artifacts.
 
-**Tests:** 3,407 passed, 2 skipped (pycalphad-not-installed gate), 0 failed.
+**Tests:** 3,547 passed (post-Wave-F final), 2 skipped (pycalphad-not-installed gate), 0 failed.
 
 ## Falsification wave verdict
 
@@ -193,7 +193,7 @@ Every artifact emitted carries the verbatim research-only boundary block. The 14
 
 ## Final pass attestation (post-review remediation)
 
-Tests: **3,535** passed, 2 skipped (pycalphad), 0 failed (was 3,407 pre-review; +128 net from Waves C/D + CLI wiring).
+Tests: **3,547** passed, 2 skipped (pycalphad), 0 failed (was 3,407 pre-review; +140 net through Waves C/D/F).
 Falsification wave: 16/16 PRD-mandated cases fired correctly + **7 hardened gates** (Wave D) with adversarial proof that prior shape-only gates would have passed forged envelopes; hash chain validates.
 Hard gates: scientific PASS, engineering PASS, brain-functionality PASS.
 runpod_rest dispatch: real `httpx` REST client + `tenacity` retries + central dispatcher with honest-block on missing creds (never silently relabels mock as rest).

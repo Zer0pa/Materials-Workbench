@@ -20,7 +20,7 @@ The governing objective is the authority metric: an end-to-end, CPU-complete, au
 
 ## Source Basis
 
-The overnight executor must read the repository in the order specified in `HANDOFF-TO-OVERNIGHT-EXECUTOR.md`. The external folder on the originating machine, `/Users/Zer0pa/Materials Portfolio/Materials Pipeline Research`, contains the same two large research briefs committed under `source-briefs/`:
+The overnight executor must read the repository in the order specified in `HANDOFF-TO-OVERNIGHT-EXECUTOR.md`. The originating-machine external folder (operator-private — do not record absolute paths in committed artifacts) contains the same two large research briefs that have since been committed under `source-briefs/`:
 
 - `source-briefs/01-full-technology-landscape.md`
 - `source-briefs/02-corrections-and-architecture.md`

@@ -56,6 +56,7 @@ def _envelope(
     falsifier_items: list[FalsifierItem] | None = None,
     audit_id: str | None = None,
     research_boundary: str = RESEARCH_BOUNDARY,
+    back_edges: list[dict[str, str]] | None = None,
 ) -> Envelope:
     audit_id = audit_id or _audit_id(layer)
     return Envelope(
@@ -80,6 +81,7 @@ def _envelope(
             rights_claim_id=rights_claim_id,
             reuse_scope=rights_scope,  # type: ignore[arg-type]
         ),
+        back_edges=back_edges or [],  # type: ignore[arg-type]
     )
 
 
@@ -90,7 +92,30 @@ def _l6_envelope(rights_scope: str = "tenant_only") -> Envelope:
         novelty_status="novel",
         dedup_results=[L6DedupResult(source="MP", matched=False)],
     )
-    return _envelope("L6", out.model_dump(mode="json"), rights_scope=rights_scope, falsifier_items=out.falsifier_items())
+    # Wave F5: extend the L6 output with a `structure` dict so the
+    # recompute-consistency gate (novelty_status_gate_recomputed) can
+    # hash from raw evidence. Without this, the recompute returns
+    # status="invalid" and fails the gate. The L6GenerativeOutput model
+    # exposes its serialised dict as `output` — augment it here. Provide
+    # the L1+ionic+L2 back-edges that the recompute_novelty pipeline
+    # requires before it elevates the candidate to status="novel".
+    output_dict = out.model_dump(mode="json")
+    output_dict["structure"] = {
+        "lattice_vectors": [[3.0, 0.0, 0.0], [0.0, 3.0, 0.0], [0.0, 0.0, 3.0]],
+        "species": ["Li", "F"],
+        "fractional_coords": [[0.0, 0.0, 0.0], [0.5, 0.5, 0.5]],
+    }
+    return _envelope(
+        "L6",
+        output_dict,
+        rights_scope=rights_scope,
+        falsifier_items=out.falsifier_items(),
+        back_edges=[
+            {"layer": "L1", "audit_record_id": _audit_id("L1")},
+            {"layer": "L2", "audit_record_id": _audit_id("L2")},
+            {"layer": "ionic", "audit_record_id": _audit_id("ionic")},
+        ],
+    )
 
 
 def _l1_envelope(rights_scope: str = "tenant_only") -> Envelope:
@@ -107,13 +132,20 @@ def _l1_envelope(rights_scope: str = "tenant_only") -> Envelope:
 
 
 def _l2_envelope(rights_scope: str = "tenant_only") -> Envelope:
+    # Wave F5: keep the per-model predictions consistent with the claimed
+    # disagreement scalars so the AcceptanceGate's recompute-consistency
+    # gate (which calls dpa_mace_disagreement_routing_recomputed) does not
+    # falsely fire on this clean fixture.
     out = L2MlipOutput(
         predictions=[
             L2ModelPrediction(model="DPA-3.1-3M", energy_eV_per_atom=-1.0, force_rmse_eV_per_Ang=0.05),
             L2ModelPrediction(model="MACE-MPA-0", energy_eV_per_atom=-1.01, force_rmse_eV_per_Ang=0.06),
         ],
+        # |E_DPA - E_MACE| = 0.01 eV → 10 meV/atom (matches claim).
         energy_disagreement_meV_per_atom=10.0,
-        force_rmse_disagreement_eV_per_Ang=0.05,
+        # |F_DPA - F_MACE| = 0.01 eV/Å (was 0.05 — that was an inconsistency
+        # the OLD shape-only gate ignored; the recompute gate catches it).
+        force_rmse_disagreement_eV_per_Ang=0.01,
         routing_decision="promote",
     )
     return _envelope("L2", out.model_dump(mode="json"), rights_scope=rights_scope, falsifier_items=out.falsifier_items())

@@ -30,7 +30,7 @@ Read in this order:
 
 The GitHub repo is canonical: `https://github.com/Zer0pa/Materials`. Use authenticated git/gh access. Commit and push all work for handoff.
 
-The originating-machine external folder `/Users/Zer0pa/Materials Portfolio/Materials Pipeline Research` contained the same two large research briefs committed under `source-briefs/`; do not depend on that local path on another machine.
+The originating-machine external folder (operator-private — do not record absolute paths in committed artifacts) contained the same two large research briefs that have since been committed to this repo under `source-briefs/`; do not depend on the originating local path on another machine. The repo plus `pip install -e '.[dev]'` is fully self-contained.
 
 ## Governing Objective
 

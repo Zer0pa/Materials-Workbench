@@ -200,10 +200,20 @@ class TestAuditPersistence:
         total_triggered = sum(
             len(cr.triggered_falsifiers) for cr in result.case_results
         )
+        # Wave F5: the runner also writes one row per gate in the post-PRD
+        # recompute sweep (typically 7 rows).
+        sweep_rows = (
+            len(result.recompute_sweep.gate_results)
+            if result.recompute_sweep is not None
+            else 0
+        )
         # Every triggered FalsifierItem becomes a row regardless of status —
         # the runner records pass/fail items so chain has full history.
-        assert result.total_falsifier_rows_written == total_triggered, (
-            f"Expected {total_triggered} falsifier rows; got "
+        assert (
+            result.total_falsifier_rows_written == total_triggered + sweep_rows
+        ), (
+            f"Expected {total_triggered + sweep_rows} falsifier rows "
+            f"(triggers={total_triggered}, sweep={sweep_rows}); got "
             f"{result.total_falsifier_rows_written}."
         )
 

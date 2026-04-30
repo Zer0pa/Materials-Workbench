@@ -24,6 +24,16 @@ no path may skip any):
    ``zer0pa_materials.falsifiers.*_falsifiers`` is a leaf of the composed
    gate. The :func:`compose_layer_gates` helper aggregates them.
 
+6. **Recompute consistency (Wave F5)**: every Wave D hardened recompute
+   gate that applies is invoked on the envelope chain. The gate fails if
+   any recompute disagrees with the envelope's claimed scalar (energy
+   disagreement, force RMSE disagreement), structure_hash, novelty
+   status, on-disk artifact sha256 + units sidecar, ionic back-edge
+   resolution, NEB barrier plausibility, source-manifest linkage, or
+   sovereign-backend enable record. ``blocked`` recomputes are also
+   treated as a hard block (claim/recompute mismatch) so promotion does
+   NOT fall through to the unhardened path.
+
 The composition is **not** an "any-pass-wins" lattice. The gate fails
 closed: ANY failed/blocked sub-gate forces the verdict to ``fail``. The
 roll-up only returns ``pass`` when every sub-gate returned ``pass``.
@@ -67,6 +77,7 @@ GateName = Literal[
     "layer_falsifiers",
     "ionic_battery_evidence",
     "boundary_block",
+    "recompute_consistency",
 ]
 
 GateOutcome = Literal["pass", "fail", "blocked", "inconclusive"]
@@ -80,6 +91,7 @@ PromotionFailureReason = Literal[
     "layer_falsifier_failed",
     "ionic_evidence_incomplete",
     "boundary_block_missing",
+    "claim_recompute_mismatch",
 ]
 
 
@@ -117,12 +129,32 @@ class GateContext(BaseModel):
         default=("L6", "L2", "L1"),
         description="Layers that MUST have an envelope before promotion is considered.",
     )
+    audit_log: Any | None = Field(
+        default=None,
+        description=(
+            "Optional live AuditLog (or in-memory iterable of audit rows) "
+            "used by the Wave D recompute gates that resolve back-edges, "
+            "source manifests, and decision rows. When None, recompute "
+            "gates that need an audit log skip with status='pass' "
+            "(non-applicable); structural recomputes (L2 disagreement, L6 "
+            "novelty, L5 sidecar) still run."
+        ),
+    )
+    novelty_reference_hashes: set[str] = Field(
+        default_factory=set,
+        description=(
+            "Reference structure_hashes (Materials Project / JARVIS / "
+            "Alexandria / GNoME / OPTIMADE). Wave D L6 recompute novelty "
+            "matches against this set."
+        ),
+    )
 
     def model_post_init(self, __context: Any) -> None:
         # Defensive copy of mutable sets on construction.
         self.rejected_candidate_ids = set(self.rejected_candidate_ids)
         self.rejected_structure_hashes = set(self.rejected_structure_hashes)
         self.audit_provenance_chain = set(self.audit_provenance_chain)
+        self.novelty_reference_hashes = set(self.novelty_reference_hashes)
 
 
 class AcceptanceGateVerdict(BaseModel):
@@ -357,6 +389,174 @@ def _ionic_battery_evidence_gate(ctx: GateContext) -> tuple[GateOutcome, Falsifi
     return ("pass", item, [])
 
 
+def _envelope_to_dict(env: Envelope) -> dict[str, Any]:
+    """Return a wire-shape dict for an Envelope (Wave D recomputes accept dicts)."""
+    if isinstance(env, Envelope):
+        return env.model_dump(mode="json")
+    if isinstance(env, dict):
+        return env
+    return {}
+
+
+def _recompute_consistency_gate(
+    ctx: GateContext,
+) -> tuple[GateOutcome, list[FalsifierItem], list[PromotionFailureReason]]:
+    """Wave F5: invoke every Wave D recompute gate against the envelope chain.
+
+    For each layer envelope, run the relevant recompute falsifier:
+
+    * L2 envelope → :func:`dpa_mace_disagreement_routing_recomputed`
+    * Phase 0 envelope → :func:`verify_source_manifest_linkage` (needs audit_log)
+    * L6 envelope → :func:`novelty_status_gate_recomputed`
+    * Ionic envelope → :func:`verify_ionic_service_back_edge` (needs audit_log) AND
+      :func:`neb_barrier_range_check` (no audit_log needed)
+    * L5 envelope → :func:`verify_l5_artifact_sidecar`
+    * L3 envelope → :func:`verify_l3_sovereign_block_enforced` (needs audit_log)
+
+    Plus the `verify_source_manifest_linkage` walk on every envelope's
+    ``audit.source_manifest_refs``.
+
+    Status semantics:
+
+    * Any sub-recompute returning ``fail`` (claim/recompute mismatch,
+      forged ref, missing on-disk artifact, missing decision record, etc.)
+      makes the gate fail closed.
+    * ``blocked`` outcomes from sub-recomputes (e.g. recompute helper
+      cannot run because per-model predictions are absent) propagate as
+      ``blocked``.
+    * If no audit-log-dependent recompute can run (no ``audit_log``
+      passed) the structural recomputes still run and we return their
+      composed outcome.
+    """
+    # Imports kept inside the function to avoid circular imports between
+    # orchestration and falsifiers at module-load time.
+    from zer0pa_materials.falsifiers.l2_falsifiers import (
+        dpa_mace_disagreement_routing_recomputed,
+    )
+    from zer0pa_materials.falsifiers.l6_falsifiers import (
+        novelty_status_gate_recomputed,
+    )
+    from zer0pa_materials.falsifiers.l5_falsifiers import (
+        verify_l5_artifact_sidecar,
+    )
+    from zer0pa_materials.falsifiers.ionic_falsifiers import (
+        neb_barrier_range_check,
+        verify_ionic_service_back_edge,
+    )
+    from zer0pa_materials.falsifiers.l3_falsifiers import (
+        verify_l3_sovereign_block_enforced,
+    )
+    from zer0pa_materials.falsifiers.phase0_falsifiers import (
+        verify_source_manifest_linkage,
+    )
+
+    items: list[FalsifierItem] = []
+    reasons: list[PromotionFailureReason] = []
+
+    # --- L2 disagreement recompute ---
+    l2_env = ctx.layer_envelopes.get("L2")
+    if l2_env is not None:
+        l2_dict = _envelope_to_dict(l2_env)
+        l2_item = dpa_mace_disagreement_routing_recomputed(l2_dict)
+        items.append(l2_item)
+
+    # --- L6 novelty recompute ---
+    l6_env = ctx.layer_envelopes.get("L6")
+    if l6_env is not None:
+        l6_dict = _envelope_to_dict(l6_env)
+        # Provide reference_set so reference matches resurface as duplicate.
+        # Sibling envelopes for batch dedupe come from the rest of the chain.
+        sibs = [
+            _envelope_to_dict(e)
+            for layer, e in ctx.layer_envelopes.items()
+            if layer != "L6" and (isinstance(e, Envelope) and e.layer == "L6")
+        ]
+        l6_item = novelty_status_gate_recomputed(
+            l6_dict,
+            reference_set=ctx.novelty_reference_hashes,
+            batch_envelopes=sibs,
+        )
+        items.append(l6_item)
+
+    # --- L5 artifact sidecar recompute ---
+    l5_env = ctx.layer_envelopes.get("L5")
+    if l5_env is not None:
+        l5_dict = _envelope_to_dict(l5_env)
+        l5_item = verify_l5_artifact_sidecar(l5_dict)
+        items.append(l5_item)
+
+    # --- Ionic back-edge + NEB barrier range ---
+    ionic_env = ctx.layer_envelopes.get("ionic")
+    if ionic_env is not None:
+        ionic_dict = _envelope_to_dict(ionic_env)
+        # The ionic envelope itself is the SOURCE of the conductivity
+        # claim — it doesn't need an ionic back-edge to itself. The
+        # back-edge gate is for CONSUMING envelopes (e.g. an L7
+        # acceptance envelope) that reference an ionic claim. Only run
+        # when an ionic-layer back-edge is actually present.
+        if ctx.audit_log is not None:
+            back_edges = ionic_dict.get("back_edges") or []
+            has_ionic_be = any(
+                isinstance(be, Mapping) and be.get("layer") == "ionic"
+                for be in back_edges
+            )
+            if has_ionic_be:
+                items.append(
+                    verify_ionic_service_back_edge(ionic_dict, ctx.audit_log)
+                )
+        items.append(neb_barrier_range_check(ionic_dict))
+
+    # --- L3 sovereign block enforcement ---
+    l3_env = ctx.layer_envelopes.get("L3")
+    if l3_env is not None and ctx.audit_log is not None:
+        l3_dict = _envelope_to_dict(l3_env)
+        items.append(verify_l3_sovereign_block_enforced(l3_dict, ctx.audit_log))
+
+    # --- Phase 0 source-manifest linkage (and any envelope with manifest refs) ---
+    if ctx.audit_log is not None:
+        for layer, env in ctx.layer_envelopes.items():
+            env_dict = _envelope_to_dict(env)
+            audit_block = env_dict.get("audit") or {}
+            refs = audit_block.get("source_manifest_refs") or []
+            # Only run the gate when the envelope actually claims refs.
+            # An empty refs list is reported as fail by the gate itself
+            # — phase 0 IS expected to always carry refs, other layers
+            # may not, so we only invoke the gate when refs are present
+            # OR for the phase 0 envelope (the canonical caller).
+            if refs or layer == "phase0":
+                items.append(verify_source_manifest_linkage(env_dict, ctx.audit_log))
+
+    # Compose outcome — ANY fail or inconsistent recompute is fail.
+    statuses = [it.status for it in items]
+    if "fail" in statuses:
+        outcome: GateOutcome = "fail"
+        reasons.append("claim_recompute_mismatch")
+    elif "blocked" in statuses:
+        outcome = "blocked"
+        # Fail-closed: a missing-input that prevents recompute is treated
+        # as a hard block (not pass). Surface it as a recompute failure
+        # reason so the orchestrator does not silently promote.
+        reasons.append("claim_recompute_mismatch")
+    elif "inconclusive" in statuses:
+        outcome = "inconclusive"
+        reasons.append("claim_recompute_mismatch")
+    else:
+        outcome = "pass"
+
+    if not items:
+        # No recompute applicable — vacuous pass.
+        items.append(
+            FalsifierItem(
+                name="l7.recompute_consistency_gate",
+                threshold="every Wave D recompute gate that applies returns pass",
+                actual={"reason": "no_recompute_applicable"},
+                status="pass",
+            )
+        )
+
+    return (outcome, items, reasons)
+
+
 def _expected_layers_present(ctx: GateContext) -> list[str]:
     return [layer for layer in ctx.expected_layers if layer not in ctx.layer_envelopes]
 
@@ -418,6 +618,17 @@ class AcceptanceGate:
             outcomes["ionic_battery_evidence"], ionic_item, reasons = _ionic_battery_evidence_gate(ctx)
             all_items.append(ionic_item)
             all_reasons.extend(reasons)
+
+        # 8. Wave F5: recompute-consistency gate.
+        #    Runs every Wave D recompute helper that applies to the
+        #    envelopes the candidate has produced. Any forged claim that
+        #    passes the shape-only gates upstream gets caught here.
+        recompute_status, recompute_items, recompute_reasons = (
+            _recompute_consistency_gate(ctx)
+        )
+        outcomes["recompute_consistency"] = recompute_status
+        all_items.extend(recompute_items)
+        all_reasons.extend(recompute_reasons)
 
         # Roll-up: any fail wins; otherwise blocked > inconclusive > pass.
         statuses = list(outcomes.values())

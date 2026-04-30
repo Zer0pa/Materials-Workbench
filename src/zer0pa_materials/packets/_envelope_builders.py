@@ -168,6 +168,9 @@ def l6_known_control_envelope(
     matched_in: tuple[str, ...] = ("MP",),
     rights_claim_id: str = "rights:l6:default",
     reuse_scope: str = "tenant_only",
+    cif_text: str | None = None,
+    structure: dict[str, Any] | None = None,
+    back_edges: tuple[dict[str, str], ...] | None = None,
 ) -> Envelope:
     """Build an L6 envelope for a known-published structure.
 
@@ -175,6 +178,20 @@ def l6_known_control_envelope(
     de-duplication MUST report a match. For the Li-Mg-Zr-Cl-seed,
     the seed is novel until full SQS expansion + dedupe, so callers
     pass ``novelty_status="novel"`` and ``matched_in=()``.
+
+    Wave F5 wiring
+    --------------
+    The Wave D ``novelty_status_gate_recomputed`` requires raw evidence
+    (CIF text or structure dict) to recompute the structure_hash and
+    the dedupe pipeline. Callers can supply ``cif_text`` (preferred — read
+    from the fixture's structure.cif) or ``structure`` (a dict with
+    ``lattice_vectors``, ``species``, ``fractional_coords``). When neither
+    is provided, the L6 envelope falls back to a deterministic placeholder
+    structure derived from the candidate_id; this is so the recompute can
+    still execute end-to-end in fixture mode without forging a hash that
+    would mismatch the claim. In production the orchestrator MUST pass
+    real CIF text — the placeholder hash will not match a real
+    structure_hash.
     """
     dedup_results = [{"source": src, "matched": True, "matched_id": "literature"} for src in matched_in]
     if not dedup_results:
@@ -190,6 +207,11 @@ def l6_known_control_envelope(
         minimum_distance_ok=True,
     )
     out_dict = output.model_dump(mode="json")
+    # Wave F5: embed raw structure data so the recompute can run end-to-end.
+    if cif_text is not None and cif_text.strip():
+        out_dict["cif_text"] = cif_text
+    if structure is not None:
+        out_dict["structure"] = structure
     canonical_input: dict[str, Any] = {
         "candidate_id": candidate_id,
         "structure_hash": structure_hash,
@@ -224,6 +246,7 @@ def l6_known_control_envelope(
             rights_claim_id=rights_claim_id,
             reuse_scope=reuse_scope,  # type: ignore[arg-type]
         ),
+        back_edges=list(back_edges) if back_edges else [],  # type: ignore[arg-type]
     )
 
 

@@ -23,7 +23,7 @@ Research infrastructure for in silico materials science discovery. Outputs are r
 
 The CPU-side build is **complete and post-review-hardened**. Runpod migration is a config-flag swap, not architecture work. A reviewer audit caught real weaknesses (silent runpod_rest fallback, "assumed-pass" precheck, falsifier-trust-fields anti-pattern, absolute-path tests) which have been fixed in Waves A–E. Run `git log` for the canonical commit chain; latest is the HEAD of `main` on [Zer0pa/Materials](https://github.com/Zer0pa/Materials).
 
-* **Tests:** **3,535** passing, 2 skipped (pycalphad), 0 failed.
+* **Tests:** **3,547** passing post-Wave-F (the count grows as adversarial tests are added — run `pytest -q | tail -3` for the canonical current count), 2 skipped (pycalphad), 0 failed.
 * **Falsification wave:** 16 of 16 PRD-mandated deliberate failures fired correctly with hash-chained audit proof, plus **7 newly-hardened gates** that recompute from raw evidence (Wave D adversarial tests prove the prior shape-only gates would have passed forged envelopes).
 * **Hard gates:** scientific PASS, engineering PASS, brain-functionality PASS.
 * **runpod_rest dispatch:** real `httpx`-based REST client with `tenacity` retries; honest-block when credentials missing (no silent mock fallback).

@@ -10,7 +10,7 @@ Research infrastructure for in silico materials science discovery. Outputs are r
 - **Finished at:** `2026-04-30T06:19:18.750486+00:00`
 - **Operator:** `wave6-final`
 - **Repo commit:** `cf374d07972eb7d03bf79cbcf2e1f1f8a1308c01` (branch `main`)
-- **Audit dir:** `/Users/zer0palab/Materials Pipeline/audit/wave6`
+- **Audit dir:** `<repo>/audit/wave6` (resolved via `zer0pa_materials.repo_root.audit_root(runtime=False) / "wave6"`)
 - **Python:** `3.13.12` on `Darwin`
 
 ## Verdict semantics (inverted)

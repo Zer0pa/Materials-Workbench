@@ -33,6 +33,25 @@ from pydantic import BaseModel, ConfigDict, Field
 from zer0pa_materials.boundary import RESEARCH_BOUNDARY
 from zer0pa_materials.envelope import Envelope, FalsifierItem
 from zer0pa_materials.envelope.falsifier import FalsifierStatus
+from zer0pa_materials.falsifiers.ionic_falsifiers import (
+    neb_barrier_range_check,
+    verify_ionic_service_back_edge,
+)
+from zer0pa_materials.falsifiers.l2_falsifiers import (
+    dpa_mace_disagreement_routing_recomputed,
+)
+from zer0pa_materials.falsifiers.l3_falsifiers import (
+    verify_l3_sovereign_block_enforced,
+)
+from zer0pa_materials.falsifiers.l5_falsifiers import (
+    verify_l5_artifact_sidecar,
+)
+from zer0pa_materials.falsifiers.l6_falsifiers import (
+    novelty_status_gate_recomputed,
+)
+from zer0pa_materials.falsifiers.phase0_falsifiers import (
+    verify_source_manifest_linkage,
+)
 from zer0pa_materials.packets.evidence_packet import EvidencePacket
 
 
@@ -388,12 +407,212 @@ def _check_promotion_decision_recorded(packet: EvidencePacket) -> FalsifierItem:
 
 
 # ----------------------------------------------------------------------------
+# Wave F5: recompute gates over every nested envelope
+# ----------------------------------------------------------------------------
+
+
+def _envelope_layer(env_dict: Mapping[str, Any]) -> str:
+    layer = env_dict.get("layer", "")
+    return str(layer) if layer is not None else ""
+
+
+def _check_recompute_gates_per_envelope(packet: EvidencePacket) -> list[FalsifierItem]:
+    """Run every Wave D recompute gate against the appropriate nested envelope.
+
+    Wave F5 wiring: the packet is the publishable deliverable. If
+    production validation does not call recompute, customers receive the
+    unhardened version. For each nested envelope:
+
+    * L2 envelope → :func:`dpa_mace_disagreement_routing_recomputed`
+    * L6 envelope → :func:`novelty_status_gate_recomputed`
+    * L5 envelope → :func:`verify_l5_artifact_sidecar`
+    * Ionic envelope → :func:`neb_barrier_range_check`
+    * Phase 0 envelope (or any envelope with source_manifest_refs) →
+      :func:`verify_source_manifest_linkage` (uses the
+      ``audit_trail_head`` section as the in-memory audit log shim).
+    * L3 envelope → :func:`verify_l3_sovereign_block_enforced`
+    * Ionic envelope → :func:`verify_ionic_service_back_edge`
+
+    Each recompute returns a :class:`FalsifierItem` whose name is unique
+    to the gate; the validator collects them all so the roll-up sees
+    every recompute outcome.
+
+    Audit-log-resolving gates (source manifest, ionic back-edge, L3
+    sovereign block) need a live ledger. Inside the packet validator we
+    use the ``audit_trail_head`` section's recorded payloads as the
+    in-memory audit log: each payload has a ``source_manifest_id`` /
+    ``audit_record_id`` keyed to the envelope chain. When the section is
+    absent, the gates are skipped (the existing
+    ``_check_audit_trail_head_complete`` already fails the packet for
+    that case).
+    """
+    items: list[FalsifierItem] = []
+
+    # In-memory audit log: a list of audit-row payloads aggregated from
+    # the audit_trail_head section. Each row may carry a
+    # source_manifest_id, audit_record_id, layer, decision_impact, etc.
+    # When the section is present (the packet declared an audit head),
+    # we always run the linkage gates with whatever rows are available
+    # — even an empty rows list, because the gates correctly fail when
+    # any ref does not resolve.
+    audit_log: list[dict[str, Any]] | None = None
+    head_section = packet.bundle.section("audit_trail_head")
+    if head_section is not None:
+        head_payload = head_section.raw_payload
+        rows = head_payload.get("rows") or head_payload.get("audit_rows") or []
+        if isinstance(rows, list):
+            audit_log = [r for r in rows if isinstance(r, dict)]
+        else:
+            audit_log = []
+
+    # We accept either real audit rows or a degenerate list of strings:
+    # the recompute helpers iterate the audit log as Mapping rows, and
+    # any string entries are simply skipped.
+
+    for section_name, section in packet.bundle.sections.items():
+        for env_dict in section.envelopes:
+            if not isinstance(env_dict, dict):
+                continue
+            layer = _envelope_layer(env_dict)
+
+            # L2 disagreement recompute.
+            if layer == "L2":
+                try:
+                    items.append(dpa_mace_disagreement_routing_recomputed(env_dict))
+                except Exception as exc:  # noqa: BLE001
+                    items.append(
+                        FalsifierItem(
+                            name="l2.dpa_mace_disagreement_routing_recomputed",
+                            threshold="recompute helper runs to completion",
+                            actual={"error": f"{type(exc).__name__}: {exc}"[:200]},
+                            status="fail",
+                        )
+                    )
+
+            # L6 novelty recompute.
+            if layer == "L6":
+                try:
+                    items.append(novelty_status_gate_recomputed(env_dict))
+                except Exception as exc:  # noqa: BLE001
+                    items.append(
+                        FalsifierItem(
+                            name="l6.novelty_resolved_recomputed",
+                            threshold="recompute helper runs to completion",
+                            actual={"error": f"{type(exc).__name__}: {exc}"[:200]},
+                            status="fail",
+                        )
+                    )
+
+            # L5 artifact sidecar recompute.
+            if layer == "L5":
+                try:
+                    items.append(verify_l5_artifact_sidecar(env_dict))
+                except Exception as exc:  # noqa: BLE001
+                    items.append(
+                        FalsifierItem(
+                            name="l5.verify_artifact_sidecar",
+                            threshold="recompute helper runs to completion",
+                            actual={"error": f"{type(exc).__name__}: {exc}"[:200]},
+                            status="fail",
+                        )
+                    )
+
+            # Ionic NEB range + back-edge.
+            # The NEB range check applies to every ionic envelope. The
+            # back-edge check is for CONSUMING envelopes (e.g. an L7
+            # acceptance envelope referencing an ionic claim) — running
+            # it against the ionic envelope itself would always fail
+            # since the ionic envelope is the source of the claim, not
+            # a consumer with a back-edge. We guard with a back_edges
+            # presence check.
+            if layer == "ionic":
+                try:
+                    items.append(neb_barrier_range_check(env_dict))
+                except Exception as exc:  # noqa: BLE001
+                    items.append(
+                        FalsifierItem(
+                            name="ionic.neb_barrier_range_check",
+                            threshold="recompute helper runs to completion",
+                            actual={"error": f"{type(exc).__name__}: {exc}"[:200]},
+                            status="fail",
+                        )
+                    )
+                # Only verify back-edge resolution when the envelope
+                # carries an ionic-layer back-edge (i.e. it's a
+                # consumer of an ionic claim, not the ionic source).
+                back_edges = env_dict.get("back_edges") or []
+                has_ionic_be = any(
+                    isinstance(be, dict) and be.get("layer") == "ionic"
+                    for be in back_edges
+                )
+                if has_ionic_be and audit_log is not None:
+                    try:
+                        items.append(
+                            verify_ionic_service_back_edge(env_dict, audit_log)
+                        )
+                    except Exception as exc:  # noqa: BLE001
+                        items.append(
+                            FalsifierItem(
+                                name="ionic.verify_back_edge_resolves",
+                                threshold="recompute helper runs to completion",
+                                actual={"error": f"{type(exc).__name__}: {exc}"[:200]},
+                                status="fail",
+                            )
+                        )
+
+            # L3 sovereign block enforcement.
+            if layer == "L3" and audit_log is not None:
+                try:
+                    items.append(
+                        verify_l3_sovereign_block_enforced(env_dict, audit_log)
+                    )
+                except Exception as exc:  # noqa: BLE001
+                    items.append(
+                        FalsifierItem(
+                            name="l3.sovereign_block_enforced",
+                            threshold="recompute helper runs to completion",
+                            actual={"error": f"{type(exc).__name__}: {exc}"[:200]},
+                            status="fail",
+                        )
+                    )
+
+            # Source-manifest linkage on every envelope that carries refs.
+            audit_block = env_dict.get("audit") or {}
+            refs = (
+                audit_block.get("source_manifest_refs")
+                if isinstance(audit_block, dict)
+                else None
+            )
+            if refs and audit_log is not None:
+                try:
+                    items.append(verify_source_manifest_linkage(env_dict, audit_log))
+                except Exception as exc:  # noqa: BLE001
+                    items.append(
+                        FalsifierItem(
+                            name="phase0.source_manifest_linkage",
+                            threshold="recompute helper runs to completion",
+                            actual={"error": f"{type(exc).__name__}: {exc}"[:200]},
+                            status="fail",
+                        )
+                    )
+
+    return items
+
+
+# ----------------------------------------------------------------------------
 # Top-level validator
 # ----------------------------------------------------------------------------
 
 
 def validate_evidence_packet(packet: EvidencePacket) -> ValidationReport:
-    """Run every validator on ``packet`` and return a :class:`ValidationReport`."""
+    """Run every validator on ``packet`` and return a :class:`ValidationReport`.
+
+    Wave F5 wiring: in addition to the structural validators (section
+    coverage, boundary, audit ids, etc.) the validator now invokes every
+    Wave D hardened recompute gate against each nested envelope. See
+    :func:`_check_recompute_gates_per_envelope` for the per-layer
+    routing. Customers receive the hardened gate set on every packet.
+    """
     items: list[FalsifierItem] = []
     items.append(_check_required_sections(packet))
     items.append(_check_boundary_in_every_envelope(packet))
@@ -408,6 +627,8 @@ def validate_evidence_packet(packet: EvidencePacket) -> ValidationReport:
     items.append(_check_kg_snapshot_present(packet))
     items.append(_check_audit_trail_head_complete(packet))
     items.append(_check_promotion_decision_recorded(packet))
+    # Wave F5: per-envelope recompute gates (the smoking-gun fix).
+    items.extend(_check_recompute_gates_per_envelope(packet))
 
     overall = _rollup(items)
     failures = [fi.name for fi in items if fi.status == "fail"]

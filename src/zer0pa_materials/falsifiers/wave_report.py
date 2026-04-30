@@ -262,6 +262,33 @@ def generate_falsification_wave_report(
         lines.append("```")
         lines.append("")
 
+    # Wave F5 post-PRD recompute sweep.
+    if wave_result.recompute_sweep is not None:
+        sweep = wave_result.recompute_sweep
+        lines.append("## Wave F5 post-PRD recompute sweep")
+        lines.append("")
+        lines.append(
+            "After the 16 PRD cases, the runner feeds a **synthetic forged-"
+            "evidence chain** through every Wave D hardened recompute gate. "
+            "Each row below shows the gate, the status it returned for the "
+            "forged input, and whether the production wiring is alive."
+        )
+        lines.append("")
+        lines.append(
+            f"- **Forged chain caught:** `{sweep.forged_chain_caught}`  "
+            f"(at least 4 of 7 gates fail-tripped on the forged chain)"
+        )
+        lines.append(
+            f"- **Failed (correctly): {sweep.n_failed} / {sweep.n_total}**"
+        )
+        lines.append("")
+        lines.append("| Gate | Status (on forged input) | Rationale |")
+        lines.append("|---|---|---|")
+        for gate_name, item in sweep.gate_results.items():
+            r = (item.rationale or "").replace("|", "\\|")[:120]
+            lines.append(f"| `{gate_name}` | `{item.status}` | {r} |")
+        lines.append("")
+
     # Co-fire policy footnote.
     lines.append("## Documented co-fires (allowed extras)")
     lines.append("")

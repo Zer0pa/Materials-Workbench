@@ -59,7 +59,7 @@ L6 (generative crystal structure discovery) implements four generator adapters, 
 
 4. **`BlockedSourceManifest` for all real backends.** MatterGen, DiffCSP, and CrystaLLM emit `BlockedSourceManifest(blocker_reason="license_unverified")` when `L6_GENERATOR_BACKEND` requests the real backend. The stub path always activates on `"stub"` backend (the default).
 
-5. **Fixture path from falsification-wave tests is `parents[3]`.** Test files in `tests/falsification_wave/l6/` have `parents[3]` = repo root (`Materials Pipeline`). Initial drafts used `parents[4]` (one level too high, resolving to `/Users/zer0palab`). Corrected in `test_invalid_cif.py` and `test_duplicate_candidate.py`.
+5. **Fixture path from falsification-wave tests is now via `read_fixture()`.** Test files in `tests/falsification_wave/l6/` originally used `Path(__file__).parents[N]` arithmetic which depended on per-machine layout. The Wave A `repo_root` helper plus `read_fixture(...)` replaces all such arithmetic; tests no longer depend on absolute paths.
 
 6. **`pymatgen_structure_matcher` always returns `"inconclusive"`.** The function gracefully handles both "pymatgen absent" and "pymatgen present but no reference Structure objects" cases by returning `status="inconclusive"` with `actual={"status": "parked_pending_pymatgen"}`. No external dependency is required.
 

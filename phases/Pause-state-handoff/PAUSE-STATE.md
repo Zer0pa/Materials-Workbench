@@ -108,7 +108,7 @@ The PRD §CPU-First Build Sequence requires steps 12–16 still:
 - GitHub canonical: https://github.com/Zer0pa/Materials
 - gh CLI authenticated as Zer0pa-Architect-Prime
 - git config: user.name=Zer0pa-Architect-Prime, user.email=architects@zer0pa.ai
-- Working dir: `/Users/zer0palab/Materials Pipeline/`
+- Working dir: clone of `https://github.com/Zer0pa/Materials.git` (the central `zer0pa_materials.repo_root.repo_root()` helper resolves the path on any machine; do not hardcode absolute paths)
 - Python venv: `.venv/` (Python 3.13.12)
 - Package: editable-installed via `pip install -e .`
 

@@ -377,6 +377,16 @@ class ThermoelectricPacketAssembler:
         )
 
         # ---- L6 known-control envelope --------------------------------------
+        # Wave F5: pass the raw CIF text from the fixture so the L6
+        # recompute (novelty_status_gate_recomputed) can hash from raw
+        # evidence and match the claimed structure_hash.
+        l6_cif_text: str | None = None
+        try:
+            l6_cif_path = Path(spec.structure_path)
+            if l6_cif_path.is_file():
+                l6_cif_text = l6_cif_path.read_text(encoding="utf-8")
+        except OSError:
+            l6_cif_text = None
         l6_env = l6_known_control_envelope(
             candidate_id=candidate_id,
             campaign_id=campaign_id,
@@ -384,6 +394,7 @@ class ThermoelectricPacketAssembler:
             candidate_uri=spec.candidate_uri,
             novelty_status="duplicate",
             matched_in=("MP",),
+            cif_text=l6_cif_text,
         )
 
         # ---- L2 ensemble ----------------------------------------------------

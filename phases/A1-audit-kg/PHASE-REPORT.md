@@ -90,7 +90,7 @@ Plus the existing 157 A0 tests still pass — full unit suite is 588 passed (the
 
 7. **`ReasonerTuple` + `enforce_reuse_scope_export`.** L7 emits one `ReasonerTuple` per candidate evaluation. Default `reuse_scope = "tenant_only"`; the gate fires when a tenant-only tuple is requested for a wider-scope corpus.
 
-8. **`reconstruct_from_repo(repo_root)` — the brain-functionality entry.** A fresh agent on a new shell calls `reconstruct_from_repo(Path("/Users/zer0palab/Materials Pipeline"))` and gets a `CampaignState` with `next_actions` derived from the audit chains. Chain integrity errors come first; then open falsifiers; then pending decisions; then holding tuples; then "all clean — proceed".
+8. **`reconstruct_from_repo(repo_root)` — the brain-functionality entry.** A fresh agent on a new shell calls `reconstruct_from_repo(repo_root())` (using the central `zer0pa_materials.repo_root.repo_root()` helper, NOT a hardcoded absolute path) and gets a `CampaignState` with `next_actions` derived from the audit chains. Chain integrity errors come first; then open falsifiers; then pending decisions; then holding tuples; then "all clean — proceed".
 
 9. **CLI surface stable.** Subagents and the orchestrator can run:
    - `zer0pa-materials audit add-source ...`

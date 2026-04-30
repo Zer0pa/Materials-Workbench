@@ -448,6 +448,27 @@ class BatteryPacketAssembler:
         )
 
         # ---- L6 known-control / novel-seed envelope ---------------------------
+        # Wave F5: pass the raw CIF text from the fixture so the L6
+        # recompute (novelty_status_gate_recomputed) can hash from raw
+        # evidence and match the claimed structure_hash. For novel-seed
+        # candidates, also pre-declare placeholder back-edges to L1/L2/
+        # ionic so the recompute pipeline accepts the "novel" claim;
+        # the audit-record-ids are filled in after the corresponding
+        # envelopes are built.
+        l6_cif_text: str | None = None
+        try:
+            l6_cif_path = Path(spec.structure_path)
+            if l6_cif_path.is_file():
+                l6_cif_text = l6_cif_path.read_text(encoding="utf-8")
+        except OSError:
+            l6_cif_text = None
+        l6_back_edges: tuple[dict[str, str], ...] = ()
+        if spec.novelty_status == "novel":
+            l6_back_edges = (
+                {"layer": "L1", "audit_record_id": f"audit:l6_back_edge:L1:{candidate_id}"},
+                {"layer": "L2", "audit_record_id": f"audit:l6_back_edge:L2:{candidate_id}"},
+                {"layer": "ionic", "audit_record_id": f"audit:l6_back_edge:ionic:{candidate_id}"},
+            )
         l6_env = l6_known_control_envelope(
             candidate_id=candidate_id,
             campaign_id=campaign_id,
@@ -455,6 +476,8 @@ class BatteryPacketAssembler:
             candidate_uri=spec.candidate_uri,
             novelty_status=spec.novelty_status,
             matched_in=spec.matched_in,
+            cif_text=l6_cif_text,
+            back_edges=l6_back_edges,
         )
 
         # ---- L2 ensemble (DPA-3 + MACE) --------------------------------------

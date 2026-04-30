@@ -71,7 +71,43 @@ __all__ = [
     "FalsificationWaveRunner",
     "DEFAULT_CASES",
     "WAVE_CASE_ORDER",
+    "RecomputeSweepResult",
 ]
+
+
+# ---------------------------------------------------------------------------
+# Wave F5: post-PRD recompute sweep result type
+# ---------------------------------------------------------------------------
+
+
+@dataclass
+class RecomputeSweepResult:
+    """Result of running every Wave D recompute gate over a sentinel chain.
+
+    Attributes
+    ----------
+    gate_results
+        ``{gate_name: FalsifierItem}`` for each Wave D gate that ran.
+    forged_chain_caught
+        Aggregate verdict: did the sentinel forged-evidence chain make
+        ANY recompute gate trip with status="fail"? If True, the wiring
+        is alive.
+    sentinel_kind
+        ``"forged"`` (the deliberate-failure chain) or ``"clean"``
+        (a positive control).
+    """
+
+    gate_results: dict[str, FalsifierItem] = field(default_factory=dict)
+    forged_chain_caught: bool = False
+    sentinel_kind: str = "forged"
+
+    @property
+    def n_failed(self) -> int:
+        return sum(1 for it in self.gate_results.values() if it.status == "fail")
+
+    @property
+    def n_total(self) -> int:
+        return len(self.gate_results)
 
 
 # ---------------------------------------------------------------------------
@@ -185,6 +221,8 @@ class FalsificationWaveResult:
     total_falsifier_rows_written: int = 0
     total_decision_rows_written: int = 0
     kg_node_count_after: int = 0
+    # Wave F5: post-PRD recompute sweep over the sentinel forged chain.
+    recompute_sweep: RecomputeSweepResult | None = None
 
     @property
     def cases_correct(self) -> int:
@@ -1112,7 +1150,16 @@ class FalsificationWaveRunner:
     # ---- batch run ---------------------------------------------------------
 
     def run_all(self, fixtures_root: str | Path) -> FalsificationWaveResult:
-        """Run every case in :attr:`cases` and return the aggregate result."""
+        """Run every case in :attr:`cases` and return the aggregate result.
+
+        Wave F5: after the 16 PRD cases, run an additional **post-PRD
+        recompute sweep** of the seven Wave D hardened gates against a
+        synthetic forged-evidence chain. The sweep verifies that the
+        production wiring is alive: each forged envelope must trip its
+        corresponding recompute gate with ``status="fail"``. The result
+        is stored under :attr:`FalsificationWaveResult.recompute_sweep`
+        and surfaced in the wave report.
+        """
         root = Path(fixtures_root).resolve()
         started_at = _utc_now()
 
@@ -1125,6 +1172,41 @@ class FalsificationWaveRunner:
         for case in self.cases:
             case_result = self.run_one(case, root)
             result.case_results.append(case_result)
+
+        # Wave F5: post-PRD recompute sweep.
+        try:
+            sweep = self._run_recompute_sweep()
+        except Exception as exc:  # noqa: BLE001 — keep wave finalisation idempotent
+            sweep = RecomputeSweepResult(
+                gate_results={},
+                forged_chain_caught=False,
+                sentinel_kind="error",
+            )
+            sweep.gate_results["wave_f5.sweep_error"] = FalsifierItem(
+                name="wave_f5.sweep_error",
+                threshold="recompute sweep runs to completion",
+                actual={"error": f"{type(exc).__name__}: {exc}"[:240]},
+                status="fail",
+            )
+        # Persist each sweep result as a falsifiers.jsonl row so the
+        # ledger holds the post-PRD evidence too.
+        for gate_name, item in sweep.gate_results.items():
+            payload = {
+                "case": "wave_f5.recompute_sweep",
+                "expected_layer": gate_name.split(".", 1)[0],
+                "target_falsifier": gate_name,
+                "research_boundary": RESEARCH_BOUNDARY,
+                "name": item.name,
+                "threshold": item.threshold,
+                "actual": item.actual,
+                "status": item.status,
+                "rationale": item.rationale,
+            }
+            try:
+                self.audit_log.append_event("falsifiers", payload)
+            except Exception:  # noqa: BLE001 — best-effort
+                pass
+        result.recompute_sweep = sweep
 
         result.finished_at = _utc_now()
 
@@ -1143,6 +1225,159 @@ class FalsificationWaveRunner:
                 result.kg_node_count_after = 0
 
         return result
+
+    # ---- Wave F5: post-PRD recompute sweep ---------------------------------
+
+    def _run_recompute_sweep(self) -> RecomputeSweepResult:
+        """Build a forged-evidence sentinel chain and run every Wave D gate.
+
+        Each recompute gate is fed an envelope/chain that should trip it.
+        The aggregate ``forged_chain_caught`` is True when at least four
+        of the seven gates fired (the threshold for "wiring is alive";
+        some gates depend on filesystem state we don't control here).
+        """
+        from zer0pa_materials.falsifiers.l2_falsifiers import (
+            dpa_mace_disagreement_routing_recomputed,
+        )
+        from zer0pa_materials.falsifiers.l3_falsifiers import (
+            verify_l3_sovereign_block_enforced,
+        )
+        from zer0pa_materials.falsifiers.l5_falsifiers import (
+            verify_l5_artifact_sidecar,
+        )
+        from zer0pa_materials.falsifiers.l6_falsifiers import (
+            novelty_status_gate_recomputed,
+        )
+        from zer0pa_materials.falsifiers.ionic_falsifiers import (
+            neb_barrier_range_check,
+            verify_ionic_service_back_edge,
+        )
+        from zer0pa_materials.falsifiers.phase0_falsifiers import (
+            verify_source_manifest_linkage,
+        )
+        from zer0pa_materials.falsifiers.raw_evidence import (
+            llzo_cubic_reference_structure,
+        )
+        from zer0pa_materials.envelope.hashing import structure_hash
+
+        sweep = RecomputeSweepResult(sentinel_kind="forged")
+
+        # 1. Forged L2 envelope: predictions imply 100 meV/atom, claim 5
+        forged_l2 = {
+            "output": {
+                "predictions": [
+                    {
+                        "model": "DPA-3.1-3M",
+                        "energy_eV_per_atom": -5.0,
+                        "force_rmse_eV_per_Ang": 0.05,
+                    },
+                    {
+                        "model": "MACE-MPA-0",
+                        "energy_eV_per_atom": +5.0,  # 10 eV diff = 10000 meV/atom
+                        "force_rmse_eV_per_Ang": 0.06,
+                    },
+                ],
+                "energy_disagreement_meV_per_atom": 5.0,  # forged
+                "force_rmse_disagreement_eV_per_Ang": 0.01,
+                "routing_decision": "promote",  # forged
+            }
+        }
+        sweep.gate_results["l2.recomputed"] = (
+            dpa_mace_disagreement_routing_recomputed(forged_l2)
+        )
+
+        # 2. Forged source manifest: refs that don't resolve.
+        forged_phase0 = {
+            "layer": "L2",
+            "audit": {
+                "audit_record_id": "audit:wave_f5/forged-phase0",
+                "input_hash": "sha256:" + "0" * 64,
+                "output_hash": "sha256:" + "0" * 64,
+                "source_manifest_refs": ["src:fabricated:fake"],
+            },
+        }
+        sweep.gate_results["phase0.source_manifest_linkage"] = (
+            verify_source_manifest_linkage(forged_phase0, [])
+        )
+
+        # 3. Forged L6 novelty: claims novel but the structure is in the
+        #    reference set.
+        llzo_struct = llzo_cubic_reference_structure()
+        ref_hash = structure_hash(llzo_struct)
+        forged_l6 = {
+            "candidate_id": "candidate:wave_f5/forged-novel",
+            "layer": "L6",
+            "output": {
+                "structure": llzo_struct,
+                "novelty_status": "novel",  # forged
+            },
+            "back_edges": [
+                {"layer": "L1", "audit_record_id": "audit:wave_f5/L1"},
+                {"layer": "ionic", "audit_record_id": "audit:wave_f5/ionic"},
+                {"layer": "L2", "audit_record_id": "audit:wave_f5/L2"},
+            ],
+        }
+        sweep.gate_results["l6.novelty_recomputed"] = novelty_status_gate_recomputed(
+            forged_l6, reference_set={ref_hash}
+        )
+
+        # 4. Forged ionic back-edge: claims conductivity but the
+        #    audit_record_id does not resolve.
+        forged_ionic = {
+            "ionic_conductivity_S_per_cm": 5e-3,
+            "output": {"nernst_einstein_conductivity_S_per_cm": 5e-3},
+            "back_edges": [
+                {"layer": "ionic", "audit_record_id": "audit:wave_f5/forged-ionic"},
+            ],
+        }
+        sweep.gate_results["ionic.back_edge_resolves"] = (
+            verify_ionic_service_back_edge(forged_ionic, [])
+        )
+
+        # 5. Forged NEB barrier: outside literature band.
+        forged_neb = {
+            "output": {
+                "migration_barrier_eV": 5.0,  # > 3.0 max
+                "nernst_einstein_conductivity_S_per_cm": 1e-3,
+            }
+        }
+        sweep.gate_results["ionic.neb_barrier_range"] = neb_barrier_range_check(
+            forged_neb
+        )
+
+        # 6. Forged L5 artifact sidecar: URI points at a non-existent file.
+        forged_l5 = {
+            "_artifact_sidecars": [
+                {
+                    "format": "vtk",
+                    "uri": "file:///tmp/wave_f5_does_not_exist.vtk",
+                    "sha256": "sha256:" + "0" * 64,
+                    "units": {"x": "m"},
+                }
+            ]
+        }
+        sweep.gate_results["l5.artifact_sidecar"] = verify_l5_artifact_sidecar(
+            forged_l5
+        )
+
+        # 7. Forged L3 sovereign block: claims PhaseForgePlus but no enable
+        #    decision exists in decisions.jsonl. We pass an empty audit_log
+        #    so the lookup fails by construction.
+        forged_l3 = {
+            "tool_adapter": {"name": "PhaseForgePlusAdapter", "version": "0.0.1"},
+            "_phaseforgeplus_meta": {"enabled": True, "repo": "fake/repo"},
+        }
+        sweep.gate_results["l3.sovereign_block_enforced"] = (
+            verify_l3_sovereign_block_enforced(forged_l3, [])
+        )
+
+        # Aggregate verdict: at least four gates fired (the threshold for
+        # "wiring is alive"). All seven SHOULD fire; if some don't, the
+        # report flags it but the wave is not invalidated.
+        n_failed = sum(1 for it in sweep.gate_results.values() if it.status == "fail")
+        sweep.forged_chain_caught = n_failed >= 4
+
+        return sweep
 
 
 # ---------------------------------------------------------------------------

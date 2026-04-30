@@ -14,7 +14,7 @@ Research infrastructure for in silico materials science discovery. Outputs are r
 
 REPOSITORY
 Primary: https://github.com/Zer0pa/Materials  (visibility: internal; use authenticated `gh` CLI or token)
-Local fallback (originating machine only): /Users/Zer0pa/Materials Portfolio/_materials-repo/
+Local fallback (originating machine only): operator-private path; do not record absolute paths in committed artifacts. The GitHub repo is canonical across machines.
 
 If you have access to the local fallback path, prefer it for read speed. Always commit and push to GitHub for handoff. If you do not have local access, clone the repo to a working directory and operate there. The GitHub repo is canonical.
 

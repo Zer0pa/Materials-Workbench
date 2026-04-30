@@ -125,21 +125,68 @@ def test_precheck_uma_hf_gate_records_manifest_pending(tmp_path, monkeypatch):
 
 
 def test_precheck_uma_hf_gate_passes_when_manifest_and_creds_present(tmp_path, monkeypatch):
-    """When UMA env vars set AND manifest exists with aup_accepted_at → P2 True."""
+    """When UMA env vars set AND a fully-valid manifest exists → P2 True.
+
+    Wave F.6 hardening: the precheck now delegates to
+    :func:`zer0pa_materials.falsifiers.uma_manifest.verify_uma_manifest`
+    which schema-validates against ``UmaAupLicenseManifest``, recomputes
+    the manifest hash, and rejects placeholder values.  A *minimal*
+    manifest with just ``aup_accepted_at`` is no longer enough.
+
+    This test feeds the canonical Wave D template (which is an
+    intentional working-shape example committed at
+    ``phases/UMA-license/manifest.template.json``) so the precheck
+    correctly returns True.
+    """
+    from zer0pa_materials.falsifiers.uma_manifest import (
+        RESTRICTED_JURISDICTIONS,  # noqa: F401 — informational
+        UmaAupLicenseManifest,
+        compute_manifest_hash,
+    )
+
     fake_root = _make_fake_repo_root(tmp_path)
     monkeypatch.setenv("ZER0PA_MATERIALS_REPO_ROOT", str(fake_root))
 
     uma_dir = fake_root / "phases" / "UMA-license"
     uma_dir.mkdir(parents=True, exist_ok=True)
+
+    # Build a fully-valid manifest (ZA jurisdiction is unrestricted under
+    # FAIR-CL-v1; all flags True; canonical hash recomputed).
+    fields = {
+        "manifest_version": "zer0pa.uma.aup.v1",
+        "research_boundary": (
+            "Research infrastructure for in silico materials science discovery. "
+            "Outputs are research artifacts. No regulatory certification claims. "
+            "No clinical or human-subject use. ITAR / weapons applications are "
+            "out of scope (Meta UMA Acceptable Use Policy and operator policy)."
+        ),
+        "library_license_spdx": "MIT",
+        "weights_license": "FAIR-Chemistry-License-v1",
+        "hf_organization": "fair-chem",
+        "hf_organization_verified_at": "2026-04-30T11:00:00+00:00",
+        "aup_accepted_at": "2026-04-30T12:00:00+00:00",
+        "aup_accepted_by": "operator@zer0pa.ai",
+        "geographic_jurisdiction": "ZA",
+        "geographic_jurisdiction_verified_against_aup": True,
+        "fairchem_repo_commit": None,
+        "derivative_works_ownership_acknowledged": True,
+        "audit_record_id": "audit:test:000000000000",
+    }
+    fields["hash"] = compute_manifest_hash(fields)
+    # Round-trip via the model so we know the schema accepts it.
+    UmaAupLicenseManifest.model_validate(fields)
     (uma_dir / "manifest.json").write_text(
-        json.dumps({"aup_accepted_at": "2026-04-30T12:00:00+00:00"}),
-        encoding="utf-8",
+        json.dumps(fields, indent=2, sort_keys=True), encoding="utf-8"
     )
 
     cfg = _cfg(UMA_HF_ORG="fair-chem", UMA_HF_TOKEN="t")
     report = RunpodCutover(config=cfg).precheck(fast=True, persist=False)
-    assert report.preconditions["uma_hf_aup_gate"] is True
-    assert "aup_accepted_at" in report.evidence["uma_hf_aup_gate"]
+    assert report.preconditions["uma_hf_aup_gate"] is True, (
+        f"P2 expected True; evidence: {report.evidence['uma_hf_aup_gate']}"
+    )
+    # Evidence wording is from the new verify_uma_manifest path.
+    ev = report.evidence["uma_hf_aup_gate"]
+    assert "verified by verify_uma_manifest" in ev or "status=pass" in ev
 
 
 # ---------------------------------------------------------------------------

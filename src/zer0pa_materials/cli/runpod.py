@@ -30,6 +30,7 @@ from rich.table import Table
 
 from zer0pa_materials.boundary import RESEARCH_BOUNDARY
 from zer0pa_materials.envelope.config import MaterialsConfig
+from zer0pa_materials.repo_root import phase_dir, repo_root
 from zer0pa_materials.runpod.cutover import RunpodCutover, SENTINEL_SEEDS
 from zer0pa_materials.runpod.hard_failures import HardFailureDetector
 from zer0pa_materials.runpod.mock_backends import build_runpod_mock_envelope, RUNPOD_MOCK_LAYERS
@@ -48,10 +49,13 @@ runpod_app = typer.Typer(
 )
 console = Console()
 
-_REPO_ROOT = Path(__file__).parents[4]
-_PHASES_DIR = _REPO_ROOT / "phases" / "Runpod-cutover"
-_DOCS_DIR = _REPO_ROOT / "docs"
-_RUNBOOK_PATH = _DOCS_DIR / "RUNPOD-CUTOVER.md"
+
+def _runpod_phases_dir() -> Path:
+    return phase_dir("Runpod-cutover")
+
+
+def _runbook_path() -> Path:
+    return repo_root() / "docs" / "RUNPOD-CUTOVER.md"
 
 
 @runpod_app.command("precheck")
@@ -113,7 +117,7 @@ def sentinel(
     report = cutover.run_sentinel_campaign(backend=backend)
 
     # Write Markdown report.
-    out_dir = Path(output_dir) if output_dir else _PHASES_DIR
+    out_dir = Path(output_dir) if output_dir else _runpod_phases_dir()
     out_dir.mkdir(parents=True, exist_ok=True)
     report_path = out_dir / "sentinel-report.md"
     _write_sentinel_md(report, report_path)
@@ -143,24 +147,28 @@ def parity(
     ] = False,
 ) -> None:
     """Run the parity test suite (tests/parity/) and print results."""
-    parity_dir = _REPO_ROOT / "tests" / "parity"
+    repo = repo_root()
+    parity_dir = repo / "tests" / "parity"
     if not parity_dir.exists():
         console.print(f"[red]Parity test directory not found: {parity_dir}[/red]")
         raise typer.Exit(code=1)
 
-    python = _REPO_ROOT / ".venv" / "bin" / "python"
-    cmd = [str(python), "-m", "pytest", str(parity_dir), "-v", "--tb=short"]
+    # Use the running interpreter so the command works whether the user
+    # runs from .venv or any other Python environment that has the
+    # package installed.
+    python = sys.executable
+    cmd = [python, "-m", "pytest", str(parity_dir), "-v", "--tb=short"]
     if not verbose:
         cmd.extend(["-q"])
 
     console.print(f"[bold]Running parity tests: {' '.join(cmd[-3:])}[/bold]")
-    result = subprocess.run(cmd, capture_output=not verbose, text=True)
+    result = subprocess.run(cmd, capture_output=not verbose, text=True, cwd=str(repo))
 
     if not verbose:
         lines = (result.stdout or "") + (result.stderr or "")
         console.print(lines[-3000:] if len(lines) > 3000 else lines)
 
-    out_dir = Path(output_dir) if output_dir else _PHASES_DIR
+    out_dir = Path(output_dir) if output_dir else _runpod_phases_dir()
     out_dir.mkdir(parents=True, exist_ok=True)
     parity_report_path = out_dir / "parity-result.txt"
     parity_report_path.write_text(
@@ -177,7 +185,7 @@ def parity(
 
 @runpod_app.command("hard-failures")
 def hard_failures(
-    repo_root: Annotated[
+    repo_root_override: Annotated[
         Optional[str],
         typer.Option("--repo-root", help="Repo root for bulk-dataset scan."),
     ] = None,
@@ -193,7 +201,7 @@ def hard_failures(
     """Run all 10 hard-failure detectors against the current state."""
     detector = HardFailureDetector()
     cfg = MaterialsConfig.from_env()
-    repo = Path(repo_root) if repo_root else _REPO_ROOT
+    repo = Path(repo_root_override) if repo_root_override else repo_root()
     results = []
 
     # Build a sample envelope for envelope-level detectors.
@@ -258,8 +266,9 @@ def hard_failures(
 @runpod_app.command("cutover-runbook")
 def cutover_runbook() -> None:
     """Print the operator runbook (docs/RUNPOD-CUTOVER.md)."""
-    if _RUNBOOK_PATH.exists():
-        console.print(_RUNBOOK_PATH.read_text(encoding="utf-8"))
+    runbook_path = _runbook_path()
+    if runbook_path.exists():
+        console.print(runbook_path.read_text(encoding="utf-8"))
     else:
         console.print(
             "[yellow]docs/RUNPOD-CUTOVER.md not found. "

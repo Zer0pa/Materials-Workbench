@@ -39,16 +39,57 @@ out of scope (Meta UMA Acceptable Use Policy and operator policy).
 
 from __future__ import annotations
 
-from typing import Any, Final, Literal
+from typing import Any, Callable, Final, Literal
 
 import httpx
-from tenacity import (
-    RetryError,
-    retry,
-    retry_if_exception_type,
-    stop_after_attempt,
-    wait_exponential,
-)
+
+# tenacity is in the [runpod] extra; without it, retries are disabled and a
+# clear error tells the operator to install the extra. Importing lazily here
+# means a `pip install -e ".[dev]"` install still imports this module
+# successfully — only invoking the real REST client without [runpod]
+# installed raises. The previous eager import broke test collection.
+try:
+    from tenacity import (
+        RetryError,
+        retry,
+        retry_if_exception_type,
+        stop_after_attempt,
+        wait_exponential,
+    )
+    _TENACITY_AVAILABLE = True
+except ImportError:  # pragma: no cover - exercised in [dev]-only installs
+    _TENACITY_AVAILABLE = False
+
+    class RetryError(Exception):  # type: ignore[no-redef]
+        """Stand-in surfaced when tenacity is not installed.
+
+        The real ``tenacity.RetryError`` is raised when a retry envelope
+        exhausts.  In [dev]-only installs we cannot retry; if a caller
+        reaches this point it means the production REST path was invoked
+        without the [runpod] extra installed, which is a configuration
+        error to surface, not silently mask.
+        """
+
+    def retry(*args: Any, **kwargs: Any) -> Callable[[Callable[..., Any]], Callable[..., Any]]:  # type: ignore[no-redef]
+        """No-op decorator surfaced when tenacity is not installed.
+
+        Returns the function unchanged; calls into the REST client without
+        retries.  Production deployments MUST install ``[runpod]`` so the
+        real retry envelope is active — see ``RunpodRestClient.__init__``.
+        """
+        def deco(fn: Callable[..., Any]) -> Callable[..., Any]:
+            return fn
+        return deco
+
+    def retry_if_exception_type(*args: Any, **kwargs: Any) -> None:  # type: ignore[no-redef]
+        return None
+
+    def stop_after_attempt(*args: Any, **kwargs: Any) -> None:  # type: ignore[no-redef]
+        return None
+
+    def wait_exponential(*args: Any, **kwargs: Any) -> None:  # type: ignore[no-redef]
+        return None
+
 
 from zer0pa_materials.boundary import RESEARCH_BOUNDARY
 
@@ -162,6 +203,19 @@ class RunpodRestClient:
         # canonical injection point.  Production code passes ``None`` and
         # gets the default sync transport (real network).
         self._transport = transport
+
+        if not _TENACITY_AVAILABLE:
+            # Honest surface: tell the operator the [runpod] extra is required.
+            # Construction still succeeds so unit tests exercising the schema
+            # of a "configured" client (without actually calling) still work.
+            import warnings
+            warnings.warn(
+                "tenacity is not installed; Runpod REST retries are disabled. "
+                "Install with: pip install -e '.[runpod]' before invoking "
+                "RunpodRestClient.call() in production.",
+                RuntimeWarning,
+                stacklevel=2,
+            )
 
     # ------------------------------------------------------------------
     # Public API
