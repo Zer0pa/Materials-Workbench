@@ -16,6 +16,12 @@ dist/
 audit/runtime/*.jsonl
 !audit/runtime/.gitkeep
 
+# File-lock files used for atomic JSONL append concurrency control.
+# These are runtime concurrency artifacts; they MUST NOT be committed.
+*.lock
+.*.jsonl.lock
+audit/**/.*.lock
+
 # Env
 .env
 .env.local
