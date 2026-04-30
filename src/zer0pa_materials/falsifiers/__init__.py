@@ -25,6 +25,16 @@ from zer0pa_materials.falsifiers.l6_falsifiers import (
     structure_hash_dedupe,
     valid_cif_only,
 )
+from zer0pa_materials.falsifiers.l3_falsifiers import (
+    commercial_tdb_provider_disabled_by_default,
+    espei_posterior_diagnostics,
+    phase_boundary_drift,
+    phase_fraction_js_divergence,
+    phase_set_jaccard_distance,
+    phaseforgeplus_license_gate,
+    tdb_parses_in_pycalphad,
+    tdb_quarantine_breach,
+)
 
 __all__ = [
     # phase0
@@ -36,6 +46,15 @@ __all__ = [
     "reject_unit_unparseable",
     "reject_unresolved_contradiction",
     "assert_kg_nodes_for",
+    # l3
+    "tdb_parses_in_pycalphad",
+    "phase_boundary_drift",
+    "phase_set_jaccard_distance",
+    "phase_fraction_js_divergence",
+    "espei_posterior_diagnostics",
+    "tdb_quarantine_breach",
+    "phaseforgeplus_license_gate",
+    "commercial_tdb_provider_disabled_by_default",
     # l6
     "InvalidCifError",
     "ChargeNeutralityError",

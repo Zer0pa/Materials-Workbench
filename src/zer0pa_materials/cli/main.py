@@ -46,6 +46,8 @@ from zer0pa_materials.audit import (
 from zer0pa_materials.cli.phase0 import phase0_app  # phase0 wave (kept)
 from zer0pa_materials.cli.l6 import l6_app  # l6 wave (kept)
 from zer0pa_materials.cli.ionic import app as ionic_app  # ionic wave
+from zer0pa_materials.cli.l3 import l3_app  # l3 wave
+from zer0pa_materials.cli.l4 import l4_app  # l4 wave
 from zer0pa_materials.envelope import (
     LAYER_OUTPUT_REGISTRY,
     Envelope,
@@ -256,6 +258,8 @@ def audit_reconstruct(
 app.add_typer(phase0_app, name="phase0")
 app.add_typer(l6_app, name="l6")
 app.add_typer(ionic_app, name="ionic")
+app.add_typer(l3_app, name="l3")
+app.add_typer(l4_app, name="l4")
 
 # Allow ``python -m zer0pa_materials.cli.main`` invocation.
 if __name__ == "__main__":  # pragma: no cover
