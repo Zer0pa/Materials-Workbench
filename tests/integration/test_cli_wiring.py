@@ -33,6 +33,9 @@ WIRED_LAYERS: tuple[str, ...] = (
     "l3",
     "l4",
     "l5",
+    "l7",
+    "packets",
+    "runpod",
 )
 
 
