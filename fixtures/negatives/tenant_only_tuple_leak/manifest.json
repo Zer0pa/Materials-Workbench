@@ -1,0 +1,21 @@
+{
+  "research_boundary": "Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).",
+  "fixture_id": "fixture:tenant_only_tuple_leak:negative",
+  "name": "Tenant-scoped reasoner tuple inside shared_learning bundle",
+  "kind": "negative",
+  "purpose": "Trigger the data-sovereignty falsifier 'tenant_only_tuple_leak' (PRD §Self-Bootstrapping Reasoner; PRD §Falsification wave 'private tuple reuse outside reuse_scope').",
+  "sources": [
+    {
+      "type": "operator",
+      "locator": "synthetic-fixture",
+      "license": "internal"
+    }
+  ],
+  "expected_use_layers": ["L7"],
+  "structure_hash": null,
+  "size_bytes": 1213,
+  "novelty_status": "deliberate_violation",
+  "negative_falsifier_target": "tenant_only_tuple_leak",
+  "verified": false,
+  "notes": "export_bundle='shared_learning' with embedded tuples[0].reuse_scope='tenant_only'. Falsifier rule: bundle's classification must be a superset of every tuple's reuse_scope authorisation."
+}

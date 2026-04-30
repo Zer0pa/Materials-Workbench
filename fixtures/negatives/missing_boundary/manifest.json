@@ -1,0 +1,21 @@
+{
+  "research_boundary": "Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).",
+  "fixture_id": "fixture:missing_boundary:negative",
+  "name": "Envelope with non-verbatim boundary block",
+  "kind": "negative",
+  "purpose": "Trigger the boundary falsifier 'missing boundary block' (PRD §Falsification wave). The envelope JSON has a research_boundary field that is NOT the verbatim canonical block.",
+  "sources": [
+    {
+      "type": "operator",
+      "locator": "synthetic-fixture",
+      "license": "internal"
+    }
+  ],
+  "expected_use_layers": ["L7"],
+  "structure_hash": null,
+  "size_bytes": 863,
+  "novelty_status": "deliberate_violation",
+  "negative_falsifier_target": "missing_boundary",
+  "verified": false,
+  "notes": "Note: the manifest itself carries the verbatim boundary so the manifest test passes, but the embedded envelope.json carries a wrong boundary so the boundary-falsifier triggers when the envelope is fed through assert_boundary."
+}

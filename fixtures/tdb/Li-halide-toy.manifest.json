@@ -1,0 +1,21 @@
+{
+  "research_boundary": "Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).",
+  "fixture_id": "fixture:tdb-Li-halide-toy:tdb",
+  "name": "Toy Li-Cl halide CALPHAD database",
+  "kind": "tdb",
+  "purpose": "Battery sidecar TDB fixture for the L3 halide-electrolyte arm (PRD §Scope Li-Mg-Zr-Cl seed; PRD §L3 'produced TDB must parse in pycalphad').",
+  "sources": [
+    {
+      "type": "operator",
+      "locator": "synthetic-fixture (Li-Cl toy)",
+      "license": "internal"
+    }
+  ],
+  "expected_use_layers": ["L3"],
+  "structure_hash": null,
+  "size_bytes": 1671,
+  "novelty_status": "synthetic_known",
+  "negative_falsifier_target": null,
+  "verified": false,
+  "notes": "DELIBERATELY synthetic. Two phases: LIQUID with one excess term and LICL_RS (rocksalt). Schema and syntax follow standard TDB conventions. pycalphad parses this TDB cleanly when installed; parser-only syntactic test runs without pycalphad."
+}

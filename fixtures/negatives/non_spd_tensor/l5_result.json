@@ -1,0 +1,23 @@
+{
+  "research_boundary": "Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).",
+  "tensors": [
+    {
+      "name": "stiffness_C_3x3",
+      "spd": false,
+      "eigvals_min": -0.42
+    }
+  ],
+  "_synthetic_C_3x3": [
+    [ 100.0,  90.0,  80.0],
+    [  90.0,  10.0,   5.0],
+    [  80.0,   5.0,   2.0]
+  ],
+  "analytic_heat_slab_error": 1.0e-9,
+  "elastic_patch_residual": 1.0e-12,
+  "fenicsx_vs_dealii_strain_energy_disagreement_pct": 0.05,
+  "openfoam_poiseuille_error_pct": 0.0,
+  "cfd_mass_balance_error": 0.0,
+  "cfd_heat_balance_error": 0.0,
+  "artifact_uris": [],
+  "_note": "Synthetic L5 envelope. The 3x3 'stiffness' tensor is symmetric but NOT positive-definite — its smallest eigenvalue is negative (~ -0.42). The L5 falsifier 'tensors_spd' (PRD §L5: 'Reject non-SPD stiffness or conductivity tensors') MUST fail. All other L5 gates are passing values so only the SPD gate triggers."
+}

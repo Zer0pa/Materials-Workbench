@@ -1,0 +1,61 @@
+{
+  "$id": "urn:zer0pa:materials:L4.output.v1",
+  "additionalProperties": false,
+  "description": "Output of an L4 phase-field/kMC adapter (PRD \u00a7L4 gates).",
+  "properties": {
+    "allen_cahn_bounds_violation": {
+      "anyOf": [
+        {
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Allen Cahn Bounds Violation"
+    },
+    "cahn_hilliard_mass_drift": {
+      "anyOf": [
+        {
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Cahn Hilliard Mass Drift"
+    },
+    "microstructure_trajectory_uri": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Artifact URI for the microstructure trajectory.",
+      "title": "Microstructure Trajectory Uri"
+    },
+    "spparks_potts_energy_monotonic": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "True iff energy non-increasing across dumps at T=0.",
+      "title": "Spparks Potts Energy Monotonic"
+    }
+  },
+  "title": "zer0pa.materials.L4.output.v1",
+  "type": "object"
+}

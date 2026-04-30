@@ -1,0 +1,21 @@
+{
+  "research_boundary": "Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).",
+  "fixture_id": "fixture:tdb_quarantine_breach:negative",
+  "name": "Manifest claiming commercial Thermo-Calc TDB with redistributable=true",
+  "kind": "negative",
+  "purpose": "Trigger the L3 quarantine falsifier 'tdb_quarantine_breach' (PRD §L3: 'Commercial TDB data must never be committed, copied into fixtures, redistributed, or used as general training data').",
+  "sources": [
+    {
+      "type": "operator",
+      "locator": "synthetic-fixture (tdb_claim.json described inside)",
+      "license": "internal"
+    }
+  ],
+  "expected_use_layers": ["L3"],
+  "structure_hash": null,
+  "size_bytes": 733,
+  "novelty_status": "deliberate_violation",
+  "negative_falsifier_target": "tdb_quarantine_breach",
+  "verified": false,
+  "notes": "The fixture is a CLAIM/manifest only — NO commercial TDB content is committed (that itself would violate the policy). The accompanying tdb_claim.json contains a fictitious manifest claiming `provider='ThermoCalc-TCFE9'`, `redistributable=true`, `license='proprietary'` — a contradiction the falsifier MUST detect."
+}

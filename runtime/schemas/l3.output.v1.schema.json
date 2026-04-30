@@ -1,0 +1,80 @@
+{
+  "$id": "urn:zer0pa:materials:L3.output.v1",
+  "additionalProperties": false,
+  "description": "Output of an L3 CALPHAD adapter (PRD \u00a7L3 gates).",
+  "properties": {
+    "equilibrium_phases": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Equilibrium Phases",
+      "type": "array"
+    },
+    "espei_diagnostics": {
+      "additionalProperties": true,
+      "description": "MCMC diagnostics: r_hat, ess, n_chains, n_samples, accept_rate, ...",
+      "title": "Espei Diagnostics",
+      "type": "object"
+    },
+    "fixture_phase_boundary_drift_K": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Drift vs fixture (K).",
+      "title": "Fixture Phase Boundary Drift K"
+    },
+    "phase_fraction_js_divergence": {
+      "anyOf": [
+        {
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "JS divergence vs reference distribution.",
+      "title": "Phase Fraction Js Divergence"
+    },
+    "phase_fraction_posterior": {
+      "additionalProperties": {
+        "type": "number"
+      },
+      "description": "Phase -> mean fraction in [0, 1].",
+      "title": "Phase Fraction Posterior",
+      "type": "object"
+    },
+    "phase_set_jaccard_distance": {
+      "anyOf": [
+        {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Jaccard distance to reference phase set.",
+      "title": "Phase Set Jaccard Distance"
+    },
+    "tdb_ref": {
+      "description": "URI/URN of the TDB used (read-only if commercial).",
+      "title": "Tdb Ref",
+      "type": "string"
+    }
+  },
+  "required": [
+    "tdb_ref"
+  ],
+  "title": "zer0pa.materials.L3.output.v1",
+  "type": "object"
+}

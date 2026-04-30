@@ -1,0 +1,43 @@
+{
+  "research_boundary": "Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).",
+  "extracted_properties": [
+    {
+      "property_name": "ionic_conductivity_room_temperature",
+      "value": 1.3e-3,
+      "unit": "S/cm",
+      "grounding": {
+        "doi": "10.1002/anie.200703900",
+        "page": 757,
+        "table": "Table 1",
+        "figure": null
+      },
+      "contradiction_flag": false
+    },
+    {
+      "property_name": "activation_energy",
+      "value": 0.16,
+      "unit": "eV",
+      "grounding": {
+        "doi": "10.1002/anie.200703900",
+        "page": 757,
+        "table": null,
+        "figure": "Figure 2"
+      },
+      "contradiction_flag": false
+    },
+    {
+      "property_name": "electrochemical_window_oxidation",
+      "value": 2.4,
+      "unit": "V",
+      "grounding": {
+        "doi": "10.1149/2.0291701jes",
+        "page": 1,
+        "table": null,
+        "figure": "Figure 3"
+      },
+      "contradiction_flag": false
+    }
+  ],
+  "units_normalised": true,
+  "contradictions_blocking": []
+}

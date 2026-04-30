@@ -1,0 +1,41 @@
+$ Toy Li-Cl halide CALPHAD database for fixture testing.
+$ DELIBERATELY synthetic and NOT a fitted parameterisation.
+$ Battery sidecar fixture (PRD §L3 + §Scope first seed); used to drive
+$ the L3 pipeline through the halide-electrolyte arm.
+$
+$ Source disclaimer: synthetic. Real Li-Cl thermodynamic descriptions are
+$ available in some commercial libraries (e.g., SGTE) and as research
+$ parameterisations in the literature; this toy file does NOT reproduce
+$ them. DO NOT use these parameters for real thermodynamic computation.
+
+ELEMENT  /-   ELECTRON_GAS              0.0          0.00      0.00       !
+ELEMENT  VA   VACUUM                    0.0          0.00      0.00       !
+ELEMENT  LI   BCC_A2                    6.941       4632.00     29.12      !
+ELEMENT  CL   ID-L_GAS                 35.453       9181.40    223.080     !
+
+FUNCTION GHSERLI 298.15
+  -10583.817+217.637482*T-38.940488*T*LN(T)+0.035466931*T**2-1.94937E-5*T**3
+  +159994*T**(-1);
+  453.6 Y
+  -559.328+10.4684*T-9.4366*T*LN(T)-1.62E-3*T**2;
+  3000 N !
+
+FUNCTION GHSERCL 298.15
+  -9594.194+86.041*T-25.85*T*LN(T)-1.5E-3*T**2;
+  3000 N !
+
+PHASE LIQUID  %  1  1.0  !
+   CONSTITUENT LIQUID  :LI,CL: !
+   PARAMETER G(LIQUID,LI;0)   298.15  +5104.30-12.5*T+GHSERLI;
+                              3000 N !
+   PARAMETER G(LIQUID,CL;0)   298.15  +3122.62-7.4*T+GHSERCL;
+                              3000 N !
+   PARAMETER L(LIQUID,LI,CL;0) 298.15  -98321.5+27.45*T;
+                              3000 N !
+
+PHASE LICL_RS  %  2  1.0  1.0  !
+$ rocksalt LiCl
+   CONSTITUENT LICL_RS  :LI:CL: !
+   PARAMETER G(LICL_RS,LI:CL;0) 298.15
+       -380000.00+96.0*T-13.4*T*LN(T)+GHSERLI+GHSERCL;
+       3000 N !

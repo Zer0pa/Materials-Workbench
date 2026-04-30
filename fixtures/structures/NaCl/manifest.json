@@ -1,0 +1,26 @@
+{
+  "research_boundary": "Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).",
+  "fixture_id": "fixture:NaCl:1b074e3a",
+  "name": "NaCl rocksalt 2-atom primitive cell",
+  "kind": "structure",
+  "purpose": "Ionic-conductor reference + L1.5 phonon smoke test fixture (rocksalt NaCl has well-characterised acoustic phonon dispersion).",
+  "sources": [
+    {
+      "type": "mp_id",
+      "locator": "mp-22862",
+      "license": "CC-BY-4.0"
+    },
+    {
+      "type": "paper",
+      "locator": "CRC Handbook of Chemistry and Physics 90th ed., NaCl crystallographic data",
+      "license": "operator-cited"
+    }
+  ],
+  "expected_use_layers": ["L1", "L1.5", "ionic"],
+  "structure_hash": "sha256:1b074e3a19b8bde5807f1b802eadc40120c076ec5fa9ac0fcce5cdbdb3cbf9ba",
+  "size_bytes": 894,
+  "novelty_status": "known",
+  "negative_falsifier_target": null,
+  "verified": false,
+  "notes": "Conventional cubic a = 5.6402 Å; primitive 2-atom rhombohedral representation. Na at (0,0,0); Cl at (1/2,1/2,1/2). Space group Fm-3m (#225)."
+}

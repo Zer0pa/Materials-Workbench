@@ -1,0 +1,21 @@
+{
+  "research_boundary": "Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).",
+  "fixture_id": "fixture:invalid_cif:negative",
+  "name": "Invalid CIF (deliberately malformed)",
+  "kind": "negative",
+  "purpose": "Trigger the L6 generative falsifier 'invalid CIF' (PRD §Falsification wave). Compounding violations: missing _cell_length_b AND mismatched loop column/data widths.",
+  "sources": [
+    {
+      "type": "operator",
+      "locator": "synthetic-fixture",
+      "license": "internal"
+    }
+  ],
+  "expected_use_layers": ["L6"],
+  "structure_hash": null,
+  "size_bytes": 614,
+  "novelty_status": "deliberate_violation",
+  "negative_falsifier_target": "invalid_cif",
+  "verified": false,
+  "notes": "MUST raise ValueError when fed to parse_minimal_cif. The fixture exists ONLY to verify the falsifier triggers correctly."
+}

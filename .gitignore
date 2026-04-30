@@ -1,0 +1,48 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+build/
+dist/
+
+# Audit runtime files (append-only logs are persisted in `audit/runtime/` ONLY for live runs;
+# committed audit fixtures live under `fixtures/audit/`).
+audit/runtime/*.jsonl
+!audit/runtime/.gitkeep
+
+# Env
+.env
+.env.local
+
+# Caches and large artifacts
+.cache/
+artifacts/runtime/
+runtime/cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Bulk artefacts (no-bulk-local-data invariant, PRD §Hard Gates)
+*.h5
+*.hdf5
+*.npz
+data/raw/
+data/bulk/
+checkpoints/
+
+# Logs
+*.log
+logs/

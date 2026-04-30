@@ -1,0 +1,55 @@
+$ Toy Cu-Mg binary CALPHAD database for fixture testing.
+$ Synthetic parameters — NOT a real fitted thermodynamic description.
+$ The values below are illustrative; the file's purpose is to exercise
+$ the pycalphad parser (when installed) and the syntactic-shape parser
+$ (when pycalphad is absent). DO NOT use these parameters for real
+$ thermodynamic computation.
+$
+$ Source disclaimer: synthetic. Real Cu-Mg TDBs (e.g., Coughanowr et al.
+$ 1991, Z. Metallkd; Zuo & Chang 1993, Z. Metallkd) require fitting and
+$ are commercial-licence in some libraries.
+$
+$ Schema:
+$   ELEMENT  <name>  <ref-state>  <mass>  <H298>  <S298>  !
+$   FUNCTION <name>  <T_low>  <expr>  <T_high>  <expr>  ;  ! ...
+$   PHASE   <name>  <type>  <n_sublattices>  <site_ratios>  !
+$   CONSTITUENT <phase>  :<elem,elem>:<elem,elem>:!
+$   PARAMETER  G(phase,sublattice;order)  T_low  <expr>  T_high  N  !
+
+ELEMENT  /-   ELECTRON_GAS              0.0          0.00      0.00       !
+ELEMENT  VA   VACUUM                    0.0          0.00      0.00       !
+ELEMENT  CU   FCC_A1                   63.546     5004.00     33.15       !
+ELEMENT  MG   HCP_A3                   24.305     4998.00     32.67       !
+
+FUNCTION GHSERCU 298.15
+  -7770.458+130.485235*T-24.112392*T*LN(T)-0.00265684*T**2+0.000000129223*T**3
+  +52478*T**(-1);
+ 1357.77 Y
+  -13542.026+183.804*T-31.38*T*LN(T)+3.642E+29*T**(-9);
+ 3200 N !
+
+FUNCTION GHSERMG 298.15
+  -8367.34+143.675547*T-26.1849782*T*LN(T)+0.4858E-3*T**2-1.393669E-6*T**3
+  +78950*T**(-1);
+  923 Y
+  -14130.185+204.716215*T-34.3088*T*LN(T)+1.038192E+28*T**(-9);
+ 3000 N !
+
+PHASE LIQUID  %  1  1.0  !
+   CONSTITUENT LIQUID  :CU,MG: !
+   PARAMETER G(LIQUID,CU;0)   298.15  +12964.84-9.452*T+GHSERCU;
+                              3200 N !
+   PARAMETER G(LIQUID,MG;0)   298.15  +8202.24-8.83693*T+GHSERMG;
+                              3000 N !
+   PARAMETER L(LIQUID,CU,MG;0) 298.15  -36962.71+4.74394*T;
+                              3000 N !
+
+PHASE FCC_A1  %  2  1.0  1.0  !
+   CONSTITUENT FCC_A1  :CU,MG:VA: !
+   PARAMETER G(FCC_A1,CU:VA;0)  298.15  +GHSERCU;  3200 N !
+   PARAMETER G(FCC_A1,MG:VA;0)  298.15  +2600-0.9*T+GHSERMG;  3000 N !
+
+PHASE HCP_A3  %  2  1.0  0.5  !
+   CONSTITUENT HCP_A3  :CU,MG:VA: !
+   PARAMETER G(HCP_A3,CU:VA;0)  298.15  +600+0.2*T+GHSERCU;  3200 N !
+   PARAMETER G(HCP_A3,MG:VA;0)  298.15  +GHSERMG;  3000 N !

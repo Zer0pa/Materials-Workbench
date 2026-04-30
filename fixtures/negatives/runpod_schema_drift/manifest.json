@@ -1,0 +1,21 @@
+{
+  "research_boundary": "Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).",
+  "fixture_id": "fixture:runpod_schema_drift:negative",
+  "name": "Envelope from runpod_mock with extra schema-illegal field",
+  "kind": "negative",
+  "purpose": "Trigger the Runpod cutover falsifier 'runpod_schema_drift' (PRD §Runpod Migration 'Hard cutover failures: schema drift'; PRD §Falsification wave).",
+  "sources": [
+    {
+      "type": "operator",
+      "locator": "synthetic-fixture",
+      "license": "internal"
+    }
+  ],
+  "expected_use_layers": ["L7"],
+  "structure_hash": null,
+  "size_bytes": 1160,
+  "novelty_status": "deliberate_violation",
+  "negative_falsifier_target": "runpod_schema_drift",
+  "verified": false,
+  "notes": "tool_adapter.backend='runpod_mock' and the envelope has an extra 'schema_drift_field' that violates Envelope's extra='forbid'. Pydantic Envelope.model_validate MUST raise; the falsifier wave catches the rejection and tags it as schema drift."
+}

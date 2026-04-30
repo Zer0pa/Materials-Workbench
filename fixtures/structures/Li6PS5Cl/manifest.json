@@ -1,0 +1,31 @@
+{
+  "research_boundary": "Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).",
+  "fixture_id": "fixture:Li6PS5Cl:8d7b2175",
+  "name": "Li6PS5Cl argyrodite — REDUCED 13-atom fixture",
+  "kind": "structure",
+  "purpose": "Battery MVP known-borderline control (PRD §Scope) — recover high-conductivity potential while flagging disorder, moisture sensitivity, Li-metal interface, and oxidative-stability concerns.",
+  "sources": [
+    {
+      "type": "paper",
+      "locator": "10.1002/anie.200703900",
+      "license": "operator-cited"
+    },
+    {
+      "type": "paper",
+      "locator": "10.1016/j.ssi.2012.06.008",
+      "license": "operator-cited"
+    },
+    {
+      "type": "mp_id",
+      "locator": "mp-985592",
+      "license": "CC-BY-4.0"
+    }
+  ],
+  "expected_use_layers": ["L1", "L1.5", "ionic", "L2"],
+  "structure_hash": "sha256:8d7b217550c751a08bd6bc85d74a166ff0b4966266552d254ca53527607c40bc",
+  "size_bytes": 2214,
+  "novelty_status": "known",
+  "negative_falsifier_target": null,
+  "verified": false,
+  "notes": "REDUCED FIXTURE — one formula unit Li6PS5Cl (13 atoms) on the F-43m argyrodite host (a = 9.859 Å). Ordered S/Cl positions (real argyrodite has S/Cl partial occupancy that drives disorder-dependent conductivity); SOD-disordered supercell loaded downstream when needed."
+}

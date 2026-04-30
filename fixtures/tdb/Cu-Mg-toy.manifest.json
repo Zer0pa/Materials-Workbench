@@ -1,0 +1,21 @@
+{
+  "research_boundary": "Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).",
+  "fixture_id": "fixture:tdb-Cu-Mg-toy:tdb",
+  "name": "Toy Cu-Mg binary CALPHAD database",
+  "kind": "tdb",
+  "purpose": "Minimal CALPHAD TDB suitable for L3 pycalphad smoke test (PRD §L3 'produced TDB must parse in pycalphad').",
+  "sources": [
+    {
+      "type": "operator",
+      "locator": "synthetic-fixture (Cu-Mg toy)",
+      "license": "internal"
+    }
+  ],
+  "expected_use_layers": ["L3"],
+  "structure_hash": null,
+  "size_bytes": 2351,
+  "novelty_status": "synthetic_known",
+  "negative_falsifier_target": null,
+  "verified": false,
+  "notes": "Synthetic numerical parameters — NOT a real fitted parameterisation. Schema and syntax follow standard TDB conventions (ELEMENT, FUNCTION, PHASE, CONSTITUENT, PARAMETER). Two terminal phases (FCC_A1, HCP_A3) and a LIQUID with one excess Redlich-Kister term. pycalphad parses this TDB cleanly when installed; the parser-only syntactic test runs without pycalphad."
+}

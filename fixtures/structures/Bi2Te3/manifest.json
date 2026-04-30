@@ -1,0 +1,31 @@
+{
+  "research_boundary": "Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).",
+  "fixture_id": "fixture:Bi2Te3:cfee960f",
+  "name": "Bi2Te3 rhombohedral primitive 5-atom cell",
+  "kind": "structure",
+  "purpose": "Thermoelectric sidecar reference (PRD §L1.5: thermoelectric ZT path) — Bi2Te3 is the canonical room-temperature TE benchmark (ZT ~1).",
+  "sources": [
+    {
+      "type": "mp_id",
+      "locator": "mp-568390",
+      "license": "CC-BY-4.0"
+    },
+    {
+      "type": "paper",
+      "locator": "Wyckoff, Crystal Structures Vol. 2 (1964)",
+      "license": "operator-cited"
+    },
+    {
+      "type": "paper",
+      "locator": "10.1088/2515-7639/acc550",
+      "license": "operator-cited"
+    }
+  ],
+  "expected_use_layers": ["L1", "L1.5"],
+  "structure_hash": "sha256:cfee960f8705b17944ddfd4df64e3aa840d0870af020ea4f9d64bd05c1a7b54f",
+  "size_bytes": 1311,
+  "novelty_status": "known",
+  "negative_falsifier_target": null,
+  "verified": false,
+  "notes": "Rhombohedral primitive (a_R = 10.473 Å, alpha = 24.159°). Conventional hexagonal a = 4.3835 Å, c = 30.487 Å. Space group R-3m (#166). 2 Bi + 3 Te = 5 atoms in primitive cell."
+}

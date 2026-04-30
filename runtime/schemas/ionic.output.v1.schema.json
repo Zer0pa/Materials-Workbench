@@ -1,0 +1,146 @@
+{
+  "$defs": {
+    "IonicArrhenius": {
+      "additionalProperties": false,
+      "properties": {
+        "activation_energy_eV": {
+          "exclusiveMinimum": 0.0,
+          "title": "Activation Energy Ev",
+          "type": "number"
+        },
+        "activation_energy_uncertainty_eV": {
+          "minimum": 0.0,
+          "title": "Activation Energy Uncertainty Ev",
+          "type": "number"
+        }
+      },
+      "required": [
+        "activation_energy_eV",
+        "activation_energy_uncertainty_eV"
+      ],
+      "title": "IonicArrhenius",
+      "type": "object"
+    }
+  },
+  "$id": "urn:zer0pa:materials:ionic.output.v1",
+  "additionalProperties": false,
+  "description": "Output of the IonicTransportService (PRD \u00a7Ionic Transport gates).",
+  "properties": {
+    "arrhenius": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/IonicArrhenius"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Activation energy with uncertainty."
+    },
+    "confidence": {
+      "default": 0.0,
+      "description": "Self-reported confidence in [0, 1].",
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Confidence",
+      "type": "number"
+    },
+    "defect_disorder_assumptions": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Defect Disorder Assumptions",
+      "type": "array"
+    },
+    "diffusion_coefficient_cm2_per_s": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "MD/AIMD/MLIP-MD diffusion coefficient (cm\u00b2/s).",
+      "title": "Diffusion Coefficient Cm2 Per S"
+    },
+    "electrochemical_window_V_vs_LiLi": {
+      "anyOf": [
+        {
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "(reduction, oxidation) potentials vs Li/Li+.",
+      "title": "Electrochemical Window V Vs Lili"
+    },
+    "interface_stability": {
+      "default": "unknown",
+      "enum": [
+        "li_metal_stable",
+        "li_metal_unstable_coating_required",
+        "cathode_facing_stable",
+        "cathode_facing_unstable",
+        "unknown"
+      ],
+      "title": "Interface Stability",
+      "type": "string"
+    },
+    "migration_barrier_eV": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "NEB or path-search migration barrier.",
+      "title": "Migration Barrier Ev"
+    },
+    "msd_A2": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Mean-square displacement (\u00c5\u00b2).",
+      "title": "Msd A2"
+    },
+    "nernst_einstein_conductivity_S_per_cm": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Room-temperature ionic conductivity from Nernst-Einstein (S/cm).",
+      "title": "Nernst Einstein Conductivity S Per Cm"
+    }
+  },
+  "title": "zer0pa.materials.ionic.output.v1",
+  "type": "object"
+}

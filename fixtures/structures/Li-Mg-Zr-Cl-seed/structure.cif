@@ -1,0 +1,61 @@
+data_LiMgZrCl_seed_reduced
+# REDUCED FIXTURE — pre-registered novel-challenge SEED.
+# NOT a novelty claim. The PRD §Scope explicitly classifies
+# "Li2.2Mg0.1Zr0.9Cl6" in the Li-Mg-Zr-Cl halide design family as a
+# pre-registered generated challenge candidate, NOT as a novelty claim,
+# until L6 de-duplication and L2/L1 validation pass. The fixture exists
+# so the orchestration layer has a concrete starting structure to
+# parameterise the L6 generative loop and the L2 DPA-3+MACE ensemble
+# screening — the L7 reasoner is expected to either confirm novelty
+# against MP/JARVIS/Alexandria/GNoME/OPTIMADE or pivot to a sibling
+# composition.
+#
+# We choose the host lattice as Li3ZrCl6-style (a known halide
+# solid-electrolyte family, e.g. Li3YCl6, Li3InCl6, Li3ZrCl6), space
+# group P-3m1 / trigonal, conventional a ≈ 6.51 Å, c ≈ 6.05 Å.
+# We embed Mg2+ on one of the M3+ (Zr) sites at fractional occupancy
+# 0.1 (here represented as a single ordered Mg site to satisfy fixture
+# stoichiometry) with a compensating Li excess.
+# The ratio Li2.2 Mg0.1 Zr0.9 Cl6 is approximated in this 14-atom seed
+# as: 2 Li + 1 Mg + 1 Zr + 6 Cl = Li2 Mg1 Zr1 Cl6 (ordered fixture
+# composition, NOT the exact target stoichiometry). The exact target
+# stoichiometry will be reached in the L6 generator's special-quasi-
+# random-structure (SQS) expansion phase; this fixture is the seed.
+#
+# Mark `novelty_status: pending` in the manifest.
+#
+# Sources:
+#   - Asano, T. et al. "Solid Halide Electrolytes with High Lithium-Ion
+#     Conductivity for Application in 4 V Class Bulk-Type All-Solid-State
+#     Batteries", Adv. Mater. 30(44), 1803075 (2018).
+#     DOI: 10.1002/adma.201803075
+#   - Park, K.-H. et al. "High-Voltage Superionic Halide Solid Electrolytes
+#     for All-Solid-State Li-Ion Batteries", ACS Energy Lett. 5(2),
+#     533–539 (2020). DOI: 10.1021/acsenergylett.9b02599
+#   - Wang, S. et al. "Lithium chlorides and bromides as promising
+#     solid-state chemistries for fast ion conductors with good
+#     electrochemical stability", Angew. Chem. Int. Ed. 58(24),
+#     8039–8043 (2019). DOI: 10.1002/anie.201901938
+_cell_length_a 6.510
+_cell_length_b 6.510
+_cell_length_c 6.050
+_cell_angle_alpha 90.0
+_cell_angle_beta 90.0
+_cell_angle_gamma 120.0
+_symmetry_space_group_name_H-M 'P 1'
+_symmetry_Int_Tables_number 1
+loop_
+_atom_site_type_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+Li 0.000 0.000 0.250
+Li 0.000 0.000 0.750
+Mg 0.333 0.667 0.000
+Zr 0.667 0.333 0.500
+Cl 0.333 0.000 0.250
+Cl 0.000 0.333 0.250
+Cl 0.667 0.667 0.250
+Cl 0.667 0.000 0.750
+Cl 0.000 0.667 0.750
+Cl 0.333 0.333 0.750

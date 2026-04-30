@@ -1,0 +1,31 @@
+{
+  "research_boundary": "Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).",
+  "fixture_id": "fixture:PbTe:5bcfe45e",
+  "name": "PbTe rocksalt 2-atom primitive cell",
+  "kind": "structure",
+  "purpose": "Thermoelectric sidecar reference (PRD §L1.5) — mid-temperature (~700 K) PbTe ZT benchmark (~1.5 with nanostructuring).",
+  "sources": [
+    {
+      "type": "mp_id",
+      "locator": "mp-19717",
+      "license": "CC-BY-4.0"
+    },
+    {
+      "type": "paper",
+      "locator": "10.1038/nature09996",
+      "license": "operator-cited"
+    },
+    {
+      "type": "paper",
+      "locator": "Wyckoff, Crystal Structures Vol. 1 (1963)",
+      "license": "operator-cited"
+    }
+  ],
+  "expected_use_layers": ["L1", "L1.5"],
+  "structure_hash": "sha256:5bcfe45e449312ee65bba028e79fe59a7e8d17fa074d1e8ec162c53ec2bee6f8",
+  "size_bytes": 1066,
+  "novelty_status": "known",
+  "negative_falsifier_target": null,
+  "verified": false,
+  "notes": "Conventional cubic a = 6.4540 Å; primitive 2-atom rhombohedral. Pb at (0,0,0); Te at (1/2,1/2,1/2). Space group Fm-3m (#225)."
+}

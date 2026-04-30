@@ -1,0 +1,26 @@
+{
+  "research_boundary": "Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).",
+  "fixture_id": "fixture:Si:6ed1b2a0",
+  "name": "Si diamond 2-atom primitive cell",
+  "kind": "structure",
+  "purpose": "Standard L1 DFT smoke fixture — diamond Si is the most cited semiconductor benchmark; convergence delta is the canonical L1 publication-grade gate.",
+  "sources": [
+    {
+      "type": "mp_id",
+      "locator": "mp-149",
+      "license": "CC-BY-4.0"
+    },
+    {
+      "type": "paper",
+      "locator": "CRC Handbook of Chemistry and Physics 90th ed., Si crystallographic data",
+      "license": "operator-cited"
+    }
+  ],
+  "expected_use_layers": ["L1", "L1.5", "L2"],
+  "structure_hash": "sha256:6ed1b2a0535b7709a5e576704c618395fe9aba2b49cdaaf07fc8fe61296a6863",
+  "size_bytes": 949,
+  "novelty_status": "known",
+  "negative_falsifier_target": null,
+  "verified": false,
+  "notes": "Conventional cubic a = 5.4307 Å; primitive 2-atom rhombohedral representation. Two Si atoms at (0,0,0) and (1/4,1/4,1/4) of conventional. Space group Fd-3m (#227)."
+}

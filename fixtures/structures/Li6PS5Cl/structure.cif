@@ -1,0 +1,54 @@
+data_Li6PS5Cl_argyrodite_reduced
+# REDUCED FIXTURE — NOT a real Li6PS5Cl primitive cell.
+# Real argyrodite Li6PS5Cl is space group F-43m (#216), conventional cubic
+# cell a ≈ 9.86 Å, 4 formula units (52 atoms in conventional cell).
+# We use the real conventional lattice parameter and place ONE formula unit
+# (13 atoms: 6Li + 1P + 5S + 1Cl) at illustrative argyrodite Wyckoff
+# positions; this is suitable as a stoichiometry/disorder fixture but is
+# NOT a relaxed primitive cell. The real cell exhibits S/Cl partial
+# occupancy (the disorder that lowers conductivity in some samples) — this
+# fixture uses ordered positions; downstream Phase 0 / L1 adapters that
+# need the disorder model will load the full SOD-generated supercell.
+#
+# Argyrodite is the PRD §Scope "known-borderline control": good ionic
+# conductivity potential but Li-metal interface and moisture sensitivity
+# concerns. The fixture purpose is to drive the L1 + ionic-transport
+# pipeline through a structure with known thermochemical complexity and
+# to populate the falsifier rows for interface_stability and oxidative
+# stability.
+#
+# Sources:
+#   - Deiseroth, H. J. et al. "Li6PS5X: A Class of Crystalline Li-Rich
+#     Solids with an Unusually High Li+ Mobility", Angew. Chem. Int. Ed.
+#     47(4), 755–758 (2008). DOI: 10.1002/anie.200703900
+#   - Boulineau, S. et al. "Mechanochemical synthesis of Li-argyrodite
+#     Li6PS5X (X=Cl,Br,I) as sulfur-based solid electrolytes for all
+#     solid state lithium batteries application", Solid State Ionics 221,
+#     1–5 (2012). DOI: 10.1016/j.ssi.2012.06.008
+#   - Materials Project entry mp-985592 (Li6PS5Cl argyrodite).
+_cell_length_a 9.859
+_cell_length_b 9.859
+_cell_length_c 9.859
+_cell_angle_alpha 90.0
+_cell_angle_beta 90.0
+_cell_angle_gamma 90.0
+_symmetry_space_group_name_H-M 'P 1'
+_symmetry_Int_Tables_number 1
+loop_
+_atom_site_type_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+Li 0.250 0.062 0.062
+Li 0.062 0.250 0.062
+Li 0.062 0.062 0.250
+Li 0.750 0.938 0.938
+Li 0.938 0.750 0.938
+Li 0.938 0.938 0.750
+P  0.500 0.500 0.500
+S  0.250 0.250 0.250
+S  0.750 0.750 0.250
+S  0.750 0.250 0.750
+S  0.250 0.750 0.750
+S  0.000 0.000 0.000
+Cl 0.500 0.000 0.000

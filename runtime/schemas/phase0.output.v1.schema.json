@@ -1,0 +1,126 @@
+{
+  "$defs": {
+    "Phase0ExtractedProperty": {
+      "additionalProperties": false,
+      "properties": {
+        "contradiction_flag": {
+          "default": false,
+          "description": "True if multiple sources disagree and conditions did not differ.",
+          "title": "Contradiction Flag",
+          "type": "boolean"
+        },
+        "grounding": {
+          "$ref": "#/$defs/Phase0PropertyGrounding"
+        },
+        "property_name": {
+          "minLength": 1,
+          "title": "Property Name",
+          "type": "string"
+        },
+        "unit": {
+          "description": "Canonical unit string (see envelope.units.CANONICAL_UNITS).",
+          "title": "Unit",
+          "type": "string"
+        },
+        "value": {
+          "description": "Numeric value in canonical unit (post-normalisation).",
+          "title": "Value",
+          "type": "number"
+        }
+      },
+      "required": [
+        "property_name",
+        "value",
+        "unit",
+        "grounding"
+      ],
+      "title": "Phase0ExtractedProperty",
+      "type": "object"
+    },
+    "Phase0PropertyGrounding": {
+      "additionalProperties": false,
+      "description": "Source grounding for an extracted property (PRD \u00a7Phase 0 falsifier).\n\nThe PRD requires ``DOI/page/table/figure`` grounding for any numeric\nclaim. ``page`` and ``table`` and ``figure`` are individually optional\nso figure-only or table-only citations remain valid; ``doi`` is required.",
+      "properties": {
+        "doi": {
+          "description": "DOI of the source publication.",
+          "minLength": 1,
+          "title": "Doi",
+          "type": "string"
+        },
+        "figure": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Figure identifier (e.g. 'Figure 3').",
+          "title": "Figure"
+        },
+        "page": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Page number of the cited claim.",
+          "title": "Page"
+        },
+        "table": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Table identifier (e.g. 'Table 2').",
+          "title": "Table"
+        }
+      },
+      "required": [
+        "doi"
+      ],
+      "title": "Phase0PropertyGrounding",
+      "type": "object"
+    }
+  },
+  "$id": "urn:zer0pa:materials:phase0.output.v1",
+  "additionalProperties": false,
+  "description": "Output of a Phase 0 extraction adapter.",
+  "properties": {
+    "contradictions_blocking": {
+      "description": "Names of properties whose contradictions are unresolved and BLOCK promotion.",
+      "items": {
+        "type": "string"
+      },
+      "title": "Contradictions Blocking",
+      "type": "array"
+    },
+    "extracted_properties": {
+      "items": {
+        "$ref": "#/$defs/Phase0ExtractedProperty"
+      },
+      "title": "Extracted Properties",
+      "type": "array"
+    },
+    "units_normalised": {
+      "default": true,
+      "description": "True iff every property in extracted_properties carries a canonical unit.",
+      "title": "Units Normalised",
+      "type": "boolean"
+    }
+  },
+  "title": "zer0pa.materials.phase0.output.v1",
+  "type": "object"
+}

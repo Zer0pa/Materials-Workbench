@@ -1,0 +1,72 @@
+{
+  "$id": "urn:zer0pa:materials:L1.output.v1",
+  "additionalProperties": false,
+  "description": "Output of an L1 DFT adapter (PRD \u00a7L1 gates).",
+  "properties": {
+    "code": {
+      "enum": [
+        "QE",
+        "CP2K",
+        "ABINIT",
+        "PySCF",
+        "GPU4PySCF"
+      ],
+      "title": "Code",
+      "type": "string"
+    },
+    "convergence_delta_meV_per_atom": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Cross-code or cross-functional delta vs reference (meV/atom).",
+      "title": "Convergence Delta Mev Per Atom"
+    },
+    "force_rmse_eV_per_Ang": {
+      "description": "Force RMSE on the converged geometry.",
+      "minimum": 0.0,
+      "title": "Force Rmse Ev Per Ang",
+      "type": "number"
+    },
+    "functional": {
+      "description": "Functional / theory level, e.g. 'PBE', 'HSE06', 'r2SCAN'.",
+      "title": "Functional",
+      "type": "string"
+    },
+    "kpoint_mesh": {
+      "description": "K-point mesh, e.g. [4,4,4]; length 3.",
+      "items": {
+        "type": "integer"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "title": "Kpoint Mesh",
+      "type": "array"
+    },
+    "publication_grade": {
+      "default": false,
+      "description": "True iff convergence_delta_meV_per_atom <= 5; PRD \u00a7L1.",
+      "title": "Publication Grade",
+      "type": "boolean"
+    },
+    "total_energy_eV": {
+      "description": "Total energy in eV.",
+      "title": "Total Energy Ev",
+      "type": "number"
+    }
+  },
+  "required": [
+    "code",
+    "functional",
+    "total_energy_eV",
+    "force_rmse_eV_per_Ang",
+    "kpoint_mesh"
+  ],
+  "title": "zer0pa.materials.L1.output.v1",
+  "type": "object"
+}

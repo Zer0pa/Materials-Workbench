@@ -1,0 +1,25 @@
+data_Si_diamond_primitive
+# Diamond Si primitive 2-atom cell (Fd-3m, space group 227).
+# Lattice parameter a_conv = 5.43070 Å (room T experimental).
+# Primitive cell vectors are rhombohedral with FCC translations:
+#   a1 = (a/2, a/2, 0); a2 = (0, a/2, a/2); a3 = (a/2, 0, a/2)
+# Two basis atoms at (0,0,0) and (1/4,1/4,1/4) in fractional coords.
+# CIF below uses the conventional cubic cell as a 2-atom primitive
+# representation (primitive lattice vectors expressed via P1 cell).
+# Source: Materials Project mp-149 (Si, diamond), corroborated by
+# CRC Handbook 90th ed., crystallographic data.
+_cell_length_a 3.840014
+_cell_length_b 3.840014
+_cell_length_c 3.840014
+_cell_angle_alpha 60.0
+_cell_angle_beta 60.0
+_cell_angle_gamma 60.0
+_symmetry_space_group_name_H-M 'P 1'
+_symmetry_Int_Tables_number 1
+loop_
+_atom_site_type_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+Si 0.000000 0.000000 0.000000
+Si 0.250000 0.250000 0.250000

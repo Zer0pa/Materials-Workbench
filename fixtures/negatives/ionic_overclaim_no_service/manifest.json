@@ -1,0 +1,21 @@
+{
+  "research_boundary": "Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).",
+  "fixture_id": "fixture:ionic_overclaim_no_service:negative",
+  "name": "Candidate envelope claiming high ionic conductivity without IonicTransportService",
+  "kind": "negative",
+  "purpose": "Trigger the ionic-transport falsifier 'ionic_overclaim_no_service' (PRD §Ionic Transport; PRD §Falsification wave 'ionic conductivity overclaim without IonicTransportService').",
+  "sources": [
+    {
+      "type": "operator",
+      "locator": "synthetic-fixture",
+      "license": "internal"
+    }
+  ],
+  "expected_use_layers": ["ionic", "L2"],
+  "structure_hash": null,
+  "size_bytes": 848,
+  "novelty_status": "deliberate_violation",
+  "negative_falsifier_target": "ionic_overclaim_no_service",
+  "verified": false,
+  "notes": "ionic_conductivity_S_per_cm=5e-3, ionic_transport_service_ref=null. Falsifier rule: claims of conductivity above 1e-3 S/cm REQUIRE a non-null IonicTransportService reference."
+}

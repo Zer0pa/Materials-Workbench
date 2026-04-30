@@ -1,0 +1,21 @@
+{
+  "research_boundary": "Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).",
+  "fixture_id": "fixture:ungrounded_property:negative",
+  "name": "Phase 0 extracted property without grounding",
+  "kind": "negative",
+  "purpose": "Trigger the Phase 0 falsifier 'ungrounded extracted property' (PRD §Phase 0/L6: 'Reject numeric claims without DOI/page/table/figure grounding'; PRD §Falsification wave).",
+  "sources": [
+    {
+      "type": "operator",
+      "locator": "synthetic-fixture",
+      "license": "internal"
+    }
+  ],
+  "expected_use_layers": ["phase0"],
+  "structure_hash": null,
+  "size_bytes": 552,
+  "novelty_status": "deliberate_violation",
+  "negative_falsifier_target": "ungrounded_property",
+  "verified": false,
+  "notes": "extracted_properties[0].grounding is null; valid Phase0Output requires a Phase0PropertyGrounding object with a non-empty doi. Pydantic validation MUST raise."
+}

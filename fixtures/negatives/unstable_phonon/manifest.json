@@ -1,0 +1,21 @@
+{
+  "research_boundary": "Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).",
+  "fixture_id": "fixture:unstable_phonon:negative",
+  "name": "Synthetic L1.5 spectrum with non-acoustic imaginary mode",
+  "kind": "negative",
+  "purpose": "Trigger the L1.5 falsifier 'unstable phonon structure' — non-acoustic imaginary mode magnitude > 0.25 THz (PRD §L1.5; PRD §Falsification wave).",
+  "sources": [
+    {
+      "type": "operator",
+      "locator": "synthetic-fixture",
+      "license": "internal"
+    }
+  ],
+  "expected_use_layers": ["L1.5"],
+  "structure_hash": null,
+  "size_bytes": 940,
+  "novelty_status": "deliberate_violation",
+  "negative_falsifier_target": "unstable_phonon",
+  "verified": false,
+  "notes": "imaginary_mode_max_THz set to 1.42, which is > 0.25. All other gate inputs (force RMSE, qmesh convergence) are passing values so only the imaginary-mode gate triggers."
+}

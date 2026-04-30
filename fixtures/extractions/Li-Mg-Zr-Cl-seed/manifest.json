@@ -1,0 +1,31 @@
+{
+  "research_boundary": "Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).",
+  "fixture_id": "fixture:extraction-LiMgZrCl-seed:phase0",
+  "name": "Phase 0 extracted properties for Li-Mg-Zr-Cl halide family seed",
+  "kind": "extraction",
+  "purpose": "Phase 0 extraction fixture for the pre-registered novel-challenge seed (PRD §Scope Li2.2Mg0.1Zr0.9Cl6). Captures the Li3MCl6 family conductivity benchmarks; the seed itself is novelty_status=pending.",
+  "sources": [
+    {
+      "type": "paper",
+      "locator": "10.1002/adma.201803075",
+      "license": "operator-cited"
+    },
+    {
+      "type": "paper",
+      "locator": "10.1021/acsenergylett.9b02599",
+      "license": "operator-cited"
+    },
+    {
+      "type": "paper",
+      "locator": "10.1002/anie.201901938",
+      "license": "operator-cited"
+    }
+  ],
+  "expected_use_layers": ["phase0", "L6", "L7"],
+  "structure_hash": null,
+  "size_bytes": 1258,
+  "novelty_status": "pending",
+  "negative_falsifier_target": null,
+  "verified": false,
+  "notes": "DOIs are real. Numeric values are PROXIES from the Li3MCl6 family (e.g., Li3InCl6, Li3YCl6) and NOT measurements of the specific Li2.2Mg0.1Zr0.9Cl6 composition (which has no published characterisation; that's why it's a 'pre-registered novel-challenge seed' per PRD §Scope). verified=false until lead agent confirms each numeric value against the cited paper."
+}

@@ -1,0 +1,59 @@
+data_LLZO_tetragonal_reduced
+# REDUCED FIXTURE — NOT a real LLZO primitive cell.
+# Real tetragonal Li7La3Zr2O12 (LLZO) is space group I41/acd (#142),
+# conventional cell ~13.07 Å × 13.07 Å × 12.66 Å, 8 formula units (192 atoms).
+# This fixture preserves the *tetragonal distortion* (a != c) of the real
+# phase while remaining a 24-atom representation suitable as a fixture.
+#
+# Tetragonal LLZO is the LOW-conductivity phase (~1e-6 S/cm at RT,
+# vs cubic ~1e-3 S/cm); the cubic-vs-tetragonal contrast is the canonical
+# "known-good control" the PRD requires (PRD §Scope: "Recover literature
+# behavior while distinguishing cubic high-conductivity LLZO from
+# tetragonal low-conductivity behavior").
+#
+# Same disclaimer as cubic/structure.cif: positions are stoichiometrically
+# correct illustrative seed positions, NOT relaxed Wyckoff sites. For real
+# work, fetch from Materials Project mp-942790 (tetragonal LLZO) or the
+# cited primary source.
+#
+# Sources:
+#   - Awaka, J. et al. J. Solid State Chem. 182(8), 2046–2052 (2009).
+#     DOI: 10.1016/j.jssc.2009.05.020 (tetragonal LLZO crystallography).
+#   - Materials Project entry mp-942790 (tetragonal LLZO).
+_cell_length_a 13.070
+_cell_length_b 13.070
+_cell_length_c 12.660
+_cell_angle_alpha 90.0
+_cell_angle_beta 90.0
+_cell_angle_gamma 90.0
+_symmetry_space_group_name_H-M 'P 1'
+_symmetry_Int_Tables_number 1
+loop_
+_atom_site_type_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+Li 0.125 0.000 0.250
+Li 0.125 0.500 0.250
+Li 0.625 0.000 0.250
+Li 0.625 0.500 0.250
+Li 0.375 0.000 0.250
+Li 0.375 0.500 0.250
+Li 0.875 0.000 0.250
+La 0.000 0.250 0.125
+La 0.000 0.250 0.625
+La 0.000 0.750 0.375
+Zr 0.000 0.000 0.000
+Zr 0.500 0.500 0.500
+O  0.105 0.190 0.275
+O  0.275 0.105 0.190
+O  0.190 0.275 0.105
+O  0.895 0.810 0.725
+O  0.725 0.895 0.810
+O  0.810 0.725 0.895
+O  0.395 0.690 0.275
+O  0.275 0.395 0.690
+O  0.690 0.275 0.395
+O  0.605 0.310 0.725
+O  0.725 0.605 0.310
+O  0.310 0.725 0.605

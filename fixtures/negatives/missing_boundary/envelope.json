@@ -1,0 +1,26 @@
+{
+  "contract_version": "zer0pa.materials.layer-envelope.v1",
+  "research_boundary": "Wrong boundary string. This is not the verbatim block.",
+  "run_id": "run:test/missing_boundary",
+  "campaign_id": "campaign:test/missing_boundary",
+  "candidate_id": "candidate:test/missing_boundary",
+  "layer": "phase0",
+  "tool_adapter": {
+    "name": "TestAdapter",
+    "version": "0.0.1",
+    "backend": "stub",
+    "engine": "test"
+  },
+  "input_refs": [],
+  "output": {},
+  "audit": {
+    "audit_record_id": "audit:test/missing_boundary",
+    "input_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "output_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_manifest_refs": []
+  },
+  "rights": {
+    "rights_claim_id": "rights:test/missing_boundary",
+    "reuse_scope": "tenant_only"
+  }
+}

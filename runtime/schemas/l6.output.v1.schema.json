@@ -1,0 +1,101 @@
+{
+  "$defs": {
+    "L6DedupResult": {
+      "additionalProperties": false,
+      "properties": {
+        "matched": {
+          "title": "Matched",
+          "type": "boolean"
+        },
+        "matched_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "ID in the source database if matched.",
+          "title": "Matched Id"
+        },
+        "source": {
+          "enum": [
+            "MP",
+            "JARVIS",
+            "Alexandria",
+            "GNoME",
+            "OPTIMADE"
+          ],
+          "title": "Source",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source",
+        "matched"
+      ],
+      "title": "L6DedupResult",
+      "type": "object"
+    }
+  },
+  "$id": "urn:zer0pa:materials:L6.output.v1",
+  "additionalProperties": false,
+  "description": "Output of an L6 generative adapter (MatterGen, DiffCSP, CrystaLLM).",
+  "properties": {
+    "candidate_uri": {
+      "description": "URI to the CIF or extxyz artifact.",
+      "title": "Candidate Uri",
+      "type": "string"
+    },
+    "charge_neutral": {
+      "default": true,
+      "title": "Charge Neutral",
+      "type": "boolean"
+    },
+    "cif_valid": {
+      "default": true,
+      "description": "CIF parsed and basic checks passed.",
+      "title": "Cif Valid",
+      "type": "boolean"
+    },
+    "dedup_results": {
+      "description": "Per-source de-duplication outcomes (MP, JARVIS, Alexandria, GNoME, OPTIMADE).",
+      "items": {
+        "$ref": "#/$defs/L6DedupResult"
+      },
+      "title": "Dedup Results",
+      "type": "array"
+    },
+    "minimum_distance_ok": {
+      "default": true,
+      "title": "Minimum Distance Ok",
+      "type": "boolean"
+    },
+    "novelty_status": {
+      "description": "Outcome of de-duplication and validity gate.",
+      "enum": [
+        "pending",
+        "novel",
+        "duplicate",
+        "invalid"
+      ],
+      "title": "Novelty Status",
+      "type": "string"
+    },
+    "structure_hash": {
+      "description": "Deterministic structure hash.",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Structure Hash",
+      "type": "string"
+    }
+  },
+  "required": [
+    "candidate_uri",
+    "structure_hash",
+    "novelty_status"
+  ],
+  "title": "zer0pa.materials.L6.output.v1",
+  "type": "object"
+}

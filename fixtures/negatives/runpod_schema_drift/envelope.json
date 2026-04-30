@@ -1,0 +1,27 @@
+{
+  "contract_version": "zer0pa.materials.layer-envelope.v1",
+  "research_boundary": "Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).",
+  "run_id": "run:runpod_mock/test/drift",
+  "campaign_id": "campaign:runpod_mock/test/drift",
+  "candidate_id": "candidate:runpod_mock/test/drift",
+  "layer": "L1",
+  "tool_adapter": {
+    "name": "RunpodMockL1Adapter",
+    "version": "0.0.1",
+    "backend": "runpod_mock",
+    "engine": "PySCF"
+  },
+  "input_refs": [],
+  "output": {},
+  "audit": {
+    "audit_record_id": "audit:runpod_mock/test/drift",
+    "input_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "output_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_manifest_refs": []
+  },
+  "rights": {
+    "rights_claim_id": "rights:runpod_mock/test/drift",
+    "reuse_scope": "tenant_only"
+  },
+  "schema_drift_field": "this_field_is_not_in_envelope_v1_schema"
+}

@@ -1,0 +1,31 @@
+{
+  "research_boundary": "Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).",
+  "fixture_id": "fixture:Li-Mg-Zr-Cl-seed:ea01c76f",
+  "name": "Li2.2Mg0.1Zr0.9Cl6 family seed — REDUCED 10-atom fixture",
+  "kind": "structure",
+  "purpose": "Pre-registered novel-challenge SEED (PRD §Scope). NOT a novelty claim. The L6 generative loop will expand this seed into the full Li2.2Mg0.1Zr0.9Cl6 SQS supercell and run de-duplication against MP/JARVIS/Alexandria/GNoME/OPTIMADE; novelty is determined ONLY after that pipeline.",
+  "sources": [
+    {
+      "type": "paper",
+      "locator": "10.1002/adma.201803075",
+      "license": "operator-cited"
+    },
+    {
+      "type": "paper",
+      "locator": "10.1021/acsenergylett.9b02599",
+      "license": "operator-cited"
+    },
+    {
+      "type": "paper",
+      "locator": "10.1002/anie.201901938",
+      "license": "operator-cited"
+    }
+  ],
+  "expected_use_layers": ["L6", "L1", "L1.5", "ionic", "L2", "L7"],
+  "structure_hash": "sha256:ea01c76f01f1427a5010cad97a984d3802c869f96b3726501897f5b08e3c138a",
+  "size_bytes": 2628,
+  "novelty_status": "pending",
+  "negative_falsifier_target": null,
+  "verified": false,
+  "notes": "Seed stoichiometry as encoded: Li2 Mg1 Zr1 Cl6 (NOT the exact target Li2.2Mg0.1Zr0.9Cl6). Trigonal P-3m1 host (Li3MCl6 family); Mg substituted on one Zr site at fractional occupancy 0.1 → ordered fixture. The L6 loop must expand to the SQS cell before any L1/L2 promotion."
+}

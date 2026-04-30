@@ -1,0 +1,21 @@
+{
+  "research_boundary": "Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).",
+  "fixture_id": "fixture:non_spd_tensor:negative",
+  "name": "L5 result with non-SPD stiffness tensor",
+  "kind": "negative",
+  "purpose": "Trigger the L5 falsifier 'non_spd_tensor' (PRD §L5 'Reject non-SPD stiffness or conductivity tensors'; PRD §Falsification wave).",
+  "sources": [
+    {
+      "type": "operator",
+      "locator": "synthetic-fixture",
+      "license": "internal"
+    }
+  ],
+  "expected_use_layers": ["L5"],
+  "structure_hash": null,
+  "size_bytes": 1113,
+  "novelty_status": "deliberate_violation",
+  "negative_falsifier_target": "non_spd_tensor",
+  "verified": false,
+  "notes": "tensors[0].spd is False; the test computes eigenvalues of the 3x3 matrix and confirms the smallest is negative. All other L5 gates are passing so only the SPD gate triggers."
+}

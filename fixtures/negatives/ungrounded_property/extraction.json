@@ -1,0 +1,14 @@
+{
+  "research_boundary": "Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).",
+  "extracted_properties": [
+    {
+      "property_name": "ionic_conductivity",
+      "value": 1.0e-3,
+      "unit": "S/cm",
+      "grounding": null,
+      "contradiction_flag": false
+    }
+  ],
+  "units_normalised": true,
+  "contradictions_blocking": []
+}

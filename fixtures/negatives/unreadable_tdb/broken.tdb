@@ -1,0 +1,13 @@
+$ DELIBERATELY MALFORMED TDB
+$ Falsifier target: unreadable_tdb (PRD §Falsification wave).
+$ This file violates CALPHAD TDB syntax in two compounding ways:
+$   1. ELEMENT line missing required REF token.
+$   2. PHASE block has unbalanced 'PHASE / FUNCTION' tokens.
+ELEMENT CU       FCC_A1        0.000E+00  0.000E+00  0.000E+00
+ELEMENT MG       HCP_A3        0.000E+00  0.000E+00
+PHASE LIQUID  %  1
+$ The next FUNCTION line has no closing semicolon and references an
+$ undefined symbol "GHSER_ZZ" — pycalphad MUST raise a ParseError or
+$ TDB load error.
+FUNCTION GHSERCU 298.15 GHSER_ZZ + 1.234*T
+$ Missing ! at end of function and no PARAMETER block at all.

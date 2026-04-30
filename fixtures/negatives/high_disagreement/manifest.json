@@ -1,0 +1,21 @@
+{
+  "research_boundary": "Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).",
+  "fixture_id": "fixture:high_disagreement:negative",
+  "name": "L2 ensemble result with DPA/MACE energy disagreement above hard-reject threshold",
+  "kind": "negative",
+  "purpose": "Trigger the L2 falsifier 'high_disagreement' (PRD §L2 'hard reject pending DFT if energy disagreement > 75 meV/atom'; PRD §Falsification wave).",
+  "sources": [
+    {
+      "type": "operator",
+      "locator": "synthetic-fixture",
+      "license": "internal"
+    }
+  ],
+  "expected_use_layers": ["L2"],
+  "structure_hash": null,
+  "size_bytes": 1137,
+  "novelty_status": "deliberate_violation",
+  "negative_falsifier_target": "high_disagreement",
+  "verified": false,
+  "notes": "energy_disagreement_meV_per_atom = 95.0 (> 75 hard-reject); force_rmse_disagreement = 0.10 (within passing band 0 < 0.15 promote-queue). Only the energy disagreement is the high-level falsifier."
+}

@@ -1,0 +1,35 @@
+data_Bi2Te3_rhombohedral
+# Rhombohedral Bi2Te3 (R-3m, space group 166), primitive 5-atom cell.
+# Hexagonal-setting lattice parameters: a_hex = 4.3835 Å, c_hex = 30.487 Å.
+# We use the rhombohedral primitive setting: a_R = 10.473 Å,
+# alpha_R = 24.159°. Atomic positions in rhombohedral fractional coords:
+#   Bi at (x, x, x) and (-x, -x, -x) with x ≈ 0.4006
+#   Te(1) at (0, 0, 0)  [special Wyckoff site]
+#   Te(2) at (y, y, y) and (-y, -y, -y) with y ≈ 0.7919
+# This is the canonical TE reference fixture — Bi2Te3 has the highest
+# experimental ZT (~1) at room temperature for a single-phase bulk TE.
+#
+# Sources:
+#   - Wyckoff, R. W. G. "Crystal Structures Vol. 2", 2nd ed., 1964.
+#   - Materials Project entry mp-568390 (Bi2Te3).
+#   - Pecunia, V. et al. (review) "Roadmap on energy harvesting materials",
+#     J. Phys. Mater. 6(4), 042501 (2023).
+#     DOI: 10.1088/2515-7639/acc550
+_cell_length_a 10.473
+_cell_length_b 10.473
+_cell_length_c 10.473
+_cell_angle_alpha 24.159
+_cell_angle_beta 24.159
+_cell_angle_gamma 24.159
+_symmetry_space_group_name_H-M 'P 1'
+_symmetry_Int_Tables_number 1
+loop_
+_atom_site_type_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+Bi 0.4006 0.4006 0.4006
+Bi 0.5994 0.5994 0.5994
+Te 0.0000 0.0000 0.0000
+Te 0.7919 0.7919 0.7919
+Te 0.2081 0.2081 0.2081

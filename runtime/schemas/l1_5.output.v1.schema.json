@@ -1,0 +1,98 @@
+{
+  "$id": "urn:zer0pa:materials:L1.5.output.v1",
+  "additionalProperties": false,
+  "description": "Output of an L1.5 phonon adapter (Phonopy/Phono3py/HiPhive + ZT sidecar).",
+  "properties": {
+    "electrical_conductivity_S_per_cm": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Electrical Conductivity S Per Cm"
+    },
+    "imaginary_mode_max_THz": {
+      "description": "Largest non-acoustic imaginary mode magnitude (THz).",
+      "minimum": 0.0,
+      "title": "Imaginary Mode Max Thz",
+      "type": "number"
+    },
+    "mlip_vs_dft_force_rmse_eV_per_Ang": {
+      "anyOf": [
+        {
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "MLIP vs DFT force RMSE (eV/\u00c5).",
+      "title": "Mlip Vs Dft Force Rmse Ev Per Ang"
+    },
+    "qmesh_convergence_pct": {
+      "anyOf": [
+        {
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Phono3py q-mesh convergence as percentage; <10% required for publishable.",
+      "title": "Qmesh Convergence Pct"
+    },
+    "seebeck_uV_per_K": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Seebeck coefficient (\u03bcV/K) \u2014 TE sidecar.",
+      "title": "Seebeck Uv Per K"
+    },
+    "thermal_conductivity_W_per_mK": {
+      "anyOf": [
+        {
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Thermal Conductivity W Per Mk"
+    },
+    "zt": {
+      "anyOf": [
+        {
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Thermoelectric figure of merit.",
+      "title": "Zt"
+    }
+  },
+  "required": [
+    "imaginary_mode_max_THz"
+  ],
+  "title": "zer0pa.materials.L1.5.output.v1",
+  "type": "object"
+}

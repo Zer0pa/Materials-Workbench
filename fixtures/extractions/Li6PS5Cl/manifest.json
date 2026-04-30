@@ -1,0 +1,26 @@
+{
+  "research_boundary": "Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).",
+  "fixture_id": "fixture:extraction-Li6PS5Cl:phase0",
+  "name": "Phase 0 extracted properties for Li6PS5Cl",
+  "kind": "extraction",
+  "purpose": "Phase 0 extraction fixture for the battery MVP known-borderline control (PRD §Scope Li6PS5Cl). Captures argyrodite RT conductivity, activation energy, and oxidative-stability concerns.",
+  "sources": [
+    {
+      "type": "paper",
+      "locator": "10.1002/anie.200703900",
+      "license": "operator-cited"
+    },
+    {
+      "type": "paper",
+      "locator": "10.1149/2.0291701jes",
+      "license": "operator-cited"
+    }
+  ],
+  "expected_use_layers": ["phase0"],
+  "structure_hash": null,
+  "size_bytes": 1248,
+  "novelty_status": "known",
+  "negative_falsifier_target": null,
+  "verified": false,
+  "notes": "DOIs are real and resolvable. Page numbers / tables / figure references are plausible primary-source guesses; verified=false until live licence-checking and citation verification by lead agent. The 2.4 V oxidative-stability number is a known argyrodite weakness (PRD §L1.5/Ionic gates: oxidative stability target >= 4.0 V vs Li/Li+ — Li6PS5Cl flagged below this)."
+}

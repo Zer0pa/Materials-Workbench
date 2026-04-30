@@ -1,0 +1,138 @@
+{
+  "$defs": {
+    "L5TensorRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "eigvals_min": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Minimum eigenvalue.",
+          "title": "Eigvals Min"
+        },
+        "name": {
+          "description": "Tensor identifier (e.g. 'stiffness', 'conductivity').",
+          "title": "Name",
+          "type": "string"
+        },
+        "spd": {
+          "description": "True iff the tensor is symmetric positive-definite.",
+          "title": "Spd",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name",
+        "spd"
+      ],
+      "title": "L5TensorRecord",
+      "type": "object"
+    }
+  },
+  "$id": "urn:zer0pa:materials:L5.output.v1",
+  "additionalProperties": false,
+  "description": "Output of an L5 continuum adapter (PRD \u00a7L5 gates).",
+  "properties": {
+    "analytic_heat_slab_error": {
+      "anyOf": [
+        {
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Analytic Heat Slab Error"
+    },
+    "artifact_uris": {
+      "description": "VTK/Exodus/FMI artifacts (must include unit sidecars + hashes elsewhere).",
+      "items": {
+        "type": "string"
+      },
+      "title": "Artifact Uris",
+      "type": "array"
+    },
+    "cfd_heat_balance_error": {
+      "anyOf": [
+        {
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Cfd Heat Balance Error"
+    },
+    "cfd_mass_balance_error": {
+      "anyOf": [
+        {
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Cfd Mass Balance Error"
+    },
+    "elastic_patch_residual": {
+      "anyOf": [
+        {
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Elastic Patch Residual"
+    },
+    "fenicsx_vs_dealii_strain_energy_disagreement_pct": {
+      "anyOf": [
+        {
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Fenicsx Vs Dealii Strain Energy Disagreement Pct"
+    },
+    "openfoam_poiseuille_error_pct": {
+      "anyOf": [
+        {
+          "minimum": 0.0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Openfoam Poiseuille Error Pct"
+    },
+    "tensors": {
+      "items": {
+        "$ref": "#/$defs/L5TensorRecord"
+      },
+      "title": "Tensors",
+      "type": "array"
+    }
+  },
+  "title": "zer0pa.materials.L5.output.v1",
+  "type": "object"
+}

@@ -1,0 +1,55 @@
+{
+  "$id": "urn:zer0pa:materials:L7.output.v1",
+  "additionalProperties": false,
+  "description": "Output of an L7 campaign step (PRD \u00a7L7 gates).",
+  "properties": {
+    "acquisition": {
+      "enum": [
+        "qMultiFidelityKnowledgeGradient",
+        "qLogExpectedImprovement",
+        "other"
+      ],
+      "title": "Acquisition",
+      "type": "string"
+    },
+    "audit_provenance_ref": {
+      "description": "URN of audit event chain entry.",
+      "title": "Audit Provenance Ref",
+      "type": "string"
+    },
+    "candidate_id": {
+      "pattern": "^candidate:.+$",
+      "title": "Candidate Id",
+      "type": "string"
+    },
+    "gate_verdict": {
+      "enum": [
+        "pass",
+        "fail",
+        "blocked",
+        "inconclusive"
+      ],
+      "title": "Gate Verdict",
+      "type": "string"
+    },
+    "promotion_decision": {
+      "enum": [
+        "promote",
+        "queue_higher_fidelity",
+        "reject",
+        "hold"
+      ],
+      "title": "Promotion Decision",
+      "type": "string"
+    }
+  },
+  "required": [
+    "candidate_id",
+    "acquisition",
+    "promotion_decision",
+    "audit_provenance_ref",
+    "gate_verdict"
+  ],
+  "title": "zer0pa.materials.L7.output.v1",
+  "type": "object"
+}

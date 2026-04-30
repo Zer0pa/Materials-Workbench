@@ -1,0 +1,7 @@
+{
+  "research_boundary": "Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).",
+  "tdb_provider": "ThermoCalc-TCFE9",
+  "license": "proprietary",
+  "redistributable": true,
+  "_note": "Synthetic L3 manifest claim. Provider 'ThermoCalc-TCFE9' is a commercial Thermo-Calc database; license 'proprietary' is incompatible with redistributable=true. The falsifier rule: if license is 'proprietary' or provider matches /ThermoCalc/i, redistributable MUST be false. NO commercial TDB content is included in this fixture."
+}

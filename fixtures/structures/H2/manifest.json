@@ -1,0 +1,21 @@
+{
+  "research_boundary": "Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).",
+  "fixture_id": "fixture:H2:4df34f15",
+  "name": "H2 diatomic molecule (PBC box)",
+  "kind": "structure",
+  "purpose": "Smallest electronic-structure fixture — drives the L1 quantum-slot VQE smoke test (PRD §L1: H2 PennyLane VQE must match PySCF FCI within 1e-3 Ha).",
+  "sources": [
+    {
+      "type": "operator",
+      "locator": "NIST Atomic Spectra Database (HHB hydrogen bond constants)",
+      "license": "PD"
+    }
+  ],
+  "expected_use_layers": ["L1", "quantum"],
+  "structure_hash": "sha256:4df34f15bbfd3a327fce9bd1419ce56d2f1b1cdfca9ff999384901e211bf3466",
+  "size_bytes": 781,
+  "novelty_status": "known",
+  "negative_falsifier_target": null,
+  "verified": false,
+  "notes": "Bond length 0.74 Å (H2 ground state r_e). Box edge 10 Å for PBC image isolation. Stoichiometry: H2 (2 atoms)."
+}

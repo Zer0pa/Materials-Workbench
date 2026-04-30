@@ -1,0 +1,56 @@
+{
+  "$id": "urn:zer0pa:materials:quantum.output.v1",
+  "additionalProperties": false,
+  "description": "Output of a PennyLane VQE adapter (PRD \u00a7L1 quantum gates).\n\nFalsifier thresholds (PRD \u00a7L1):\n    H2 vs PySCF FCI within 1e-3 Ha.\n    LiH active-space within 5e-3 Ha.",
+  "properties": {
+    "ansatz": {
+      "description": "Variational ansatz, e.g. 'UCCSD', 'HEA(p=2)'.",
+      "title": "Ansatz",
+      "type": "string"
+    },
+    "classical_reference_Ha": {
+      "description": "PySCF FCI (H2) or active-space CASCI (LiH) reference.",
+      "title": "Classical Reference Ha",
+      "type": "number"
+    },
+    "ground_state_energy_Ha": {
+      "title": "Ground State Energy Ha",
+      "type": "number"
+    },
+    "optimizer": {
+      "enum": [
+        "SPSA",
+        "COBYLA",
+        "Adam",
+        "L-BFGS-B",
+        "GradientDescent"
+      ],
+      "title": "Optimizer",
+      "type": "string"
+    },
+    "qubits": {
+      "exclusiveMinimum": 0,
+      "title": "Qubits",
+      "type": "integer"
+    },
+    "system": {
+      "enum": [
+        "H2",
+        "LiH",
+        "other"
+      ],
+      "title": "System",
+      "type": "string"
+    }
+  },
+  "required": [
+    "system",
+    "ansatz",
+    "qubits",
+    "optimizer",
+    "ground_state_energy_Ha",
+    "classical_reference_Ha"
+  ],
+  "title": "zer0pa.materials.quantum.output.v1",
+  "type": "object"
+}

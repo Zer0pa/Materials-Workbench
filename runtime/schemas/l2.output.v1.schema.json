@@ -1,0 +1,70 @@
+{
+  "$defs": {
+    "L2ModelPrediction": {
+      "additionalProperties": false,
+      "properties": {
+        "energy_eV_per_atom": {
+          "title": "Energy Ev Per Atom",
+          "type": "number"
+        },
+        "force_rmse_eV_per_Ang": {
+          "minimum": 0.0,
+          "title": "Force Rmse Ev Per Ang",
+          "type": "number"
+        },
+        "model": {
+          "description": "Model identifier, e.g. 'DPA-3.1-3M', 'MACE-MPA-0'.",
+          "title": "Model",
+          "type": "string"
+        }
+      },
+      "required": [
+        "model",
+        "energy_eV_per_atom",
+        "force_rmse_eV_per_Ang"
+      ],
+      "title": "L2ModelPrediction",
+      "type": "object"
+    }
+  },
+  "$id": "urn:zer0pa:materials:L2.output.v1",
+  "additionalProperties": false,
+  "description": "Output of the L2 ensemble (DPA-3 + MACE; PRD \u00a7L2 thresholds).",
+  "properties": {
+    "energy_disagreement_meV_per_atom": {
+      "minimum": 0.0,
+      "title": "Energy Disagreement Mev Per Atom",
+      "type": "number"
+    },
+    "force_rmse_disagreement_eV_per_Ang": {
+      "minimum": 0.0,
+      "title": "Force Rmse Disagreement Ev Per Ang",
+      "type": "number"
+    },
+    "predictions": {
+      "items": {
+        "$ref": "#/$defs/L2ModelPrediction"
+      },
+      "minItems": 1,
+      "title": "Predictions",
+      "type": "array"
+    },
+    "routing_decision": {
+      "enum": [
+        "promote",
+        "queue_dft",
+        "hard_reject"
+      ],
+      "title": "Routing Decision",
+      "type": "string"
+    }
+  },
+  "required": [
+    "predictions",
+    "energy_disagreement_meV_per_atom",
+    "force_rmse_disagreement_eV_per_Ang",
+    "routing_decision"
+  ],
+  "title": "zer0pa.materials.L2.output.v1",
+  "type": "object"
+}

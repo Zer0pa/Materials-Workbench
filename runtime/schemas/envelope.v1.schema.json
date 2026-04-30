@@ -1,0 +1,417 @@
+{
+  "$defs": {
+    "AuditBlock": {
+      "additionalProperties": false,
+      "description": "Audit grounding for the envelope (PRD \u00a7Audit Trail And KG).",
+      "properties": {
+        "audit_record_id": {
+          "description": "URN starting with 'audit:'.",
+          "title": "Audit Record Id",
+          "type": "string"
+        },
+        "input_hash": {
+          "description": "sha256:<hex>",
+          "title": "Input Hash",
+          "type": "string"
+        },
+        "output_hash": {
+          "description": "sha256:<hex>",
+          "title": "Output Hash",
+          "type": "string"
+        },
+        "source_manifest_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Source Manifest Refs",
+          "type": "array"
+        }
+      },
+      "required": [
+        "audit_record_id",
+        "input_hash",
+        "output_hash"
+      ],
+      "title": "AuditBlock",
+      "type": "object"
+    },
+    "BackEdge": {
+      "additionalProperties": false,
+      "description": "Reference to an upstream envelope in the candidate's history.",
+      "properties": {
+        "audit_record_id": {
+          "title": "Audit Record Id",
+          "type": "string"
+        },
+        "layer": {
+          "enum": [
+            "phase0",
+            "L1",
+            "L1.5",
+            "ionic",
+            "L2",
+            "L3",
+            "L4",
+            "L5",
+            "L6",
+            "L7"
+          ],
+          "title": "Layer",
+          "type": "string"
+        },
+        "relation": {
+          "default": "DERIVED_FROM",
+          "description": "KG edge label (PRD \u00a7Audit Trail And KG: KG edges).",
+          "title": "Relation",
+          "type": "string"
+        }
+      },
+      "required": [
+        "layer",
+        "audit_record_id"
+      ],
+      "title": "BackEdge",
+      "type": "object"
+    },
+    "ConfidenceBlock": {
+      "additionalProperties": false,
+      "description": "The envelope's confidence summary.",
+      "properties": {
+        "band": {
+          "default": "low",
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "title": "Band",
+          "type": "string"
+        },
+        "basis": {
+          "description": "References supporting the score.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Basis",
+          "type": "array"
+        },
+        "score": {
+          "default": 0.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Score",
+          "type": "number"
+        }
+      },
+      "title": "ConfidenceBlock",
+      "type": "object"
+    },
+    "DisagreementBlock": {
+      "additionalProperties": false,
+      "properties": {
+        "metrics": {
+          "items": {
+            "$ref": "#/$defs/DisagreementMetric"
+          },
+          "title": "Metrics",
+          "type": "array"
+        }
+      },
+      "title": "DisagreementBlock",
+      "type": "object"
+    },
+    "DisagreementMetric": {
+      "additionalProperties": false,
+      "description": "One disagreement metric (cross-model, cross-solver, cross-functional).",
+      "properties": {
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "references": {
+          "items": {
+            "type": "string"
+          },
+          "title": "References",
+          "type": "array"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unit"
+        },
+        "value": {
+          "title": "Value",
+          "type": "number"
+        }
+      },
+      "required": [
+        "name",
+        "value"
+      ],
+      "title": "DisagreementMetric",
+      "type": "object"
+    },
+    "FalsifierBlock": {
+      "additionalProperties": false,
+      "description": "The envelope's falsifier roll-up.",
+      "properties": {
+        "items": {
+          "items": {
+            "$ref": "#/$defs/FalsifierItem"
+          },
+          "title": "Items",
+          "type": "array"
+        },
+        "status": {
+          "default": "pass",
+          "enum": [
+            "pass",
+            "fail",
+            "blocked",
+            "inconclusive"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "title": "FalsifierBlock",
+      "type": "object"
+    },
+    "FalsifierItem": {
+      "additionalProperties": false,
+      "description": "One row in ``Envelope.falsifier.items``.\n\nRequired identification:\n\n* ``name`` \u2014 stable identifier of the gate, e.g.\n  ``\"l2.energy_disagreement_promote\"``. Names are stable across runs\n  so the audit ledger can group equivalent failures.\n\nRequired evidence:\n\n* ``threshold`` \u2014 the value to compare against. A string captures the\n  relational form (``\"<= 25 meV/atom\"``) without coupling the model to\n  a specific numeric type.\n* ``actual`` \u2014 the measured value, of any JSON-serialisable type.\n* ``status`` \u2014 pass/fail/blocked/inconclusive.\n\nOptional context:\n\n* ``evidence_ref`` \u2014 URN or URI pointing to the artifact / event / log\n  line that records the evidence.\n* ``rationale`` \u2014 short string explaining why a check returned\n  ``inconclusive`` or ``blocked``. Required for non-pass-non-fail\n  statuses by the audit gate (enforced upstream, not here).",
+      "properties": {
+        "actual": {
+          "description": "Measured value; JSON-serialisable scalar/list/object.",
+          "title": "Actual"
+        },
+        "evidence_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "URN/URI to artifact, event, or source manifest that supports the result.",
+          "title": "Evidence Ref"
+        },
+        "name": {
+          "description": "Stable identifier of the falsifier gate (e.g. 'l1.h2_vqe_vs_fci').",
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "rationale": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Short rationale; required for blocked/inconclusive (enforced upstream).",
+          "title": "Rationale"
+        },
+        "status": {
+          "description": "Outcome of comparing actual against threshold.",
+          "enum": [
+            "pass",
+            "fail",
+            "blocked",
+            "inconclusive"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "threshold": {
+          "description": "Threshold expression, e.g. '<= 1e-3 Ha' or '> 0.05 eV/\u00c5'.",
+          "title": "Threshold",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "threshold",
+        "actual",
+        "status"
+      ],
+      "title": "FalsifierItem",
+      "type": "object"
+    },
+    "RightsBlock": {
+      "additionalProperties": false,
+      "description": "Data rights / reuse scope (PRD \u00a7Data Sovereignty).",
+      "properties": {
+        "reuse_scope": {
+          "enum": [
+            "tenant_only",
+            "shared_learning",
+            "open_science"
+          ],
+          "title": "Reuse Scope",
+          "type": "string"
+        },
+        "rights_claim_id": {
+          "title": "Rights Claim Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "rights_claim_id",
+        "reuse_scope"
+      ],
+      "title": "RightsBlock",
+      "type": "object"
+    },
+    "ToolAdapter": {
+      "additionalProperties": false,
+      "description": "Identification of the tool adapter that produced this envelope.",
+      "properties": {
+        "backend": {
+          "description": "Backend mode the adapter ran under.",
+          "enum": [
+            "stub",
+            "local_cpu",
+            "runpod_mock",
+            "runpod_rest"
+          ],
+          "title": "Backend",
+          "type": "string"
+        },
+        "engine": {
+          "description": "Tool/model identifier, e.g. 'PySCF', 'DPA-3.1-3M'.",
+          "minLength": 1,
+          "title": "Engine",
+          "type": "string"
+        },
+        "name": {
+          "description": "Adapter name, e.g. 'PyScfMolecularSolver'.",
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "version": {
+          "description": "Adapter version, e.g. '0.1.0'.",
+          "minLength": 1,
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "version",
+        "backend",
+        "engine"
+      ],
+      "title": "ToolAdapter",
+      "type": "object"
+    }
+  },
+  "$id": "urn:zer0pa:materials:envelope.v1",
+  "additionalProperties": false,
+  "description": "Universal layer envelope (PRD \u00a7Architecture Invariant).",
+  "properties": {
+    "audit": {
+      "$ref": "#/$defs/AuditBlock"
+    },
+    "back_edges": {
+      "items": {
+        "$ref": "#/$defs/BackEdge"
+      },
+      "title": "Back Edges",
+      "type": "array"
+    },
+    "campaign_id": {
+      "title": "Campaign Id",
+      "type": "string"
+    },
+    "candidate_id": {
+      "title": "Candidate Id",
+      "type": "string"
+    },
+    "confidence": {
+      "$ref": "#/$defs/ConfidenceBlock"
+    },
+    "contract_version": {
+      "const": "zer0pa.materials.layer-envelope.v1",
+      "default": "zer0pa.materials.layer-envelope.v1",
+      "title": "Contract Version",
+      "type": "string"
+    },
+    "disagreement": {
+      "$ref": "#/$defs/DisagreementBlock"
+    },
+    "falsifier": {
+      "$ref": "#/$defs/FalsifierBlock"
+    },
+    "input_refs": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Input Refs",
+      "type": "array"
+    },
+    "layer": {
+      "enum": [
+        "phase0",
+        "L1",
+        "L1.5",
+        "ionic",
+        "L2",
+        "L3",
+        "L4",
+        "L5",
+        "L6",
+        "L7"
+      ],
+      "title": "Layer",
+      "type": "string"
+    },
+    "output": {
+      "additionalProperties": true,
+      "title": "Output",
+      "type": "object"
+    },
+    "research_boundary": {
+      "description": "Verbatim copy of zer0pa_materials.boundary.RESEARCH_BOUNDARY.",
+      "title": "Research Boundary",
+      "type": "string"
+    },
+    "rights": {
+      "$ref": "#/$defs/RightsBlock"
+    },
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "tool_adapter": {
+      "$ref": "#/$defs/ToolAdapter"
+    }
+  },
+  "required": [
+    "research_boundary",
+    "run_id",
+    "campaign_id",
+    "candidate_id",
+    "layer",
+    "tool_adapter",
+    "audit",
+    "rights"
+  ],
+  "title": "zer0pa.materials.layer-envelope.v1",
+  "type": "object"
+}

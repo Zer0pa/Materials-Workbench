@@ -1,0 +1,21 @@
+{
+  "research_boundary": "Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).",
+  "fixture_id": "fixture:duplicate_candidate:negative",
+  "name": "Duplicate candidate (matches LLZO cubic hash)",
+  "kind": "negative",
+  "purpose": "Trigger the L6 falsifier 'duplicate generated candidate' (PRD §Falsification wave; PRD §Phase 0/L6 'structure hash de-duplication').",
+  "sources": [
+    {
+      "type": "operator",
+      "locator": "synthetic-fixture (duplicates fixtures/structures/LLZO/cubic/structure.cif)",
+      "license": "internal"
+    }
+  ],
+  "expected_use_layers": ["L6"],
+  "structure_hash": "sha256:d45cb2bfe5e76b86b365e1402e118ed32280049a62345c903558c6cfac04ef19",
+  "size_bytes": 1281,
+  "novelty_status": "deliberate_violation",
+  "negative_falsifier_target": "duplicate_candidate",
+  "verified": false,
+  "notes": "structure_hash equals the LLZO cubic positive fixture's hash. The falsifier is implemented as 'compute structure_hash and compare against the positive fixture set' — the test verifies the duplicate is detected and that no other falsifier triggers."
+}

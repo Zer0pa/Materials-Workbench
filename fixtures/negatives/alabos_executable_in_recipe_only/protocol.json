@@ -1,0 +1,21 @@
+{
+  "research_boundary": "Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).",
+  "alabos_mode": "recipe_only",
+  "hardware_executable": true,
+  "candidate_id": "candidate:test/alabos_breach",
+  "synthesis_steps": [
+    {
+      "step": 1,
+      "operation": "ball_mill",
+      "duration_min": 30,
+      "rpm": 400
+    },
+    {
+      "step": 2,
+      "operation": "calcine",
+      "temperature_C": 600,
+      "duration_min": 120
+    }
+  ],
+  "_note": "Synthetic AlabOS protocol. ALABOS_MODE='recipe_only' (default per PRD §AlabOS Integration) but hardware_executable=true. PRD §AlabOS Integration: 'Any attempt to emit hardware-executable instructions while this flag is active is a hard failure.'"
+}

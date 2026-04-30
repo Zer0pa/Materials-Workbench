@@ -1,0 +1,19 @@
+{
+  "research_boundary": "Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).",
+  "predictions": [
+    {
+      "model": "DPA-3.1-3M",
+      "energy_eV_per_atom": -5.642,
+      "force_rmse_eV_per_Ang": 0.041
+    },
+    {
+      "model": "MACE-MPA-0",
+      "energy_eV_per_atom": -5.547,
+      "force_rmse_eV_per_Ang": 0.038
+    }
+  ],
+  "energy_disagreement_meV_per_atom": 95.0,
+  "force_rmse_disagreement_eV_per_Ang": 0.10,
+  "routing_decision": "hard_reject",
+  "_note": "Synthetic L2 envelope. The single high-level falsifier target is 'high_disagreement' (PRD §L2: hard reject if energy disagreement > 75 meV/atom). The energy_disagreement value of 95 meV/atom triggers the hard-reject gate. force_rmse_disagreement_eV_per_Ang = 0.10 is intentionally between the promote gate (0.15) and hard-reject (0.35) thresholds so it does NOT add an independent fail; only the energy disagreement is the load-bearing failure."
+}

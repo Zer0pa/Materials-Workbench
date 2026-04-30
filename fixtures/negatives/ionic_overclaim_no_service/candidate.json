@@ -1,0 +1,7 @@
+{
+  "research_boundary": "Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).",
+  "candidate_id": "candidate:test/overclaim",
+  "ionic_conductivity_S_per_cm": 5.0e-3,
+  "ionic_transport_service_ref": null,
+  "_note": "Synthetic L2 candidate envelope. Claims ionic conductivity = 5e-3 S/cm (above the 1e-3 S/cm promotion target) WITHOUT an IonicTransportService reference. PRD §Ionic Transport: 'Battery MVP claims require an explicit IonicTransportService; phonons do not substitute for Li-ion conductivity.' Falsifier rule: any envelope with ionic_conductivity_S_per_cm > 1e-3 MUST have a non-null ionic_transport_service_ref."
+}

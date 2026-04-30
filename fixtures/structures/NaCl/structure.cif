@@ -1,0 +1,24 @@
+data_NaCl_rocksalt_primitive
+# NaCl rocksalt 2-atom primitive cell (Fm-3m, space group 225).
+# Conventional lattice parameter a_conv = 5.6402 Å (room T experimental).
+# Primitive cell: rhombohedral with FCC translations and a 2-atom basis.
+#   Na at (0,0,0); Cl at (1/2,1/2,1/2) of conventional cubic.
+# In primitive coords (rhombohedral with a' = a_conv/sqrt(2)),
+# Na at (0,0,0); Cl at (1/2,1/2,1/2) of primitive cell.
+# Source: Materials Project mp-22862 (NaCl, rocksalt), corroborated by
+# CRC Handbook 90th ed., crystallographic data.
+_cell_length_a 3.989029
+_cell_length_b 3.989029
+_cell_length_c 3.989029
+_cell_angle_alpha 60.0
+_cell_angle_beta 60.0
+_cell_angle_gamma 60.0
+_symmetry_space_group_name_H-M 'P 1'
+_symmetry_Int_Tables_number 1
+loop_
+_atom_site_type_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+Na 0.000000 0.000000 0.000000
+Cl 0.500000 0.500000 0.500000

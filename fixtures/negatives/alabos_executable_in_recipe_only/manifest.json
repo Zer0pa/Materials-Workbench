@@ -1,0 +1,21 @@
+{
+  "research_boundary": "Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).",
+  "fixture_id": "fixture:alabos_executable_in_recipe_only:negative",
+  "name": "AlabOS protocol artifact with hardware_executable=true while ALABOS_MODE=recipe_only",
+  "kind": "negative",
+  "purpose": "Trigger the AlabOS falsifier 'alabos_executable_in_recipe_only' (PRD §AlabOS Integration: 'Any attempt to emit hardware-executable instructions while this flag is active is a hard failure'; PRD §Falsification wave).",
+  "sources": [
+    {
+      "type": "operator",
+      "locator": "synthetic-fixture",
+      "license": "internal"
+    }
+  ],
+  "expected_use_layers": ["L7"],
+  "structure_hash": null,
+  "size_bytes": 918,
+  "novelty_status": "deliberate_violation",
+  "negative_falsifier_target": "alabos_executable_in_recipe_only",
+  "verified": false,
+  "notes": "alabos_mode='recipe_only' AND hardware_executable=true → contradiction. Falsifier rule: if alabos_mode='recipe_only', hardware_executable MUST be false."
+}

@@ -1,0 +1,21 @@
+{
+  "research_boundary": "Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).",
+  "fixture_id": "fixture:LiH:951be753",
+  "name": "LiH diatomic molecule (PBC box)",
+  "kind": "structure",
+  "purpose": "Active-space VQE fixture (PRD §L1: LiH active-space VQE must match PySCF reference within 5e-3 Ha).",
+  "sources": [
+    {
+      "type": "paper",
+      "locator": "Huber & Herzberg, Molecular Spectra and Molecular Structure IV (1979)",
+      "license": "operator-cited"
+    }
+  ],
+  "expected_use_layers": ["L1", "quantum"],
+  "structure_hash": "sha256:951be7535aa9f05fa0ad3b6d453e32e844afddef44db89cb1a6ef4a8083a211b",
+  "size_bytes": 800,
+  "novelty_status": "known",
+  "negative_falsifier_target": null,
+  "verified": false,
+  "notes": "Bond length 1.5949 Å (experimental r_e). Box edge 12 Å for PBC image isolation. Stoichiometry: LiH (2 atoms)."
+}

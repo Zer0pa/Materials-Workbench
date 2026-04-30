@@ -1,0 +1,31 @@
+{
+  "research_boundary": "Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).",
+  "fixture_id": "fixture:SnSe:6cb5daa5",
+  "name": "SnSe orthorhombic Pnma 8-atom cell",
+  "kind": "structure",
+  "purpose": "Thermoelectric sidecar reference (PRD §L1.5) — record-ZT (~2.6 along b-axis) high-T thermoelectric.",
+  "sources": [
+    {
+      "type": "mp_id",
+      "locator": "mp-691",
+      "license": "CC-BY-4.0"
+    },
+    {
+      "type": "paper",
+      "locator": "10.1038/nature13184",
+      "license": "operator-cited"
+    },
+    {
+      "type": "paper",
+      "locator": "10.1016/0022-3697(86)90059-4",
+      "license": "operator-cited"
+    }
+  ],
+  "expected_use_layers": ["L1", "L1.5"],
+  "structure_hash": "sha256:6cb5daa542a21a27b03b641faa43b0cd56f95174d089a67ee43e2fe5dc9910f2",
+  "size_bytes": 1378,
+  "novelty_status": "known",
+  "negative_falsifier_target": null,
+  "verified": false,
+  "notes": "Low-T alpha phase (Pnma, #62). Lattice a = 11.498 Å, b = 4.151 Å, c = 4.445 Å. 4 Sn + 4 Se = 8 atoms in primitive cell. The high-T beta (Cmcm) phase that delivers record ZT is a separate fixture for downstream waves if needed."
+}

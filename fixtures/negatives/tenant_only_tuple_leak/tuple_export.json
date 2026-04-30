@@ -1,0 +1,19 @@
+{
+  "research_boundary": "Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).",
+  "export_bundle": "shared_learning",
+  "tuples": [
+    {
+      "tuple_id": "tuple:test/leaked-1",
+      "input": {"candidate_id": "candidate:tenant42/abcdef"},
+      "proposed_action": "run_l2",
+      "simulation_or_experiment": "L2-MLIP-DPA3-MACE",
+      "output": {"prediction": "halide_solid_electrolyte"},
+      "falsifier": "l2.energy_disagreement_promote",
+      "ground_truth": null,
+      "decision": "queue_dft",
+      "audit_ref": "audit:tenant42/run-99",
+      "reuse_scope": "tenant_only"
+    }
+  ],
+  "_note": "Synthetic reasoner tuple. The tuple has reuse_scope='tenant_only' but it appears inside an 'export_bundle' classified as 'shared_learning' (PRD §Self-Bootstrapping Reasoner / §Data Sovereignty: 'private tuple reuse outside reuse_scope'). Falsifier rule: every tuple in a shared_learning bundle MUST have reuse_scope ∈ {shared_learning, open_science}; tenant_only tuples are forbidden."
+}

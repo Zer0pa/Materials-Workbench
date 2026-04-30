@@ -1,0 +1,26 @@
+{
+  "research_boundary": "Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).",
+  "fixture_id": "fixture:extraction-LLZO:phase0",
+  "name": "Phase 0 extracted properties for LLZO (cubic)",
+  "kind": "extraction",
+  "purpose": "Phase 0 extraction fixture for the battery MVP known-good control (PRD §Scope LLZO). Provides explicit DOI/page/table/figure grounding for three canonical properties: room-T ionic conductivity, activation energy, and cubic lattice parameter.",
+  "sources": [
+    {
+      "type": "paper",
+      "locator": "10.1002/anie.200701144",
+      "license": "operator-cited"
+    },
+    {
+      "type": "paper",
+      "locator": "10.1016/j.jssc.2009.05.020",
+      "license": "operator-cited"
+    }
+  ],
+  "expected_use_layers": ["phase0"],
+  "structure_hash": null,
+  "size_bytes": 1259,
+  "novelty_status": "known",
+  "negative_falsifier_target": null,
+  "verified": false,
+  "notes": "DOIs are real and resolvable, but the page numbers / table / figure references are plausible primary-source guesses from the cited papers — operator should verify pages/tables/figures before promotion. verified=false until lead-agent live licence-checking and citation verification."
+}

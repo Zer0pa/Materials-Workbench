@@ -1,0 +1,18 @@
+data_invalid_cif_negative_fixture
+# DELIBERATELY INVALID CIF — falsifier target: invalid_cif (PRD §Falsification wave).
+# This file is intentionally broken in two compounding ways:
+#   1. The loop_ block declares 4 columns but the data rows only supply 2 tokens.
+#   2. _cell_length_b is missing entirely (parser must reject on missing param).
+# A correct minimal-CIF parser MUST raise on this input.
+_cell_length_a 5.0
+_cell_length_c 5.0
+_cell_angle_alpha 90.0
+_cell_angle_beta 90.0
+_cell_angle_gamma 90.0
+loop_
+_atom_site_type_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+Na 0.000
+Cl 0.500

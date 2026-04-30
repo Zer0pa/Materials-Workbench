@@ -1,0 +1,38 @@
+data_SnSe_orthorhombic_Pnma
+# Orthorhombic SnSe (Pnma, space group 62), 8-atom primitive cell (= conv).
+# Lattice parameters a = 11.498 Å, b = 4.151 Å, c = 4.445 Å (room T).
+# This is the low-temperature alpha phase. The high-T beta phase (Cmcm)
+# above ~800 K is what gives SnSe its record-breaking ZT of ~2.6 along
+# the b axis.
+# Wyckoff 4c sites for Sn and Se with x_Sn ≈ 0.119, z_Sn ≈ 0.108
+# and x_Se ≈ 0.151, z_Se ≈ 0.481 (approximate room-T positions).
+#
+# Sources:
+#   - Zhao, L.-D. et al. "Ultralow thermal conductivity and high
+#     thermoelectric figure of merit in SnSe crystals", Nature 508,
+#     373–377 (2014). DOI: 10.1038/nature13184
+#   - Chattopadhyay, T. et al. "Neutron and X-ray diffraction studies of
+#     the structural phase transition in SnSe", J. Phys. Chem. Solids
+#     47(9), 879–885 (1986). DOI: 10.1016/0022-3697(86)90059-4
+#   - Materials Project entry mp-691 (SnSe Pnma).
+_cell_length_a 11.498
+_cell_length_b 4.151
+_cell_length_c 4.445
+_cell_angle_alpha 90.0
+_cell_angle_beta 90.0
+_cell_angle_gamma 90.0
+_symmetry_space_group_name_H-M 'P 1'
+_symmetry_Int_Tables_number 1
+loop_
+_atom_site_type_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+Sn 0.119 0.250 0.108
+Sn 0.881 0.750 0.892
+Sn 0.381 0.750 0.392
+Sn 0.619 0.250 0.608
+Se 0.151 0.250 0.481
+Se 0.849 0.750 0.519
+Se 0.349 0.750 0.019
+Se 0.651 0.250 0.981
