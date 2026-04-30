@@ -118,10 +118,21 @@ def test_plug_swap_acceptance_report(plug_swap_harness: PlugSwapHarness) -> None
     # Print to stdout (visible with -s).
     print("\n\n" + report_text)
 
-    # Write to file.
-    _REPORT_DIR.mkdir(parents=True, exist_ok=True)
-    _REPORT_PATH.write_text(report_text, encoding="utf-8")
-    print(f"\nReport written to: {_REPORT_PATH}")
+    # Only regenerate the committed snapshot when the operator explicitly asks
+    # (env var ``ZER0PA_REGENERATE_ACCEPTANCE_REPORT=1``). Otherwise the test
+    # would dirty the working tree on every run because wallclock measurements
+    # vary across hardware and load. Reviewers running ``pytest`` should NOT
+    # see a modified file in ``git status``.
+    import os as _os
+    if _os.environ.get("ZER0PA_REGENERATE_ACCEPTANCE_REPORT") == "1":
+        _REPORT_DIR.mkdir(parents=True, exist_ok=True)
+        _REPORT_PATH.write_text(report_text, encoding="utf-8")
+        print(f"\nReport regenerated at: {_REPORT_PATH}")
+    else:
+        print(
+            "\n(set ZER0PA_REGENERATE_ACCEPTANCE_REPORT=1 to regenerate the "
+            "committed snapshot at phases/Plug-swap-framework/acceptance-report.md)"
+        )
 
     # Hard assertion: every layer's schema, disagreement, and falsifier must pass.
     # Audit provenance may be inconclusive (same-name adapters) — that is allowed.
