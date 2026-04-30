@@ -56,6 +56,7 @@ from zer0pa_materials.cli.l5 import l5_app  # l5 wave
 from zer0pa_materials.cli.l7 import l7_app  # L7 orchestration wave (4a)
 from zer0pa_materials.cli.packets import packets_app  # MVP evidence packet (5a)
 from zer0pa_materials.cli.runpod import runpod_app  # Wave 5c — Runpod cutover
+from zer0pa_materials.cli.falsification import falsification_app  # Wave 6 — full falsification wave
 from zer0pa_materials.envelope import (
     LAYER_OUTPUT_REGISTRY,
     Envelope,
@@ -275,6 +276,7 @@ app.add_typer(l4_app, name="l4")
 app.add_typer(l5_app, name="l5")
 app.add_typer(l7_app, name="l7")
 app.add_typer(packets_app, name="packets")
+app.add_typer(falsification_app, name="falsification")
 app.add_typer(runpod_app, name="runpod")
 
 # Allow ``python -m zer0pa_materials.cli.main`` invocation.

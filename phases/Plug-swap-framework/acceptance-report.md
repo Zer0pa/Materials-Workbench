@@ -7,17 +7,17 @@
 
 | Layer | Adapter A | Adapter B | Schema | Audit | Disagreement | Falsifier | Wallclock | Budget |
 |---|---|---|---|---|---|---|---|---|
-| phase0 | OptimadeFederatedQueryAdapter | LangGraphExtractionWorkflow | OK | OK | OK | OK | 0.009s | YES |
-| L1 | PyScfMolecularSolver | QuantumEspressoAiiDASolver | OK | OK | OK | OK | 0.003s | YES |
-| quantum | PennyLaneVqeSolver | QiskitNatureVqeSolver | OK | OK | OK | OK | 0.004s | YES |
-| L2 | DeepmdDpaCalculatorAdapter | MaceMpCalculatorAdapter | OK | OK | OK | OK | 0.003s | YES |
-| ionic | NebMigrationBarrierAdapter | MlipMdDiffusionAdapter | OK | OK | OK | OK | 0.021s | YES |
-| L1.5 | PhonopyHarmonicAdapter | Phono3pyAnharmonicBTEAdapter | OK | OK | OK | OK | 0.004s | YES |
-| L3 | PyCalphadEquilibriumAdapter | EspeiBayesianFitAdapter | OK | OK | OK | OK | 0.114s | YES |
-| L4 | PrismsPfAdapter | MoosePhaseFieldAdapter | OK | OK | OK | OK | 0.006s | YES |
-| L5 | FEniCSxContinuumAdapter | DealIIStructuralAdapter | OK | OK | OK | OK | 0.003s | YES |
-| L6 | MatterGenGeneratorAdapter | DiffCspGeneratorAdapter | OK | OK | OK | OK | 0.010s | YES |
-| L7 | PrefectCampaignAdapter | LangGraphReasonerAdapter | OK | OK | OK | OK | 0.003s | YES |
+| phase0 | OptimadeFederatedQueryAdapter | LangGraphExtractionWorkflow | OK | OK | OK | OK | 0.005s | YES |
+| L1 | PyScfMolecularSolver | QuantumEspressoAiiDASolver | OK | OK | OK | OK | 0.002s | YES |
+| quantum | PennyLaneVqeSolver | QiskitNatureVqeSolver | OK | OK | OK | OK | 0.002s | YES |
+| L2 | DeepmdDpaCalculatorAdapter | MaceMpCalculatorAdapter | OK | OK | OK | OK | 0.002s | YES |
+| ionic | NebMigrationBarrierAdapter | MlipMdDiffusionAdapter | OK | OK | OK | OK | 0.010s | YES |
+| L1.5 | PhonopyHarmonicAdapter | Phono3pyAnharmonicBTEAdapter | OK | OK | OK | OK | 0.002s | YES |
+| L3 | PyCalphadEquilibriumAdapter | EspeiBayesianFitAdapter | OK | OK | OK | OK | 0.048s | YES |
+| L4 | PrismsPfAdapter | MoosePhaseFieldAdapter | OK | OK | OK | OK | 0.003s | YES |
+| L5 | FEniCSxContinuumAdapter | DealIIStructuralAdapter | OK | OK | OK | OK | 0.002s | YES |
+| L6 | MatterGenGeneratorAdapter | DiffCspGeneratorAdapter | OK | OK | OK | OK | 0.005s | YES |
+| L7 | PrefectCampaignAdapter | LangGraphReasonerAdapter | OK | OK | OK | OK | 0.002s | YES |
 
 ## Legend
 - **OK** — verdict `pass`
