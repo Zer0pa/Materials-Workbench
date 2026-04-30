@@ -43,6 +43,9 @@ from zer0pa_materials.audit import (
     SourceManifest,
     reconstruct_from_repo,
 )
+from zer0pa_materials.cli.phase0 import phase0_app  # phase0 wave (kept)
+from zer0pa_materials.cli.l6 import l6_app  # l6 wave (kept)
+from zer0pa_materials.cli.ionic import app as ionic_app  # ionic wave
 from zer0pa_materials.envelope import (
     LAYER_OUTPUT_REGISTRY,
     Envelope,
@@ -249,6 +252,10 @@ def audit_reconstruct(
     state = reconstruct_from_repo(root)
     typer.echo(json.dumps(state.model_dump(mode="json"), indent=2, sort_keys=True))
 
+
+app.add_typer(phase0_app, name="phase0")
+app.add_typer(l6_app, name="l6")
+app.add_typer(ionic_app, name="ionic")
 
 # Allow ``python -m zer0pa_materials.cli.main`` invocation.
 if __name__ == "__main__":  # pragma: no cover

@@ -125,15 +125,24 @@ class Phase0PropertyGrounding(BaseModel):
 
     The PRD requires ``DOI/page/table/figure`` grounding for any numeric
     claim. ``page`` and ``table`` and ``figure`` are individually optional
-    so figure-only or table-only citations remain valid; ``doi`` is required.
+    so figure-only or table-only citations remain valid; ``doi`` may be
+    ``None`` (missing) but an empty string is rejected at the schema level.
     """
 
     model_config = ConfigDict(extra="forbid")
 
-    doi: str = Field(..., min_length=1, description="DOI of the source publication.")
+    doi: str | None = Field(None, description="DOI of the source publication.")
     page: int | None = Field(None, ge=1, description="Page number of the cited claim.")
     table: str | None = Field(None, description="Table identifier (e.g. 'Table 2').")
     figure: str | None = Field(None, description="Figure identifier (e.g. 'Figure 3').")
+
+    @field_validator("doi")
+    @classmethod
+    def doi_not_empty(cls, v: str | None) -> str | None:
+        """Reject empty-string doi; None is allowed (means 'missing')."""
+        if v is not None and v.strip() == "":
+            raise ValueError("doi must be a non-empty string or None (got empty string)")
+        return v
 
 
 class Phase0ExtractedProperty(BaseModel):
