@@ -40,6 +40,11 @@ from zer0pa_materials.audit.sources import BlockedSourceManifest
 from zer0pa_materials.boundary import RESEARCH_BOUNDARY
 from zer0pa_materials.envelope.hashing import sha256_of, structure_hash
 from zer0pa_materials.envelope.layer_outputs import L2MlipOutput
+from zer0pa_materials.runpod.dispatcher import (
+    DispatchResult,
+    RunpodCredentialsError,
+    RunpodDispatcher,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -93,10 +98,21 @@ class L2EnsembleRunner:
         dpa_adapter: L2MlipAdapter | None = None,
         mace_adapter: L2MlipAdapter | None = None,
         optional_adapters: list[L2MlipAdapter] | None = None,
+        *,
+        dispatcher: RunpodDispatcher | None = None,
     ) -> None:
         self._dpa = dpa_adapter or DeepmdDpaCalculatorAdapter()
         self._mace = mace_adapter or MaceMpCalculatorAdapter()
         self._optional: list[L2MlipAdapter] = optional_adapters or []
+        # Wave C: optional Runpod dispatcher. When provided AND its
+        # configured backend for L2 is "runpod_rest", :meth:`run` routes
+        # the call through the live REST client; the local DPA/MACE
+        # ensemble fires only when the dispatcher is absent or returns
+        # ``None`` (i.e. the configured backend is local).  Passing
+        # ``dispatcher=None`` (the default) preserves all pre-Wave-C
+        # behaviour, which is why the existing test suite continues to
+        # pass without modification.
+        self._dispatcher = dispatcher
 
     def add_optional_model(self, adapter: L2MlipAdapter) -> None:
         """Register an optional third model (UMA, SevenNet, etc.)."""
@@ -124,6 +140,39 @@ class L2EnsembleRunner:
         dict
             Ensemble Envelope dict ready for ``Envelope.model_validate``.
         """
+        # ---- Wave C: dispatch hook ---------------------------------------
+        # When a RunpodDispatcher is attached AND its configured L2 backend
+        # is ``runpod_rest``, hit the live REST endpoint and return the
+        # decoded envelope verbatim (the server is responsible for emitting
+        # an envelope-shaped response with backend="runpod_rest").  When
+        # the configured backend is ``runpod_mock``, return the mock
+        # envelope.  Any other backend (``local_stub`` / ``local_cpu``)
+        # makes ``dispatch()`` return None and we fall through to the
+        # mandatory DPA-3 + MACE local ensemble below.
+        #
+        # CRITICAL: if ``runpod_rest`` is configured but credentials are
+        # missing, ``dispatcher.dispatch`` raises ``RunpodCredentialsError``
+        # — we MUST propagate that exception rather than silently falling
+        # back to the local ensemble or to the mock backend.  This is the
+        # honest-block invariant Wave C enforces (see the docstring on
+        # :class:`RunpodDispatcher` and the tests in
+        # tests/parity/test_runpod_dispatcher.py).
+        if self._dispatcher is not None:
+            structure_for_payload = {**structure, "request_id": request.run_id}
+            mock_output_payload = {
+                "energy_per_atom_eV": -6.10,
+                "routing_decision": "promote",
+                "committee_size": 2,
+            }
+            dispatch_result = self._dispatcher.dispatch(
+                layer="L2",
+                endpoint="ensemble_predict",
+                payload=structure_for_payload,
+                mock_output=mock_output_payload,
+            )
+            if dispatch_result is not None:
+                return dispatch_result.payload
+
         # ---- mandatory adapters -------------------------------------------
         dpa_envelope = self._dpa.predict(structure, request)
         mace_envelope = self._mace.predict(structure, request)
@@ -259,6 +308,14 @@ class L2EnsembleRunner:
         manifests.extend(self._mace.blocked_manifests())
         for opt in self._optional:
             manifests.extend(opt.blocked_manifests())
+        # Wave C: surface manifests recorded by the Runpod dispatcher when
+        # ``runpod_rest`` was requested but credentials were missing.  The
+        # dispatcher already raised ``RunpodCredentialsError`` upstream;
+        # this list is the structured trail the operator inspects to see
+        # *why* the run was blocked.
+        if self._dispatcher is not None:
+            for m in self._dispatcher.blocked_manifests():
+                manifests.append(m.model_dump(mode="json"))
         return manifests
 
     # ------------------------------------------------------------------ KG writes

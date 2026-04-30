@@ -31,6 +31,7 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from zer0pa_materials.envelope.falsifier import FalsifierItem, FalsifierStatus
+from zer0pa_materials.falsifiers.raw_evidence import iter_audit_rows
 
 
 __all__ = [
@@ -42,6 +43,7 @@ __all__ = [
     "tdb_quarantine_breach",
     "phaseforgeplus_license_gate",
     "commercial_tdb_provider_disabled_by_default",
+    "verify_l3_sovereign_block_enforced",
 ]
 
 
@@ -662,4 +664,207 @@ def commercial_tdb_provider_disabled_by_default(
         threshold="L3_COMMERCIAL_TDB_PROVIDER in {'disabled', 'thermo_calc_quarantined'}",
         actual={"config_value": cfg_value},
         status="blocked",
+    )
+
+
+# ---------------------------------------------------------------------------
+# verify_l3_sovereign_block_enforced   (Wave D hardened gate 7)
+# ---------------------------------------------------------------------------
+
+
+_PHASEFORGEPLUS_NAME_HINTS = ("PhaseForgePlus", "phaseforge+", "phaseforge_plus")
+
+
+def _envelope_used_phaseforgeplus(envelope: dict[str, Any]) -> bool:
+    """Heuristic: did this envelope claim PhaseForgePlus contribution?
+
+    Looks at the adapter name, the input refs, and the
+    ``_phaseforgeplus_meta`` block.
+    """
+    tool_adapter = envelope.get("tool_adapter") or {}
+    adapter_name = str(tool_adapter.get("name") or "")
+    if any(hint.lower() in adapter_name.lower() for hint in _PHASEFORGEPLUS_NAME_HINTS):
+        return True
+    pfp_meta = envelope.get("_phaseforgeplus_meta") or {}
+    if pfp_meta.get("repo") or pfp_meta.get("enabled"):
+        return True
+    refs = envelope.get("input_refs") or []
+    if any(
+        isinstance(r, str) and any(hint.lower() in r.lower() for hint in _PHASEFORGEPLUS_NAME_HINTS)
+        for r in refs
+    ):
+        return True
+    return False
+
+
+def _envelope_used_thermocalc(envelope: dict[str, Any]) -> bool:
+    """Heuristic: did this envelope use a Thermo-Calc TDB?"""
+    tool_adapter = envelope.get("tool_adapter") or {}
+    adapter_name = str(tool_adapter.get("name") or "")
+    backend = str(tool_adapter.get("backend") or "")
+    engine = str(tool_adapter.get("engine") or "")
+    quarantine = envelope.get("_quarantine_meta") or {}
+    provider = str(quarantine.get("tdb_provider") or "")
+    return (
+        "ThermoCalc" in adapter_name
+        or "thermo_calc" in backend.lower()
+        or "thermo-calc" in engine.lower()
+        or re.search(r"thermo.?calc", provider, flags=re.IGNORECASE) is not None
+    )
+
+
+def _decisions_show_enable(
+    audit_log: Any,
+    needles: tuple[str, ...],
+) -> dict[str, Any] | None:
+    """Walk decisions.jsonl looking for an enable-record matching the needles.
+
+    Returns the matched payload or None. Each needle is a substring
+    matched case-insensitively against the decision row's
+    ``rationale``, ``context``, and ``decision_id`` fields.
+    """
+    for payload in iter_audit_rows(audit_log, "decisions"):
+        haystack = " ".join(
+            str(payload.get(k) or "")
+            for k in ("decision_id", "context", "rationale")
+        ).lower()
+        if all(n.lower() in haystack for n in needles):
+            return payload
+    return None
+
+
+def verify_l3_sovereign_block_enforced(
+    envelope: dict[str, Any],
+    audit_log: Any,
+) -> FalsifierItem:
+    """Verify the L3 sovereign-block decision is recorded for restricted backends.
+
+    Wave D hardened version of the L3 quarantine + PhaseForgePlus gates.
+    The original gates inspect ``_quarantine_meta`` and
+    ``_phaseforgeplus_meta`` fields on the envelope itself — fields
+    that an adapter can paint without ever recording the corresponding
+    decision in ``decisions.jsonl``.
+
+    The hardened gate requires a CONCRETE PRIOR DECISION:
+
+      * Envelope claims a Thermo-Calc TDB → ``decisions.jsonl`` must
+        contain a row mentioning ``"enable_with_customer_license"`` or
+        ``"thermo-calc-quarantined"`` (case-insensitive). If not, the
+        envelope was produced without a sovereign-block enable record
+        and FAILS.
+      * Envelope claims PhaseForgePlus contribution → ``decisions.jsonl``
+        must contain ``"enable_with_verified_license"`` or
+        ``"phaseforgeplus"`` AND ``"license"``. Otherwise the envelope
+        used PhaseForgePlus output without a license record and FAILS.
+
+    Pass conditions:
+      * Envelope did not use Thermo-Calc and did not use PhaseForgePlus
+        (gate not applicable), OR
+      * Both checks above pass.
+    """
+    used_thermocalc = _envelope_used_thermocalc(envelope)
+    used_pfp = _envelope_used_phaseforgeplus(envelope)
+    if not used_thermocalc and not used_pfp:
+        return FalsifierItem(
+            name="l3.sovereign_block_enforced",
+            threshold=(
+                "Thermo-Calc → enable_with_customer_license decision; "
+                "PhaseForgePlus → enable_with_verified_license decision"
+            ),
+            actual={"used_thermocalc": False, "used_phaseforgeplus": False},
+            status="pass",
+            rationale="No restricted backend in use; gate not applicable.",
+        )
+
+    failures: list[dict[str, Any]] = []
+    matches: list[dict[str, Any]] = []
+
+    if used_thermocalc:
+        # Look for either the enable record or a quarantined-mode decision.
+        decision = _decisions_show_enable(
+            audit_log,
+            ("enable_with_customer_license",),
+        )
+        if decision is None:
+            decision = _decisions_show_enable(
+                audit_log,
+                ("thermo", "calc"),
+            )
+        if decision is None:
+            failures.append(
+                {
+                    "backend": "thermo_calc",
+                    "reason": "no_enable_decision_in_decisions_jsonl",
+                }
+            )
+        else:
+            matches.append(
+                {
+                    "backend": "thermo_calc",
+                    "decision_id": decision.get("decision_id"),
+                }
+            )
+
+    if used_pfp:
+        decision = _decisions_show_enable(
+            audit_log,
+            ("enable_with_verified_license",),
+        )
+        if decision is None:
+            decision = _decisions_show_enable(
+                audit_log,
+                ("phaseforgeplus", "license"),
+            )
+        if decision is None:
+            decision = _decisions_show_enable(
+                audit_log,
+                ("phaseforge_plus", "license"),
+            )
+        if decision is None:
+            failures.append(
+                {
+                    "backend": "phaseforgeplus",
+                    "reason": "no_enable_decision_in_decisions_jsonl",
+                }
+            )
+        else:
+            matches.append(
+                {
+                    "backend": "phaseforgeplus",
+                    "decision_id": decision.get("decision_id"),
+                }
+            )
+
+    if failures:
+        return FalsifierItem(
+            name="l3.sovereign_block_enforced",
+            threshold=(
+                "Thermo-Calc → enable_with_customer_license decision; "
+                "PhaseForgePlus → enable_with_verified_license decision"
+            ),
+            actual={
+                "used_thermocalc": used_thermocalc,
+                "used_phaseforgeplus": used_pfp,
+                "failures": failures,
+                "matches": matches,
+            },
+            status="fail",
+            rationale=(
+                "envelope claims a sovereign-blocked backend but the "
+                "corresponding enable decision is absent from decisions.jsonl"
+            ),
+        )
+
+    return FalsifierItem(
+        name="l3.sovereign_block_enforced",
+        threshold=(
+            "Thermo-Calc → enable_with_customer_license decision; "
+            "PhaseForgePlus → enable_with_verified_license decision"
+        ),
+        actual={
+            "used_thermocalc": used_thermocalc,
+            "used_phaseforgeplus": used_pfp,
+            "matches": matches,
+        },
+        status="pass",
     )

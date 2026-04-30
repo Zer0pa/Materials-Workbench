@@ -48,6 +48,11 @@ from typing import Any, Mapping
 
 from zer0pa_materials.envelope import Envelope, FalsifierItem
 from zer0pa_materials.adapters.ionic.base import IONIC_TRANSPORT_SERVICE_REF
+from zer0pa_materials.falsifiers.raw_evidence import (
+    ARRHENIUS_KB_EV_PER_K,
+    find_ionic_back_edge_target,
+    implied_arrhenius_barrier_eV,
+)
 
 __all__ = [
     "requires_ionic_transport_service",
@@ -59,7 +64,12 @@ __all__ = [
     "mlip_aimd_diffusion_disagreement",
     "defect_disorder_assumptions_documented",
     "full_battery_evidence_chain_complete",
+    "verify_ionic_service_back_edge",
+    "neb_barrier_range_check",
     "REQUIRED_EVIDENCE_KEYS",
+    "MIN_PLAUSIBLE_BARRIER_EV",
+    "MAX_PLAUSIBLE_BARRIER_EV",
+    "ARRHENIUS_BARRIER_BAND_AT_1E_3_EV",
 ]
 
 
@@ -74,6 +84,30 @@ REQUIRED_EVIDENCE_KEYS: tuple[str, ...] = (
     "interface_stability",
     "defect_disorder_assumptions",
 )
+
+
+# Wave D NEB barrier plausibility band (gate 5).
+#
+# Lower bound 0.05 eV: below this, the activation energy is in the
+# k_B T regime at room temperature; superionic conductors with
+# essentially-zero barriers are not physical at 300 K and almost always
+# indicate a bug in the NEB integrator or the climbing-image setup
+# (see e.g. Mo, Ong, Ceder 2012 Chem. Mater.).
+#
+# Upper bound 3.0 eV: above this, no candidate could plausibly conduct
+# Li ions at any practical temperature. A claim of 5 eV migration
+# barrier on a battery candidate is essentially garbage.
+MIN_PLAUSIBLE_BARRIER_EV: float = 0.05
+MAX_PLAUSIBLE_BARRIER_EV: float = 3.0
+
+
+# For battery candidates with claimed sigma >= 1e-3 S/cm (the canonical
+# PRD MVP threshold), the implied Arrhenius barrier at 300 K with a
+# typical superionic prefactor (sigma_0 ~ 1e3 S/cm) falls in
+# [0.20, 0.45] eV. A claimed migration_barrier outside this band while
+# the conductivity claim is at or above 1e-3 S/cm is internally
+# inconsistent.
+ARRHENIUS_BARRIER_BAND_AT_1E_3_EV: tuple[float, float] = (0.20, 0.45)
 
 
 # ----------------------------------------------------------------------------
@@ -585,4 +619,276 @@ def full_battery_evidence_chain_complete(
             if missing
             else "All six PRD-required pieces of evidence present."
         ),
+    )
+
+
+# ----------------------------------------------------------------------------
+# verify_ionic_service_back_edge   (Wave D hardened gate 4)
+# ----------------------------------------------------------------------------
+
+
+def verify_ionic_service_back_edge(
+    envelope: Envelope | Mapping[str, Any],
+    audit_log: Any,
+) -> FalsifierItem:
+    """Verify that an ionic-conductivity claim has a back-edge that resolves.
+
+    Wave D hardened version of :func:`requires_ionic_transport_service`.
+    The original gate accepted any envelope with an ``IonicTransportService``
+    string in ``input_refs`` or any back-edge labelled ``"ionic"``.
+    A buggy adapter could fabricate a back-edge with a non-existent
+    ``audit_record_id`` and still pass.
+
+    The hardened gate:
+
+      1. Looks for an ionic-conductivity claim in the envelope (same
+         shape as the original gate: ``output.nernst_einstein_conductivity_S_per_cm``,
+         flat ``ionic_conductivity_S_per_cm``).
+      2. If a claim exists, walks the back-edges, finds the one with
+         ``layer == "ionic"``, and uses :func:`find_ionic_back_edge_target`
+         to resolve the ``audit_record_id`` in the live audit log
+         (``events.jsonl`` / ``artifacts.jsonl``).
+      3. If the back-edge does NOT resolve, returns ``status="fail"``
+         with reason ``ionic_back_edge_does_not_resolve``.
+
+    Pass conditions (all must hold OR no claim is present):
+      * The envelope has at least one ionic back-edge.
+      * The back-edge resolves to a row whose payload references an
+        ionic-layer adapter (best-effort: the row's ``layer`` field is
+        ``"ionic"`` OR the ``tool_adapter.name`` includes ``"ionic"`` /
+        the row's ``adapter`` mentions an ionic adapter).
+
+    The gate is a NO-OP for envelopes with no ionic-conductivity claim.
+    """
+    body = _as_dict(envelope)
+    output = _envelope_output(envelope)
+    flat_claim = body.get("ionic_conductivity_S_per_cm")
+    has_claim = bool(
+        (flat_claim is not None and flat_claim != 0)
+        or output.get("nernst_einstein_conductivity_S_per_cm") not in (None, 0)
+    )
+    if not has_claim:
+        return FalsifierItem(
+            name="ionic.verify_back_edge_resolves",
+            threshold=(
+                "if envelope claims ionic_conductivity, an ionic-layer "
+                "back-edge must resolve in the audit log"
+            ),
+            actual={"reason": "no_claim_present"},
+            status="pass",
+            rationale="No ionic-conductivity claim; gate not triggered.",
+        )
+
+    back_edges = body.get("back_edges") or []
+    ionic_back_edges = [
+        be for be in back_edges
+        if isinstance(be, Mapping) and be.get("layer") == "ionic"
+    ]
+    if not ionic_back_edges:
+        return FalsifierItem(
+            name="ionic.verify_back_edge_resolves",
+            threshold=(
+                "if envelope claims ionic_conductivity, an ionic-layer "
+                "back-edge must exist"
+            ),
+            actual={"back_edges": list(back_edges)},
+            status="fail",
+            rationale=(
+                "envelope claims ionic conductivity but has no back_edge "
+                "with layer='ionic'"
+            ),
+        )
+
+    target_row = find_ionic_back_edge_target(body, audit_log)
+    if target_row is None:
+        unresolved_ids = [be.get("audit_record_id") for be in ionic_back_edges]
+        return FalsifierItem(
+            name="ionic.verify_back_edge_resolves",
+            threshold=(
+                "ionic back-edge audit_record_id MUST resolve in events.jsonl"
+            ),
+            actual={
+                "back_edges": list(back_edges),
+                "unresolved_audit_record_ids": unresolved_ids,
+            },
+            status="fail",
+            rationale=(
+                "ionic back-edge audit_record_id does not resolve in the "
+                "audit log; possible fabricated back-edge"
+            ),
+        )
+
+    # Best-effort: confirm the resolved row was produced by an ionic adapter.
+    adapter_name = ""
+    if isinstance(target_row, Mapping):
+        adapter = target_row.get("tool_adapter") or {}
+        if isinstance(adapter, Mapping):
+            adapter_name = str(adapter.get("name") or "")
+        if not adapter_name:
+            adapter_name = str(target_row.get("adapter") or "")
+    layer_field = target_row.get("layer", "") if isinstance(target_row, Mapping) else ""
+    looks_ionic = (
+        str(layer_field).lower() == "ionic"
+        or "ionic" in adapter_name.lower()
+        or "neb" in adapter_name.lower()
+        or "arrhenius" in adapter_name.lower()
+        or "kmc" in adapter_name.lower()
+    )
+    if not looks_ionic:
+        return FalsifierItem(
+            name="ionic.verify_back_edge_resolves",
+            threshold=(
+                "ionic back-edge MUST resolve to an ionic-layer adapter row"
+            ),
+            actual={
+                "resolved_layer": layer_field,
+                "resolved_adapter": adapter_name,
+            },
+            status="fail",
+            rationale=(
+                "back-edge resolved but the target row was not produced by "
+                "an ionic adapter"
+            ),
+        )
+
+    return FalsifierItem(
+        name="ionic.verify_back_edge_resolves",
+        threshold=(
+            "ionic back-edge MUST resolve to an ionic-layer adapter row"
+        ),
+        actual={
+            "resolved_layer": layer_field,
+            "resolved_adapter": adapter_name,
+            "resolved_audit_record_id": target_row.get("audit_record_id")
+            if isinstance(target_row, Mapping)
+            else None,
+        },
+        status="pass",
+    )
+
+
+# ----------------------------------------------------------------------------
+# neb_barrier_range_check   (Wave D hardened gate 5)
+# ----------------------------------------------------------------------------
+
+
+def neb_barrier_range_check(
+    envelope: Envelope | Mapping[str, Any],
+    sigma_threshold_S_per_cm: float = 1e-3,
+    barrier_band: tuple[float, float] = ARRHENIUS_BARRIER_BAND_AT_1E_3_EV,
+    min_barrier_eV: float = MIN_PLAUSIBLE_BARRIER_EV,
+    max_barrier_eV: float = MAX_PLAUSIBLE_BARRIER_EV,
+) -> FalsifierItem:
+    """Range-check ``output.migration_barrier_eV`` and Arrhenius consistency.
+
+    Wave D adds an explicit NEB barrier sanity gate (the previous ionic
+    falsifier set had no plausibility band check). Two failure modes:
+
+    A. Out-of-band barrier: ``barrier`` outside ``[0.05, 3.0]`` eV. This
+       is almost always a bug — superionic conductors at room temperature
+       cannot have barriers below ``k_B T`` (≈0.025 eV), and conductors
+       above 3 eV are not physical at any practical T.
+
+    B. Arrhenius inconsistency: when the candidate is being PROMOTED
+       (``ionic_conductivity_S_per_cm >= 1e-3``) but its claimed
+       ``migration_barrier_eV`` lies outside ``[0.20, 0.45]`` eV. The
+       implied barrier from σ via :func:`implied_arrhenius_barrier_eV`
+       at 300 K with a typical sigma_0 lives in this band.
+
+    Pass conditions:
+      * ``output.migration_barrier_eV`` is None (gate not applicable), OR
+      * barrier is in ``[min_barrier_eV, max_barrier_eV]`` AND
+      * if claimed σ >= ``sigma_threshold``, barrier is in ``barrier_band``.
+
+    Returns ``status="fail"`` with rationale ``barrier_outside_literature_band``
+    or ``arrhenius_inconsistent`` depending on which check trips.
+    """
+    output = _envelope_output(envelope)
+    body = _as_dict(envelope)
+    barrier = output.get("migration_barrier_eV")
+    if barrier is None:
+        # Try Arrhenius block too.
+        arrhenius = output.get("arrhenius") or {}
+        if isinstance(arrhenius, Mapping):
+            barrier = arrhenius.get("activation_energy_eV")
+
+    sigma = output.get("nernst_einstein_conductivity_S_per_cm")
+    if sigma is None:
+        sigma = body.get("ionic_conductivity_S_per_cm")
+
+    if barrier is None:
+        return FalsifierItem(
+            name="ionic.neb_barrier_range_check",
+            threshold=(
+                f"{min_barrier_eV} <= migration_barrier_eV <= {max_barrier_eV}; "
+                f"if sigma >= {sigma_threshold_S_per_cm:.0e} also in {barrier_band}"
+            ),
+            actual={"barrier_eV": None},
+            status="pass",
+            rationale="No migration_barrier_eV recorded; gate not triggered.",
+        )
+
+    try:
+        barrier_f = float(barrier)
+    except (TypeError, ValueError):
+        return FalsifierItem(
+            name="ionic.neb_barrier_range_check",
+            threshold=(
+                f"{min_barrier_eV} <= migration_barrier_eV <= {max_barrier_eV}"
+            ),
+            actual={"barrier_eV": barrier, "reason": "non_numeric_barrier"},
+            status="fail",
+            rationale="migration_barrier_eV is not a number",
+        )
+
+    # Check A: literature band.
+    if barrier_f < min_barrier_eV or barrier_f > max_barrier_eV:
+        return FalsifierItem(
+            name="ionic.neb_barrier_range_check",
+            threshold=(
+                f"{min_barrier_eV} <= migration_barrier_eV <= {max_barrier_eV}"
+            ),
+            actual={"barrier_eV": barrier_f},
+            status="fail",
+            rationale="barrier_outside_literature_band",
+        )
+
+    # Check B: Arrhenius consistency for promoted candidates.
+    if sigma is not None:
+        try:
+            sigma_f = float(sigma)
+        except (TypeError, ValueError):
+            sigma_f = 0.0
+        if sigma_f >= sigma_threshold_S_per_cm:
+            lo, hi = barrier_band
+            if barrier_f < lo or barrier_f > hi:
+                # Compute the implied barrier from sigma for diagnostics.
+                try:
+                    implied = implied_arrhenius_barrier_eV(sigma_f)
+                except ValueError:
+                    implied = None
+                return FalsifierItem(
+                    name="ionic.neb_barrier_range_check",
+                    threshold=(
+                        f"if sigma >= {sigma_threshold_S_per_cm:.0e} S/cm at 300 K, "
+                        f"barrier in {barrier_band} eV"
+                    ),
+                    actual={
+                        "barrier_eV": barrier_f,
+                        "sigma_S_per_cm": sigma_f,
+                        "implied_barrier_eV_from_sigma": implied,
+                        "expected_band": list(barrier_band),
+                    },
+                    status="fail",
+                    rationale="arrhenius_inconsistent",
+                )
+
+    return FalsifierItem(
+        name="ionic.neb_barrier_range_check",
+        threshold=(
+            f"{min_barrier_eV} <= migration_barrier_eV <= {max_barrier_eV}; "
+            f"if sigma >= {sigma_threshold_S_per_cm:.0e} also in {barrier_band}"
+        ),
+        actual={"barrier_eV": barrier_f, "sigma_S_per_cm": sigma},
+        status="pass",
     )

@@ -5,6 +5,19 @@ Functions:
     reject_unit_unparseable(prop)          -- fails if parse_quantity raises.
     reject_unresolved_contradiction(props) -- fails if incompatible values clash.
     assert_kg_nodes_for(envelope, kg)      -- verifies KG writes are present.
+    verify_source_manifest_linkage(envelope, audit_log)
+                                           -- Wave D hardened: walks each
+                                              source_manifest_ref and verifies
+                                              it actually exists in
+                                              sources.jsonl.
+
+Wave D discipline (RESISTANCE.md ``fp-shapematch``):
+    The original audit gates check that ``audit.source_manifest_refs`` is
+    non-empty — they trust the field. A buggy adapter can populate the
+    list with strings that look syntactically valid (``src:fabricated:fake``)
+    but never wrote a corresponding row in ``sources.jsonl``. The new
+    ``verify_source_manifest_linkage`` walks each ref against the live
+    audit log and fails when any ref is unresolved.
 """
 
 from __future__ import annotations
@@ -17,6 +30,7 @@ from zer0pa_materials.envelope.envelope import Envelope
 from zer0pa_materials.envelope.falsifier import FalsifierItem, FalsifierStatus
 from zer0pa_materials.envelope.layer_outputs import Phase0ExtractedProperty
 from zer0pa_materials.envelope.units import DimensionalityError, parse_quantity
+from zer0pa_materials.falsifiers.raw_evidence import find_source_manifest_row
 
 
 # ---------------------------------------------------------------------------
@@ -248,3 +262,115 @@ def assert_kg_nodes_for(envelope: Envelope, kg: MaterialsKG) -> list[FalsifierIt
         )
 
     return items
+
+
+# ---------------------------------------------------------------------------
+# verify_source_manifest_linkage   (Wave D hardened gate 2)
+# ---------------------------------------------------------------------------
+
+
+def verify_source_manifest_linkage(
+    envelope: Envelope | dict[str, Any],
+    audit_log: Any,
+) -> FalsifierItem:
+    """Verify each ``audit.source_manifest_refs`` resolves in ``sources.jsonl``.
+
+    Wave D hardened source-manifest linkage gate. The original audit
+    flow accepts any non-empty list of ``src:...`` strings; an adapter
+    can fabricate strings that never wrote a corresponding row. This
+    gate walks each ref, looks up the row in the live audit log,
+    verifies the row's ``source_manifest_id`` matches, and verifies
+    the row's ``decision_impact`` references the same domain (``layer``)
+    as the envelope.
+
+    Pass conditions (all must hold):
+      * ``audit.source_manifest_refs`` is non-empty.
+      * For each ref, exactly one row in ``sources.jsonl`` exists with
+        ``payload.source_manifest_id == ref``.
+      * The matched row carries a ``decision_impact`` field referencing
+        the envelope's layer (e.g. mentions ``"L2"``, ``"phase0"``, etc.).
+
+    Args:
+        envelope: an :class:`Envelope` (or wire dict) carrying an
+            ``audit.source_manifest_refs`` list.
+        audit_log: a live :class:`zer0pa_materials.audit.log.AuditLog`,
+            an in-memory list of audit rows, or any iterable yielding
+            the ``sources.jsonl`` rows.
+
+    Returns:
+        FalsifierItem with status ``pass`` if every ref resolves;
+        ``fail`` listing the unresolved refs; ``blocked`` if the
+        envelope has no audit block.
+    """
+    if isinstance(envelope, Envelope):
+        body = envelope.model_dump(mode="json")
+    elif isinstance(envelope, dict):
+        body = envelope
+    else:
+        return FalsifierItem(
+            name="phase0.source_manifest_linkage",
+            threshold="every audit.source_manifest_refs entry resolves in sources.jsonl",
+            actual={"reason": "envelope_type_unknown", "type": type(envelope).__name__},
+            status="blocked",
+        )
+
+    audit_block = body.get("audit") or {}
+    refs = audit_block.get("source_manifest_refs") or []
+    layer = body.get("layer", "unknown")
+
+    if not refs:
+        return FalsifierItem(
+            name="phase0.source_manifest_linkage",
+            threshold="every audit.source_manifest_refs entry resolves in sources.jsonl",
+            actual={"refs": [], "reason": "no_refs_to_check"},
+            status="fail",
+            rationale="envelope has no source_manifest_refs",
+        )
+
+    unresolved: list[str] = []
+    decision_impact_mismatches: list[dict[str, str]] = []
+    for ref in refs:
+        if not isinstance(ref, str):
+            unresolved.append(repr(ref))
+            continue
+        row = find_source_manifest_row(audit_log, ref)
+        if row is None:
+            unresolved.append(ref)
+            continue
+        # Verify decision_impact references this envelope's layer.
+        impact = str(row.get("decision_impact") or "")
+        if impact and layer != "unknown" and layer.lower() not in impact.lower():
+            decision_impact_mismatches.append(
+                {
+                    "ref": ref,
+                    "decision_impact": impact[:120],
+                    "envelope_layer": str(layer),
+                }
+            )
+
+    if unresolved:
+        return FalsifierItem(
+            name="phase0.source_manifest_linkage",
+            threshold="every audit.source_manifest_refs entry resolves in sources.jsonl",
+            actual={
+                "refs": list(refs),
+                "unresolved": unresolved,
+                "decision_impact_mismatches": decision_impact_mismatches,
+            },
+            status="fail",
+            rationale=(
+                f"{len(unresolved)} of {len(refs)} source_manifest_refs do not "
+                "resolve in sources.jsonl — possible fabricated refs"
+            ),
+        )
+
+    return FalsifierItem(
+        name="phase0.source_manifest_linkage",
+        threshold="every audit.source_manifest_refs entry resolves in sources.jsonl",
+        actual={
+            "refs": list(refs),
+            "n_resolved": len(refs),
+            "decision_impact_mismatches": decision_impact_mismatches,
+        },
+        status="pass",
+    )

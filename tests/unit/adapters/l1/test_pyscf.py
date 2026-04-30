@@ -26,8 +26,10 @@ pytestmark_pyscf = pytest.mark.skipif(
     False, reason="Always runs; pyscf_available flag indicates real vs stub"
 )
 
-H2_CIF = open("/Users/zer0palab/Materials Pipeline/fixtures/structures/H2/structure.cif").read()
-LIH_CIF = open("/Users/zer0palab/Materials Pipeline/fixtures/structures/LiH/structure.cif").read()
+from zer0pa_materials import read_fixture
+
+H2_CIF = read_fixture("structures", "H2", "structure.cif")
+LIH_CIF = read_fixture("structures", "LiH", "structure.cif")
 
 
 @pytest.fixture

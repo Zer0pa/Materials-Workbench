@@ -11,12 +11,24 @@ PRD-mandated routing thresholds:
 
 Falsifier catalogue:
     dpa_mace_disagreement_routing      — applies all routing thresholds; primary gate
+    dpa_mace_disagreement_routing_recomputed
+                                       — Wave D hardened: recomputes
+                                         disagreement from per-model
+                                         predictions before routing
     single_model_promotion_block       — fails if promote while only one model ran
     force_rmse_threshold               — dedicated force-RMSE promote gate
     volume_drift_threshold             — relaxation volume drift > 2%
     space_group_drift_threshold        — relaxation space group change
     uma_license_gate                   — fails if UMA used without verified license
     committee_uncertainty_threshold    — fails if committee variance exceeds threshold
+
+Wave D discipline (RESISTANCE.md ``fp-shapematch``):
+    ``dpa_mace_disagreement_routing`` (the original) trusts
+    ``output.energy_disagreement_meV_per_atom`` and
+    ``output.routing_decision``. A buggy or malicious adapter can write
+    a small disagreement value with a "promote" label while the actual
+    DPA / MACE energies in ``output.predictions`` would route to
+    ``hard_reject``. The recomputed variant catches that.
 """
 
 from __future__ import annotations
@@ -24,6 +36,11 @@ from __future__ import annotations
 from typing import Any
 
 from zer0pa_materials.envelope.falsifier import FalsifierItem, FalsifierStatus
+from zer0pa_materials.falsifiers.raw_evidence import (
+    DEFAULT_DISAGREEMENT_TOLERANCE_MEV,
+    DEFAULT_FORCE_TOLERANCE_EV_PER_A,
+    recompute_l2_disagreement,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -100,6 +117,158 @@ def dpa_mace_disagreement_routing(envelope: dict[str, Any]) -> FalsifierItem:
         ),
         actual=energy_disagree,
         status=status,
+    )
+
+
+# ---------------------------------------------------------------------------
+# dpa_mace_disagreement_routing_recomputed   (Wave D hardened gate 1)
+# ---------------------------------------------------------------------------
+
+
+def dpa_mace_disagreement_routing_recomputed(
+    envelope: dict[str, Any],
+    energy_tolerance_meV: float = DEFAULT_DISAGREEMENT_TOLERANCE_MEV,
+    force_tolerance_eV_per_A: float = DEFAULT_FORCE_TOLERANCE_EV_PER_A,
+) -> FalsifierItem:
+    """Recompute DPA/MACE disagreement from raw predictions then apply thresholds.
+
+    Wave D hardened version of ``dpa_mace_disagreement_routing``. The
+    original gate read ``output.energy_disagreement_meV_per_atom`` and
+    ``output.routing_decision`` directly; this gate IGNORES those claim
+    fields when adjudicating and instead:
+
+      1. Pulls the per-model predictions from ``output.predictions``
+         (also accepting ``output.per_model_predictions`` as alias).
+      2. Recomputes ``energy_meV = abs(E_DPA - E_MACE) * 1000`` and
+         ``force = abs(F_DPA - F_MACE)``. This uses the same formula as
+         :class:`L2EnsembleRunner.run` so a clean adapter is never
+         flagged.
+      3. Applies the PRD routing thresholds against the RECOMPUTED
+         scalar (queue at 25, hard-reject at 75 for energy; queue at
+         0.15, hard-reject at 0.35 for force).
+      4. Compares the recomputed scalar against the envelope's claimed
+         scalar; if they differ by more than the tolerance, returns
+         ``status="fail"`` with reason
+         ``claimed_disagreement_inconsistent_with_per_model_predictions``.
+
+    Status semantics:
+
+    * ``pass`` — recomputed values < the queue thresholds AND match the
+      envelope's claim within tolerance.
+    * ``fail`` — either the recomputed value exceeds a threshold, OR
+      the claim does not match the recompute within tolerance.
+    * ``blocked`` — the per-model predictions are missing or do not
+      include both DPA and MACE; cannot recompute.
+    """
+    energy_recomputed, force_recomputed = recompute_l2_disagreement(envelope)
+    if energy_recomputed is None and force_recomputed is None:
+        return FalsifierItem(
+            name="l2.dpa_mace_disagreement_routing_recomputed",
+            threshold=(
+                f"recomputed energy <= {_ENERGY_PROMOTE_MEV} meV/atom AND "
+                f"recomputed force <= {_FORCE_PROMOTE_EV_ANG} eV/Å AND "
+                "claim within tolerance"
+            ),
+            actual={
+                "reason": "missing_per_model_predictions",
+                "energy_recomputed_meV": None,
+                "force_recomputed_eV_per_A": None,
+            },
+            status="blocked",
+            rationale=(
+                "envelope does not include both DPA and MACE per-model "
+                "predictions; cannot recompute disagreement from raw evidence"
+            ),
+        )
+
+    output = envelope.get("output") or {}
+    if not isinstance(output, dict):
+        output = {}
+    energy_claim = output.get("energy_disagreement_meV_per_atom")
+    force_claim = output.get("force_rmse_disagreement_eV_per_Ang")
+    routing_claim = output.get("routing_decision")
+
+    # Compare claim to recompute.
+    energy_mismatch = (
+        energy_recomputed is not None
+        and energy_claim is not None
+        and abs(float(energy_claim) - float(energy_recomputed)) > energy_tolerance_meV
+    )
+    force_mismatch = (
+        force_recomputed is not None
+        and force_claim is not None
+        and abs(float(force_claim) - float(force_recomputed)) > force_tolerance_eV_per_A
+    )
+    claim_mismatch = energy_mismatch or force_mismatch
+
+    # What the routing decision SHOULD be from the recomputed scalar.
+    routing_recomputed: str
+    if (
+        energy_recomputed is not None
+        and energy_recomputed > _ENERGY_HARD_REJECT_MEV
+    ) or (
+        force_recomputed is not None
+        and force_recomputed > _FORCE_HARD_REJECT_EV_ANG
+    ):
+        routing_recomputed = "hard_reject"
+    elif (
+        energy_recomputed is not None
+        and energy_recomputed > _ENERGY_PROMOTE_MEV
+    ) or (
+        force_recomputed is not None
+        and force_recomputed > _FORCE_PROMOTE_EV_ANG
+    ):
+        routing_recomputed = "queue_dft"
+    else:
+        routing_recomputed = "promote"
+
+    if routing_recomputed != "promote" or claim_mismatch:
+        rationale_parts: list[str] = []
+        if claim_mismatch:
+            rationale_parts.append(
+                "claimed_disagreement_inconsistent_with_per_model_predictions"
+            )
+        if routing_recomputed != "promote":
+            rationale_parts.append(
+                f"recomputed routing={routing_recomputed!r} (claim was {routing_claim!r})"
+            )
+        return FalsifierItem(
+            name="l2.dpa_mace_disagreement_routing_recomputed",
+            threshold=(
+                f"recomputed energy <= {_ENERGY_PROMOTE_MEV} meV/atom AND "
+                f"recomputed force <= {_FORCE_PROMOTE_EV_ANG} eV/Å AND "
+                f"|claim - recompute| <= ({energy_tolerance_meV} meV, "
+                f"{force_tolerance_eV_per_A} eV/Å)"
+            ),
+            actual={
+                "energy_recomputed_meV": energy_recomputed,
+                "energy_claimed_meV": energy_claim,
+                "force_recomputed_eV_per_A": force_recomputed,
+                "force_claimed_eV_per_A": force_claim,
+                "routing_claim": routing_claim,
+                "routing_recomputed": routing_recomputed,
+                "claim_recompute_mismatch": claim_mismatch,
+            },
+            status="fail",
+            rationale="; ".join(rationale_parts) or "recomputed_routing_not_promote",
+        )
+
+    return FalsifierItem(
+        name="l2.dpa_mace_disagreement_routing_recomputed",
+        threshold=(
+            f"recomputed energy <= {_ENERGY_PROMOTE_MEV} meV/atom AND "
+            f"recomputed force <= {_FORCE_PROMOTE_EV_ANG} eV/Å AND "
+            f"|claim - recompute| <= ({energy_tolerance_meV} meV, "
+            f"{force_tolerance_eV_per_A} eV/Å)"
+        ),
+        actual={
+            "energy_recomputed_meV": energy_recomputed,
+            "energy_claimed_meV": energy_claim,
+            "force_recomputed_eV_per_A": force_recomputed,
+            "force_claimed_eV_per_A": force_claim,
+            "routing_recomputed": routing_recomputed,
+        },
+        status="pass",
     )
 
 

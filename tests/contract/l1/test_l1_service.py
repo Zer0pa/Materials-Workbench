@@ -8,7 +8,9 @@ from fastapi.testclient import TestClient
 from zer0pa_materials.services.l1_service import app
 from zer0pa_materials.envelope import cif_hash_from_text
 
-H2_CIF = open("/Users/zer0palab/Materials Pipeline/fixtures/structures/H2/structure.cif").read()
+from zer0pa_materials import read_fixture
+
+H2_CIF = read_fixture("structures", "H2", "structure.cif")
 H2_HASH = cif_hash_from_text(H2_CIF)
 
 

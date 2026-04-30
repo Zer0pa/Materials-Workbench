@@ -26,17 +26,25 @@ from __future__ import annotations
 
 import datetime as _dt
 import json
+import subprocess
+import sys
 import uuid
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any
 
 from zer0pa_materials.boundary import RESEARCH_BOUNDARY
 from zer0pa_materials.envelope.config import MaterialsConfig
 from zer0pa_materials.envelope.hashing import sha256_of
+from zer0pa_materials.repo_root import audit_root, phase_dir, repo_root
 from zer0pa_materials.runpod.hard_failures import HardFailureDetector, HardFailureResult
 from zer0pa_materials.runpod.mock_backends import (
     RUNPOD_MOCK_LAYERS,
     build_runpod_mock_envelope,
+)
+from zer0pa_materials.runpod.rest_client import (
+    RunpodCredentialsError,
+    RunpodRestClient,
 )
 
 __all__ = [
@@ -239,20 +247,45 @@ class RunpodCutover:
     # Step 1: Precheck
     # ------------------------------------------------------------------
 
-    def precheck(self) -> CutoverPrecheckReport:
-        """Check the 7 PRD-mandated cutover preconditions.
+    def precheck(self, *, fast: bool = False, persist: bool = True) -> CutoverPrecheckReport:
+        """Run cutover preconditions afresh; record evidence and persist a JSONL report.
+
+        Wave C rewrite: the prior implementation hardcoded P5/P6/P7 to
+        ``True`` with the literal evidence string ``"Assumed pass"`` — a
+        smoking-gun pattern this rewrite eliminates.  Each precondition
+        below either runs a concrete subprocess and captures its real
+        output, or records an ``unable to run: <reason>`` evidence string
+        with ``passed=false``.  No precondition is allowed to claim
+        ``passed=true`` without producing direct evidence.
 
         Preconditions:
-            1. RUNPOD_BASE_URL and RUNPOD_API_TOKEN are set.
-            2. UMA_HF_ORG and UMA_HF_TOKEN are set (for UMA layers).
-            3. MATERIALS_MODE is set to runpod_mock (mock phase) or runpod_rest.
-            4. No config blockers from validate_for_runpod_cutover() (when mode=runpod_rest).
-            5. local_stub tests pass (assumed by Wave 5c gate; checked via test manifest).
-            6. local_cpu tests pass (same).
-            7. runpod_mock tests pass (same).
+            P1. ``RUNPOD_BASE_URL`` + ``RUNPOD_API_TOKEN`` set; if both
+                are present we additionally call ``RunpodRestClient.healthz("L1")``
+                and record the boolean.
+            P2. UMA HF gate: ``UMA_HF_ORG`` + ``UMA_HF_TOKEN`` set AND
+                ``phases/UMA-license/manifest.json`` exists with an
+                ``aup_accepted_at`` field.  Wave D will produce that
+                manifest; until it lands, P2 records "manifest pending".
+            P3. ``MATERIALS_MODE`` is one of ``runpod_mock`` / ``runpod_rest``.
+            P4. ``validate_for_runpod_cutover()`` returns no blockers
+                (always True when ``MATERIALS_MODE == "runpod_mock"``).
+            P5. ``pytest tests/unit/adapters`` returncode == 0.
+            P6. ``pytest tests/integration`` returncode == 0.
+            P7. ``pytest tests/parity`` returncode == 0.
+            P8. ``pytest tests/integration/test_full_falsification_wave.py``
+                returncode == 0.
+
+        Args:
+            fast: When True, skip P5–P8 (the subprocess-pytest checks).
+                Operators use ``fast=True`` to verify connectivity quickly
+                without waiting on the full unit/parity suite.  Default
+                is False (run everything).
+            persist: When True (default), append the report as a single
+                JSONL row to ``audit_root() / "precheck.jsonl"``.
 
         Returns:
-            :class:`CutoverPrecheckReport` with ``passed`` True when all pass.
+            :class:`CutoverPrecheckReport` with ``passed`` True only when
+            every recorded precondition is True.
         """
         cfg = self.config
         blockers = cfg.validate_for_runpod_cutover()
@@ -260,23 +293,53 @@ class RunpodCutover:
         preconditions: dict[str, bool] = {}
         evidence: dict[str, str] = {}
 
-        # P1: Runpod connectivity
-        p1 = bool(cfg.RUNPOD_BASE_URL and cfg.RUNPOD_API_TOKEN)
-        preconditions["runpod_connectivity"] = p1
-        evidence["runpod_connectivity"] = (
-            f"RUNPOD_BASE_URL={'set' if cfg.RUNPOD_BASE_URL else 'MISSING'}, "
-            f"RUNPOD_API_TOKEN={'set' if cfg.RUNPOD_API_TOKEN else 'MISSING'}"
-        )
+        # ---- P1: Runpod connectivity -------------------------------------
+        p1_creds_ok = bool(cfg.RUNPOD_BASE_URL and cfg.RUNPOD_API_TOKEN)
+        p1_evidence_lines = [
+            f"RUNPOD_BASE_URL={'set' if cfg.RUNPOD_BASE_URL else 'MISSING'}",
+            f"RUNPOD_API_TOKEN={'set' if cfg.RUNPOD_API_TOKEN else 'MISSING'}",
+        ]
+        healthz_ok: bool | None = None
+        if p1_creds_ok:
+            try:
+                client = RunpodRestClient(
+                    base_url=cfg.RUNPOD_BASE_URL,
+                    api_token=cfg.RUNPOD_API_TOKEN,
+                )
+                healthz_ok = client.healthz("L1")
+                p1_evidence_lines.append(
+                    f"healthz(L1) returncode={'2xx' if healthz_ok else 'non-2xx-or-error'}"
+                )
+            except RunpodCredentialsError as exc:
+                healthz_ok = False
+                p1_evidence_lines.append(f"client construction failed: {exc}")
+            except Exception as exc:  # noqa: BLE001 — surface any transport error
+                healthz_ok = False
+                p1_evidence_lines.append(f"healthz call raised: {type(exc).__name__}: {exc}")
+        else:
+            p1_evidence_lines.append(
+                "healthz check skipped (credentials missing — would need both env vars)."
+            )
 
-        # P2: UMA HF gate
-        p2 = bool(cfg.UMA_HF_ORG and cfg.UMA_HF_TOKEN)
+        # P1 passes when creds are present AND healthz returns 2xx; in
+        # mock mode (no creds expected) we only need to record evidence
+        # of *what* is missing, and P1 is False so the operator sees it.
+        p1 = bool(p1_creds_ok and healthz_ok)
+        preconditions["runpod_connectivity"] = p1
+        evidence["runpod_connectivity"] = "; ".join(p1_evidence_lines)
+
+        # ---- P2: UMA HF gate ---------------------------------------------
+        p2_env_ok = bool(cfg.UMA_HF_ORG and cfg.UMA_HF_TOKEN)
+        p2_manifest_ok, p2_manifest_evidence = _check_uma_manifest()
+        p2 = p2_env_ok and p2_manifest_ok
         preconditions["uma_hf_aup_gate"] = p2
         evidence["uma_hf_aup_gate"] = (
-            f"UMA_HF_ORG={'set' if cfg.UMA_HF_ORG else 'MISSING'}, "
-            f"UMA_HF_TOKEN={'set' if cfg.UMA_HF_TOKEN else 'MISSING'}"
+            f"UMA_HF_ORG={'set' if cfg.UMA_HF_ORG else 'MISSING'}; "
+            f"UMA_HF_TOKEN={'set' if cfg.UMA_HF_TOKEN else 'MISSING'}; "
+            f"manifest: {p2_manifest_evidence}"
         )
 
-        # P3: MATERIALS_MODE acceptable
+        # ---- P3: MATERIALS_MODE acceptable -------------------------------
         p3 = cfg.MATERIALS_MODE in ("runpod_mock", "runpod_rest")
         preconditions["materials_mode_acceptable"] = p3
         evidence["materials_mode_acceptable"] = (
@@ -284,33 +347,61 @@ class RunpodCutover:
             f"(must be runpod_mock or runpod_rest)"
         )
 
-        # P4: No config blockers
+        # ---- P4: No config blockers --------------------------------------
+        # In runpod_mock mode the layer-flag blockers do not apply (parity
+        # tests run under runpod_mock by design).  In runpod_rest mode
+        # every blocker is a hard fail.
         p4 = len(blockers) == 0 or cfg.MATERIALS_MODE == "runpod_mock"
         preconditions["no_config_blockers"] = p4
         evidence["no_config_blockers"] = (
-            f"{len(blockers)} blocker(s): {blockers[:3]}"
-            if blockers else "No blockers."
+            f"validate_for_runpod_cutover() returned {len(blockers)} blocker(s): "
+            f"{blockers[:5]}{'...' if len(blockers) > 5 else ''}"
+            if blockers else "validate_for_runpod_cutover() returned no blockers."
         )
 
-        # P5: local_stub tests assumed pass (Wave 5c cannot rerun them here).
-        preconditions["local_stub_tests_pass"] = True
-        evidence["local_stub_tests_pass"] = (
-            "Assumed pass (Wave 5c gate: 2469 passed per PAUSE-STATE.md)."
-        )
+        # ---- P5/P6/P7/P8: subprocess-pytest checks -----------------------
+        if fast:
+            for key, label in (
+                ("local_stub_tests_pass", "tests/unit/adapters"),
+                ("local_cpu_tests_pass", "tests/integration"),
+                ("runpod_mock_tests_pass", "tests/parity"),
+                ("falsification_wave_fires", "tests/integration/test_full_falsification_wave.py"),
+            ):
+                preconditions[key] = False
+                evidence[key] = (
+                    f"skipped (fast=True; precheck did not invoke pytest on {label})"
+                )
+        else:
+            p5_ok, p5_evidence = _run_pytest_subprocess(
+                ["tests/unit/adapters", "-q", "--tb=no", "-x"],
+                label="tests/unit/adapters",
+            )
+            preconditions["local_stub_tests_pass"] = p5_ok
+            evidence["local_stub_tests_pass"] = p5_evidence
 
-        # P6: local_cpu tests assumed pass.
-        preconditions["local_cpu_tests_pass"] = True
-        evidence["local_cpu_tests_pass"] = (
-            "Assumed pass (same test run as local_stub, CPU adapters co-verified)."
-        )
+            p6_ok, p6_evidence = _run_pytest_subprocess(
+                ["tests/integration", "-q", "--tb=no", "-x",
+                 "--ignore=tests/integration/test_full_falsification_wave.py"],
+                label="tests/integration",
+            )
+            preconditions["local_cpu_tests_pass"] = p6_ok
+            evidence["local_cpu_tests_pass"] = p6_evidence
 
-        # P7: runpod_mock tests — will pass once parity/ suite runs.
-        preconditions["runpod_mock_tests_pass"] = True
-        evidence["runpod_mock_tests_pass"] = (
-            "Assumed pass pending parity test execution "
-            "(.venv/bin/python -m pytest tests/parity -v)."
-        )
+            p7_ok, p7_evidence = _run_pytest_subprocess(
+                ["tests/parity", "-q", "--tb=no", "-x"],
+                label="tests/parity",
+            )
+            preconditions["runpod_mock_tests_pass"] = p7_ok
+            evidence["runpod_mock_tests_pass"] = p7_evidence
 
+            p8_ok, p8_evidence = _run_pytest_subprocess(
+                ["tests/integration/test_full_falsification_wave.py", "-q", "--tb=no"],
+                label="tests/integration/test_full_falsification_wave.py",
+            )
+            preconditions["falsification_wave_fires"] = p8_ok
+            evidence["falsification_wave_fires"] = p8_evidence
+
+        # ---- assemble + persist ------------------------------------------
         all_passed = all(preconditions.values())
         report = CutoverPrecheckReport(
             passed=all_passed,
@@ -322,9 +413,24 @@ class RunpodCutover:
             decision_id=f"decision:precheck:{uuid.uuid4().hex[:12]}",
             action="precheck",
             outcome="pass" if all_passed else "blocked",
-            rationale=f"Precheck: {sum(preconditions.values())}/{len(preconditions)} conditions met. "
-                      f"Blockers: {blockers or 'none'}",
+            rationale=(
+                f"Precheck (fast={fast}): "
+                f"{sum(preconditions.values())}/{len(preconditions)} conditions met. "
+                f"Blockers: {blockers or 'none'}"
+            ),
         )
+        if persist:
+            try:
+                _append_precheck_jsonl(report, fast=fast)
+            except Exception as exc:  # noqa: BLE001
+                # Persistence failure is not a precheck failure but it must
+                # leave a trail — record it as a decision row.
+                self._record_decision(
+                    decision_id=f"decision:precheck_persist:{uuid.uuid4().hex[:12]}",
+                    action="precheck_persist",
+                    outcome="failed",
+                    rationale=f"Could not write precheck.jsonl: {type(exc).__name__}: {exc}",
+                )
         return report
 
     # ------------------------------------------------------------------
@@ -717,6 +823,118 @@ class RunpodCutover:
 
 def _now_iso() -> str:
     return _dt.datetime.now(_dt.timezone.utc).isoformat()
+
+
+# Pytest subprocess timeout: 120 s matches the wave-C spec.  We expose it as
+# a module constant so tests can monkey-patch it down for unit-test speed.
+_PYTEST_SUBPROCESS_TIMEOUT_S: float = 120.0
+
+
+def _run_pytest_subprocess(
+    args: list[str],
+    *,
+    label: str,
+    timeout_s: float | None = None,
+) -> tuple[bool, str]:
+    """Run ``pytest <args>`` from the repo root and return ``(passed, evidence)``.
+
+    The evidence string contains ``returncode=<n>``, the last line of
+    ``stdout`` (so the operator sees something like
+    ``"3404 passed, 2 skipped"``), and a truncated ``stderr`` snippet on
+    non-zero return codes.
+
+    No exception escapes: a subprocess timeout, missing pytest binary, or
+    any other ``OSError`` is converted into ``passed=False`` with concrete
+    evidence describing the failure.  This is the property tested by
+    ``test_precheck_executes.py``.
+    """
+    timeout = timeout_s if timeout_s is not None else _PYTEST_SUBPROCESS_TIMEOUT_S
+    try:
+        cwd = repo_root()
+    except Exception as exc:  # noqa: BLE001
+        return False, f"unable to resolve repo_root(): {type(exc).__name__}: {exc}"
+
+    cmd = [sys.executable, "-m", "pytest", *args]
+    try:
+        result = subprocess.run(  # noqa: S603 — fixed args, fixed cwd
+            cmd,
+            cwd=str(cwd),
+            capture_output=True,
+            timeout=timeout,
+            check=False,
+        )
+    except subprocess.TimeoutExpired:
+        return False, (
+            f"pytest {label} timed out after {timeout}s; returncode=N/A; "
+            "evidence=subprocess.TimeoutExpired"
+        )
+    except FileNotFoundError as exc:
+        return False, f"pytest not available on PYTHONPATH: {exc}"
+    except OSError as exc:
+        return False, f"pytest invocation OSError: {type(exc).__name__}: {exc}"
+
+    stdout_text = (result.stdout or b"").decode("utf-8", errors="replace")
+    stderr_text = (result.stderr or b"").decode("utf-8", errors="replace")
+    last_line = ""
+    if stdout_text:
+        for line in reversed(stdout_text.splitlines()):
+            line_stripped = line.strip()
+            if line_stripped:
+                last_line = line_stripped
+                break
+    evidence = (
+        f"pytest {label} returncode={result.returncode}; "
+        f"last stdout line: {last_line or '<empty>'}"
+    )
+    if result.returncode != 0 and stderr_text:
+        # Trim the stderr to the last 200 chars to keep the evidence size
+        # bounded; the full output is reachable via the persisted JSONL.
+        evidence += f"; stderr tail: {stderr_text.strip()[-200:]!r}"
+    return (result.returncode == 0), evidence
+
+
+def _check_uma_manifest() -> tuple[bool, str]:
+    """Look for ``phases/UMA-license/manifest.json`` and verify ``aup_accepted_at``.
+
+    Wave D will populate the manifest; until then this helper returns
+    ``(False, "<concrete reason>")`` rather than synthesising a pass.
+    """
+    try:
+        manifest_path = phase_dir("UMA-license") / "manifest.json"
+    except Exception as exc:  # noqa: BLE001
+        return False, f"phase_dir() failed: {type(exc).__name__}: {exc}"
+    if not manifest_path.is_file():
+        return False, (
+            f"manifest at {manifest_path} not present "
+            "(Wave D pending — UMA AUP manifest will be added there)"
+        )
+    try:
+        data = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError) as exc:
+        return False, f"manifest at {manifest_path} unreadable: {type(exc).__name__}: {exc}"
+    if not data.get("aup_accepted_at"):
+        return False, (
+            f"manifest at {manifest_path} present but missing 'aup_accepted_at' field"
+        )
+    return True, f"manifest at {manifest_path} valid (aup_accepted_at={data['aup_accepted_at']!r})"
+
+
+def _append_precheck_jsonl(report: CutoverPrecheckReport, *, fast: bool) -> None:
+    """Append one line to ``audit_root() / precheck.jsonl`` describing this run."""
+    target = audit_root() / "precheck.jsonl"
+    target.parent.mkdir(parents=True, exist_ok=True)
+    row: dict[str, Any] = {
+        "report_type": "CutoverPrecheckReport",
+        "boundary": RESEARCH_BOUNDARY,
+        "recorded_at": _now_iso(),
+        "fast": fast,
+        "passed": report.passed,
+        "blockers": report.blockers,
+        "preconditions": report.preconditions,
+        "evidence": report.evidence,
+    }
+    with target.open("a", encoding="utf-8") as fh:
+        fh.write(json.dumps(row, sort_keys=True) + "\n")
 
 
 def _minimal_layer_output(layer: str, seed: dict[str, Any]) -> dict[str, Any]:

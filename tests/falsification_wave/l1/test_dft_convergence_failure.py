@@ -18,7 +18,9 @@ from zer0pa_materials.falsifiers.l1_falsifiers import (
     cross_code_disagreement,
 )
 
-H2_CIF = open("/Users/zer0palab/Materials Pipeline/fixtures/structures/H2/structure.cif").read()
+from zer0pa_materials import read_fixture
+
+H2_CIF = read_fixture("structures", "H2", "structure.cif")
 
 
 def _output_with_delta(delta: float | None, force: float = 0.001) -> L1DftOutput:

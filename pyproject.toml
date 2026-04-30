@@ -58,6 +58,30 @@ materials-extras = [
     "spglib>=2.4",
     "pycalphad>=0.11",
 ]
+# GPU stack for the Runpod cutover. Keep deps to ones that pip-install on
+# common GPU images. PySCF gets `[geomopt]` (CPU); GPU acceleration is via
+# `gpu4pyscf` which has its own CUDA wheel matrix and is intentionally
+# left to the operator at install time per docs/RUNPOD-CUTOVER.md.
+gpu = [
+    "torch>=2.4",
+    "ase>=3.23",
+    "pymatgen>=2024.5",
+    "deepmd-kit>=3.0; python_version < '3.13'",
+    "mace-torch>=0.3",
+    "pennylane>=0.40",
+    "pennylane-lightning>=0.40",
+    "qiskit>=1.3",
+    "qiskit-nature>=0.7",
+    "pyscf>=2.7",
+    "pycalphad>=0.11",
+    "phonopy>=2.21",
+    "spglib>=2.4",
+    "psutil>=5.9",
+]
+runpod = [
+    "httpx>=0.27",
+    "tenacity>=8.5",
+]
 
 [project.scripts]
 zer0pa-materials = "zer0pa_materials.cli:app"

@@ -11,8 +11,10 @@ from zer0pa_materials.adapters.l1.qe_aiida import (
 from zer0pa_materials.adapters.l1.base import L1JobParams
 from zer0pa_materials.envelope import L1DftOutput, cif_hash_from_text
 
-H2_CIF = open("/Users/zer0palab/Materials Pipeline/fixtures/structures/H2/structure.cif").read()
-SI_CIF = open("/Users/zer0palab/Materials Pipeline/fixtures/structures/Si/structure.cif").read()
+from zer0pa_materials import read_fixture
+
+H2_CIF = read_fixture("structures", "H2", "structure.cif")
+SI_CIF = read_fixture("structures", "Si", "structure.cif")
 
 
 @pytest.fixture

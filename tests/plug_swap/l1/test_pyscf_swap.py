@@ -16,7 +16,9 @@ from zer0pa_materials.adapters.l1.abinit_aiida import AbinitAiiDASolver
 from zer0pa_materials.adapters.l1.base import L1JobParams
 from zer0pa_materials.envelope import L1DftOutput, Envelope, cif_hash_from_text
 
-H2_CIF = open("/Users/zer0palab/Materials Pipeline/fixtures/structures/H2/structure.cif").read()
+from zer0pa_materials import read_fixture
+
+H2_CIF = read_fixture("structures", "H2", "structure.cif")
 H2_HASH = cif_hash_from_text(H2_CIF)
 
 ADAPTERS = [

@@ -22,9 +22,10 @@ audit/runtime/*.jsonl
 .*.jsonl.lock
 audit/**/.*.lock
 
-# Env
+# Env (all variants — operator-supplied, runpod-specific, etc.)
 .env
-.env.local
+.env.*
+!.env.example
 
 # Caches and large artifacts
 .cache/
@@ -48,6 +49,12 @@ Thumbs.db
 data/raw/
 data/bulk/
 checkpoints/
+
+# Runtime SQLite — KG snapshots are reproducible from the JSONL audit chain;
+# do not commit binary state.
+*.sqlite
+*.sqlite3
+*.db
 
 # Logs
 *.log

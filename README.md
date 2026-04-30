@@ -19,16 +19,18 @@ Research infrastructure for in silico materials science discovery. Outputs are r
 | `HANDOFF-TO-OVERNIGHT-EXECUTOR.md` | Materials-specific brief for the overnight executor — defines what they inherit, what they must produce, and the no-user-engagement execution mandate | Materials orchestrator |
 | `OVERNIGHT-EXECUTOR-STARTUP-PROMPT.md` | Paste-ready startup prompt for the dedicated overnight executor agent on another machine | Materials orchestrator |
 
-## Build status (post-overnight execution, 2026-04-30)
+## Build status (post-overnight execution + post-review remediation, 2026-04-30)
 
-The CPU-side build is **complete**. Runpod migration is a config-flag swap, not architecture work.
+The CPU-side build is **complete and post-review-hardened**. Runpod migration is a config-flag swap, not architecture work. A reviewer audit caught real weaknesses (silent runpod_rest fallback, "assumed-pass" precheck, falsifier-trust-fields anti-pattern, absolute-path tests) which have been fixed in Waves A–E. Run `git log` for the canonical commit chain; latest is the HEAD of `main` on [Zer0pa/Materials](https://github.com/Zer0pa/Materials).
 
-* **Tests:** 3,407 passing, 2 skipped (pycalphad), 0 failed.
-* **Falsification wave:** 16 of 16 PRD-mandated deliberate failures fired correctly with hash-chained audit proof.
+* **Tests:** **3,535** passing, 2 skipped (pycalphad), 0 failed.
+* **Falsification wave:** 16 of 16 PRD-mandated deliberate failures fired correctly with hash-chained audit proof, plus **7 newly-hardened gates** that recompute from raw evidence (Wave D adversarial tests prove the prior shape-only gates would have passed forged envelopes).
 * **Hard gates:** scientific PASS, engineering PASS, brain-functionality PASS.
-* **HEAD:** [`29bee0b`](https://github.com/Zer0pa/Materials/commit/29bee0b).
+* **runpod_rest dispatch:** real `httpx`-based REST client with `tenacity` retries; honest-block when credentials missing (no silent mock fallback).
+* **Precheck:** runs `pytest` subprocesses; the literal string "Assumed pass" is a hard reject in any precheck row.
+* **Repo hygiene:** all tests use `read_fixture(...)` (no absolute paths); `.env.*`, `*.sqlite`, `*.lock` gitignored; deep-research source manifests committed at `phases/Deep-Research/sources.jsonl`.
 
-For a 5-minute orientation see [`REVIEWER-GUIDE.md`](REVIEWER-GUIDE.md). For the full operator-facing report see [`EXECUTION-REPORT.md`](EXECUTION-REPORT.md). For the Runpod cutover runbook see [`docs/RUNPOD-CUTOVER.md`](docs/RUNPOD-CUTOVER.md).
+For a 5-minute orientation see [`REVIEWER-GUIDE.md`](REVIEWER-GUIDE.md). For the full operator-facing report including the post-review remediation summary see [`EXECUTION-REPORT.md`](EXECUTION-REPORT.md). For the Runpod cutover runbook see [`docs/RUNPOD-CUTOVER.md`](docs/RUNPOD-CUTOVER.md).
 
 ## Read order
 

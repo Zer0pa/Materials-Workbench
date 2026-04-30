@@ -14,15 +14,29 @@ PRD-mandated gates:
     VTK/Exodus/FMI artifacts must include units sidecars and hashes
 
 SPD check uses numpy.linalg.eigvalsh for numerical robustness (PRD discipline).
+
+Wave D discipline (RESISTANCE.md ``fp-shapematch``):
+    The original ``artifact_units_sidecar_present`` reads
+    ``envelope._artifact_sidecars`` — a CLAIM list. A buggy adapter
+    can populate that list with valid-looking dicts whose ``sha256``
+    fields point at no on-disk artifact. The hardened
+    ``verify_l5_artifact_sidecar`` reads each artifact's URI from disk,
+    rehashes the bytes, and compares the recomputed sha256 against the
+    sidecar's claim. It also requires a sidecar file (``<artifact>.units.json``)
+    to exist on disk for every artifact.
 """
 
 from __future__ import annotations
 
+import json
+from pathlib import Path
 from typing import Any
 
 import numpy as np
 
 from zer0pa_materials.envelope.falsifier import FalsifierItem, FalsifierStatus
+from zer0pa_materials.falsifiers.raw_evidence import recompute_artifact_sha256
+from zer0pa_materials.repo_root import RepoRootNotFoundError, repo_root
 
 
 # ---------------------------------------------------------------------------
@@ -439,4 +453,205 @@ def artifact_units_sidecar_present(
         threshold="all VTK/Exodus/FMI artifacts carry units sidecar + sha256",
         actual={"n_artifacts": len(artifacts), "failures": failing},
         status=status,
+    )
+
+
+# ---------------------------------------------------------------------------
+# verify_l5_artifact_sidecar   (Wave D hardened gate 6)
+# ---------------------------------------------------------------------------
+
+
+def _resolve_artifact_path(uri: str | None) -> Path | None:
+    """Resolve an artifact URI / relative path to an absolute Path.
+
+    Accepts ``file://`` URIs (rare), repo-relative paths
+    (``artifacts/runtime/foo.vtk``), and absolute paths. Repo-relative
+    paths are joined under :func:`repo_root`. Returns ``None`` if the
+    URI cannot be resolved.
+    """
+    if not uri or not isinstance(uri, str):
+        return None
+    if uri.startswith("file://"):
+        return Path(uri[len("file://"):])
+    p = Path(uri)
+    if p.is_absolute():
+        return p
+    try:
+        return repo_root() / p
+    except RepoRootNotFoundError:
+        return p.resolve()
+
+
+def verify_l5_artifact_sidecar(
+    envelope: dict[str, Any],
+) -> FalsifierItem:
+    """Verify each L5 artifact's on-disk bytes hash to the recorded sha256.
+
+    Wave D hardened version of :func:`artifact_units_sidecar_present`.
+    The original gate accepts any ``_artifact_sidecars`` list whose
+    members carry non-empty ``units`` dicts and ``sha256`` strings.
+    A forged envelope can include a sidecar whose ``sha256`` is
+    fabricated and whose ``uri`` points at no on-disk file.
+
+    The hardened gate, for each sidecar dict in ``_artifact_sidecars``:
+
+      1. Resolves the artifact's URI to an absolute path (via
+         :func:`repo_root` for repo-relative paths). If the file is
+         missing, fails with reason ``artifact_file_missing``.
+      2. Reads the bytes and recomputes ``sha256:<hex>`` via
+         :func:`recompute_artifact_sha256`. If it does not match the
+         sidecar's claimed ``sha256``, fails with
+         ``recomputed_hash_mismatch``.
+      3. Verifies the units sidecar JSON file exists at
+         ``<artifact>.units.json``. The sidecar JSON must be readable
+         and contain a non-empty ``units`` dict whose key set equals
+         the sidecar dict's ``units`` key set. If absent, fails with
+         ``units_sidecar_file_missing``.
+
+    The original gate is preserved for backward compatibility.
+    """
+    artifacts = envelope.get("_artifact_sidecars") or []
+    if not artifacts:
+        return FalsifierItem(
+            name="l5.verify_artifact_sidecar",
+            threshold="every artifact resolves on disk AND sha256 recomputes",
+            actual={"n_artifacts": 0},
+            status="pass",
+            rationale="no artifacts emitted; gate not applicable",
+        )
+
+    failures: list[dict[str, Any]] = []
+    pass_records: list[dict[str, Any]] = []
+    for art in artifacts:
+        if not isinstance(art, dict):
+            failures.append({"reason": "non_dict_artifact", "artifact": repr(art)[:120]})
+            continue
+        fmt = art.get("format", "unknown")
+        uri = art.get("uri") or art.get("path")
+        claimed_sha = art.get("sha256")
+        units = art.get("units") or {}
+
+        # 1. Resolve and read.
+        path = _resolve_artifact_path(uri)
+        if path is None or not path.is_file():
+            failures.append(
+                {
+                    "format": fmt,
+                    "uri": uri,
+                    "reason": "artifact_file_missing",
+                }
+            )
+            continue
+
+        # 2. Recompute sha256.
+        recomputed = recompute_artifact_sha256(path)
+        if recomputed is None:
+            failures.append(
+                {
+                    "format": fmt,
+                    "uri": uri,
+                    "reason": "artifact_unreadable",
+                }
+            )
+            continue
+        if claimed_sha != recomputed:
+            failures.append(
+                {
+                    "format": fmt,
+                    "uri": uri,
+                    "reason": "recomputed_hash_mismatch",
+                    "claimed_sha256": claimed_sha,
+                    "recomputed_sha256": recomputed,
+                }
+            )
+            continue
+
+        # 3. Sidecar units JSON file.
+        sidecar_path = path.with_suffix(path.suffix + ".units.json")
+        if not sidecar_path.is_file():
+            failures.append(
+                {
+                    "format": fmt,
+                    "uri": uri,
+                    "reason": "units_sidecar_file_missing",
+                    "expected_sidecar": str(sidecar_path),
+                }
+            )
+            continue
+        try:
+            sidecar_data = json.loads(sidecar_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            failures.append(
+                {
+                    "format": fmt,
+                    "uri": uri,
+                    "reason": "units_sidecar_unreadable",
+                    "error": str(exc)[:120],
+                }
+            )
+            continue
+
+        sidecar_units = sidecar_data.get("units")
+        if not isinstance(sidecar_units, dict) or not sidecar_units:
+            failures.append(
+                {
+                    "format": fmt,
+                    "uri": uri,
+                    "reason": "units_sidecar_empty_or_malformed",
+                }
+            )
+            continue
+        # Sidecar units key set must include every key in the envelope's
+        # units claim (envelope claim is the contract; the sidecar is
+        # allowed to over-document).
+        missing_keys = [k for k in units if k not in sidecar_units]
+        if missing_keys:
+            failures.append(
+                {
+                    "format": fmt,
+                    "uri": uri,
+                    "reason": "units_sidecar_missing_keys",
+                    "missing_keys": missing_keys,
+                }
+            )
+            continue
+        # Sidecar's recorded hash must match too, if present.
+        sidecar_hash = sidecar_data.get("hash") or sidecar_data.get("sha256")
+        if sidecar_hash and sidecar_hash != recomputed:
+            failures.append(
+                {
+                    "format": fmt,
+                    "uri": uri,
+                    "reason": "sidecar_hash_mismatch",
+                    "sidecar_hash": sidecar_hash,
+                    "recomputed_hash": recomputed,
+                }
+            )
+            continue
+
+        pass_records.append(
+            {"format": fmt, "uri": uri, "recomputed_sha256": recomputed}
+        )
+
+    if failures:
+        return FalsifierItem(
+            name="l5.verify_artifact_sidecar",
+            threshold="every artifact resolves on disk AND sha256 recomputes",
+            actual={
+                "n_artifacts": len(artifacts),
+                "failures": failures,
+                "n_passing": len(pass_records),
+            },
+            status="fail",
+            rationale=f"{len(failures)} of {len(artifacts)} artifacts failed verification",
+        )
+
+    return FalsifierItem(
+        name="l5.verify_artifact_sidecar",
+        threshold="every artifact resolves on disk AND sha256 recomputes",
+        actual={
+            "n_artifacts": len(artifacts),
+            "verified": pass_records,
+        },
+        status="pass",
     )

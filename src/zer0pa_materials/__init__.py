@@ -11,5 +11,27 @@ Acceptable Use Policy and operator policy).
 __version__ = "0.1.0"
 
 from zer0pa_materials.boundary import RESEARCH_BOUNDARY, assert_boundary
+from zer0pa_materials.repo_root import (
+    RepoRootNotFoundError,
+    artifacts_root,
+    audit_root,
+    fixture,
+    fixtures_root,
+    phase_dir,
+    read_fixture,
+    repo_root,
+)
 
-__all__ = ["RESEARCH_BOUNDARY", "assert_boundary", "__version__"]
+__all__ = [
+    "RESEARCH_BOUNDARY",
+    "assert_boundary",
+    "__version__",
+    "RepoRootNotFoundError",
+    "artifacts_root",
+    "audit_root",
+    "fixture",
+    "fixtures_root",
+    "phase_dir",
+    "read_fixture",
+    "repo_root",
+]

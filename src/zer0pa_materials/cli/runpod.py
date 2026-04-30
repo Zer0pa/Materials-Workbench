@@ -268,6 +268,62 @@ def cutover_runbook() -> None:
         raise typer.Exit(code=1)
 
 
+@runpod_app.command("promote-backend")
+def promote_backend(
+    layer: Annotated[
+        str,
+        typer.Argument(
+            help=(
+                "Layer to promote (e.g. 'L1', 'L2', 'ionic', 'L1.5', 'L3', 'L4', "
+                "'L5', 'L6', 'quantum', 'L7') or 'all' for every GPU-bound layer."
+            ),
+        ),
+    ],
+    from_backend: Annotated[
+        str,
+        typer.Option("--from", help="Current backend label (e.g. 'runpod_mock')."),
+    ] = "runpod_mock",
+    to_backend: Annotated[
+        str,
+        typer.Option("--to", help="Target backend label (e.g. 'runpod_rest')."),
+    ] = "runpod_rest",
+    reason: Annotated[
+        str,
+        typer.Option("--reason", help="Operator-supplied rationale recorded in decisions.jsonl."),
+    ] = "Operator-approved promotion after parity tests passed.",
+) -> None:
+    """Promote a layer's backend from runpod_mock to runpod_rest.
+
+    Records a Decision row in ``decisions.jsonl`` with the operator
+    rationale. The promotion is BLOCKED unless precheck passes and parity
+    tests pass — the cutover orchestrator enforces this.
+
+    The CLI is the *audited* path; calling
+    ``RunpodCutover.promote_backend()`` directly bypasses the CLI's
+    rationale + audit step. Always use this command for production cutover.
+    """
+    cfg = MaterialsConfig.from_env()
+    cutover = RunpodCutover(config=cfg)
+    result = cutover.promote_backend(
+        layer=layer,
+        from_backend=from_backend,
+        to_backend=to_backend,
+        reason=reason,
+    )
+    if result.approved:
+        console.print(
+            f"[green]promotion approved[/green] layer={layer} "
+            f"{from_backend} -> {to_backend}"
+        )
+        console.print(f"  decision_id: {result.decision_id}")
+        console.print(f"  reason:      {result.reason}")
+    else:
+        console.print(
+            f"[red]promotion blocked[/red] layer={layer}: {result.reason}"
+        )
+        raise typer.Exit(code=2)
+
+
 # ------------------------------------------------------------------
 # Helpers
 # ------------------------------------------------------------------

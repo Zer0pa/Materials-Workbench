@@ -1,0 +1,16 @@
+{
+  "manifest_version": "zer0pa.uma.aup.v1",
+  "research_boundary": "Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).",
+  "library_license_spdx": "MIT",
+  "weights_license": "FAIR-Chemistry-License-v1",
+  "hf_organization": "TEMPLATE-REPLACE-WITH-HF-ORG",
+  "hf_organization_verified_at": "2026-04-30T00:00:00+00:00",
+  "aup_accepted_at": "2026-04-30T00:00:00+00:00",
+  "aup_accepted_by": "TEMPLATE-REPLACE-WITH-OPERATOR-IDENTITY",
+  "geographic_jurisdiction": "ZA",
+  "geographic_jurisdiction_verified_against_aup": true,
+  "fairchem_repo_commit": "TEMPLATE-REPLACE-WITH-FAIRCHEM-SHA",
+  "derivative_works_ownership_acknowledged": true,
+  "audit_record_id": "audit:TEMPLATE/uma/license-manifest",
+  "hash": "sha256:7aac704522cf2eef3703bb85a1fb98fdbd82c5271c8b4ad749883001c070c820"
+}

@@ -11,7 +11,9 @@ from zer0pa_materials.adapters.l1.base import L1JobParams
 from zer0pa_materials.envelope import L1DftOutput, cif_hash_from_text
 from zer0pa_materials.falsifiers.l1_falsifiers import cross_code_disagreement, _SCREENING_THRESHOLD_MEV
 
-SI_CIF = open("/Users/zer0palab/Materials Pipeline/fixtures/structures/Si/structure.cif").read()
+from zer0pa_materials import read_fixture
+
+SI_CIF = read_fixture("structures", "Si", "structure.cif")
 
 
 @pytest.fixture

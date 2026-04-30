@@ -8,16 +8,35 @@ Functions:
     reference_expansion_dedupe(envelope, ref) -- checks vs reference set.
     pymatgen_structure_matcher(envelope, ref) -- graceful skip if no pymatgen.
     novelty_status_gate(envelope)              -- blocks premature "novel".
+    recompute_novelty(envelope, reference_set) -- Wave D: re-runs structure
+                                                  hash + reference dedupe
+                                                  + per-batch dedupe and
+                                                  returns the recomputed
+                                                  status, ignoring claim.
+    novelty_status_gate_recomputed(envelope, reference_set, batch_envelopes)
+                                               -- Wave D: compares claim to
+                                                  recomputed status.
+
+Wave D discipline (RESISTANCE.md ``fp-shapematch``):
+    The original ``novelty_status_gate`` accepts ``output.novelty_status
+    == "novel"`` as long as the L1 back-edge exists. A buggy adapter
+    can paint that label on a candidate that already lives in
+    Materials Project. The hardened gate re-runs structure_hash, runs
+    reference_set membership, runs per-batch hashing, and compares the
+    recomputed status against the claim.
 """
 
 from __future__ import annotations
 
 import math
-from typing import Any
+from typing import Any, Iterable
 
 from zer0pa_materials.envelope.envelope import Envelope
 from zer0pa_materials.envelope.falsifier import FalsifierItem, FalsifierStatus
 from zer0pa_materials.envelope.hashing import cif_hash_from_text, parse_minimal_cif
+from zer0pa_materials.falsifiers.raw_evidence import (
+    recompute_structure_hash_from_envelope,
+)
 
 # ---------------------------------------------------------------------------
 # Oxidation state lookup (simplified; covers battery-relevant elements)
@@ -455,4 +474,219 @@ def novelty_status_gate(envelope: Envelope) -> FalsifierItem:
         threshold="novelty_status in {novel,duplicate,invalid} after all gates",
         actual=novelty_status,
         status=status,
+    )
+
+
+# ---------------------------------------------------------------------------
+# recompute_novelty   (Wave D hardened gate 3)
+# ---------------------------------------------------------------------------
+
+
+def recompute_novelty(
+    envelope: Envelope | dict[str, Any],
+    reference_set: Iterable[str] | None = None,
+    batch_envelopes: Iterable[Envelope | dict[str, Any]] | None = None,
+) -> dict[str, Any]:
+    """Recompute the novelty status from raw evidence (CIF + back-edges).
+
+    Re-runs every dedupe pipeline step from scratch:
+
+    1. Recompute the candidate's ``structure_hash`` from
+       ``output.cif_text`` (or from the structure dict). If recompute
+       fails, the candidate is ``"invalid"``.
+    2. Match the recomputed hash against the supplied
+       ``reference_set`` (Materials Project / JARVIS / Alexandria /
+       GNoME / OPTIMADE references). If matched, ``"duplicate"``.
+    3. Match the recomputed hash against the per-batch sibling
+       hashes (``batch_envelopes``). If matched, ``"duplicate"``.
+    4. If the candidate has all three downstream back-edges
+       (``L1``, ``ionic``, ``L2``), it can be ``"novel"``.
+    5. Otherwise return ``"pending"`` — the candidate has not yet
+       collected the gates required for a novelty claim.
+
+    Returns
+    -------
+    dict
+        ``{"status": <recomputed status>, "structure_hash":
+        <recomputed sha or None>, "back_edges_present": [...]}``. The
+        status is one of ``{"novel","duplicate","invalid","pending"}``
+        and is suitable for compare-against-claim in
+        :func:`novelty_status_gate_recomputed`.
+    """
+    if isinstance(envelope, Envelope):
+        body = envelope.model_dump(mode="json")
+    else:
+        body = dict(envelope)
+
+    s_hash = recompute_structure_hash_from_envelope(body)
+    if not s_hash:
+        return {"status": "invalid", "structure_hash": None, "back_edges_present": []}
+
+    ref_set = set(reference_set or [])
+    if s_hash in ref_set:
+        return {
+            "status": "duplicate",
+            "structure_hash": s_hash,
+            "duplicate_of": "reference_set",
+            "back_edges_present": [],
+        }
+
+    # Per-batch dedupe.
+    batch_hashes: dict[str, str] = {}
+    for sibling in batch_envelopes or []:
+        if isinstance(sibling, Envelope):
+            sib = sibling.model_dump(mode="json")
+        else:
+            sib = dict(sibling)
+        sib_id = sib.get("candidate_id", "<unknown>")
+        if sib_id == body.get("candidate_id"):
+            continue
+        sib_hash = recompute_structure_hash_from_envelope(sib)
+        if sib_hash:
+            batch_hashes[sib_hash] = sib_id
+    if s_hash in batch_hashes:
+        return {
+            "status": "duplicate",
+            "structure_hash": s_hash,
+            "duplicate_of": batch_hashes[s_hash],
+            "back_edges_present": [],
+        }
+
+    # Back-edge presence check — required to elevate to "novel".
+    back_edges = body.get("back_edges") or []
+    layers_present: set[str] = set()
+    for be in back_edges:
+        if isinstance(be, dict):
+            layer = be.get("layer")
+        else:
+            layer = getattr(be, "layer", None)
+        if layer:
+            layers_present.add(str(layer))
+    required = {"L1", "ionic", "L2"}
+    if required <= layers_present:
+        return {
+            "status": "novel",
+            "structure_hash": s_hash,
+            "back_edges_present": sorted(layers_present),
+        }
+    return {
+        "status": "pending",
+        "structure_hash": s_hash,
+        "back_edges_present": sorted(layers_present),
+        "missing_back_edges": sorted(required - layers_present),
+    }
+
+
+def novelty_status_gate_recomputed(
+    envelope: Envelope | dict[str, Any],
+    reference_set: Iterable[str] | None = None,
+    batch_envelopes: Iterable[Envelope | dict[str, Any]] | None = None,
+) -> FalsifierItem:
+    """Hardened ``novelty_status`` gate that ignores the claim and recomputes.
+
+    Compares the envelope's claimed ``output.novelty_status`` against
+    the result of :func:`recompute_novelty`. Pass conditions:
+
+      * Recomputed status is ``"novel"`` AND claim equals ``"novel"``.
+      * Recomputed status is ``"pending"`` AND claim is ``"pending"`` OR
+        claim is unset.
+
+    Fail conditions (any one):
+      * Recomputed status is ``"duplicate"`` (the candidate is known to
+        be in a reference database or to a batch sibling). Claim is
+        irrelevant; the gate still fails.
+      * Claim is ``"novel"`` but recompute is ``"pending"`` /
+        ``"duplicate"`` / ``"invalid"``.
+      * Recompute is ``"invalid"`` (cannot recover hash from raw CIF).
+    """
+    if isinstance(envelope, Envelope):
+        body = envelope.model_dump(mode="json")
+    else:
+        body = dict(envelope)
+    output = body.get("output") or {}
+    claim = output.get("novelty_status", "pending") if isinstance(output, dict) else "pending"
+
+    re = recompute_novelty(body, reference_set=reference_set, batch_envelopes=batch_envelopes)
+    recomputed = re["status"]
+
+    if recomputed == "duplicate":
+        return FalsifierItem(
+            name="l6.novelty_resolved_recomputed",
+            threshold=(
+                "recompute(structure_hash) NOT in reference set AND NOT in batch siblings; "
+                "back_edges include L1+ionic+L2"
+            ),
+            actual={
+                "claim": claim,
+                "recomputed": recomputed,
+                "structure_hash": re.get("structure_hash"),
+                "duplicate_of": re.get("duplicate_of"),
+            },
+            status="fail",
+            rationale=(
+                f"recomputed structure_hash matches {re.get('duplicate_of')!r}; "
+                f"candidate is duplicate (claim was {claim!r})"
+            ),
+        )
+
+    if recomputed == "invalid":
+        return FalsifierItem(
+            name="l6.novelty_resolved_recomputed",
+            threshold=(
+                "recompute(structure_hash) succeeds AND not in reference / batch"
+            ),
+            actual={"claim": claim, "recomputed": recomputed},
+            status="fail",
+            rationale="cannot recompute structure_hash from raw evidence",
+        )
+
+    if recomputed == "novel":
+        if claim != "novel":
+            return FalsifierItem(
+                name="l6.novelty_resolved_recomputed",
+                threshold="claim matches recompute when recompute=='novel'",
+                actual={"claim": claim, "recomputed": recomputed},
+                status="fail",
+                rationale=(
+                    f"recompute says novel but claim is {claim!r} — "
+                    "operator should set novelty_status='novel'"
+                ),
+            )
+        return FalsifierItem(
+            name="l6.novelty_resolved_recomputed",
+            threshold="claim matches recompute when recompute=='novel'",
+            actual={
+                "claim": claim,
+                "recomputed": recomputed,
+                "structure_hash": re.get("structure_hash"),
+                "back_edges_present": re.get("back_edges_present"),
+            },
+            status="pass",
+        )
+
+    # recomputed == "pending"
+    if claim == "novel":
+        return FalsifierItem(
+            name="l6.novelty_resolved_recomputed",
+            threshold="if claim=='novel' then back_edges include L1+ionic+L2",
+            actual={
+                "claim": claim,
+                "recomputed": recomputed,
+                "missing_back_edges": re.get("missing_back_edges"),
+            },
+            status="fail",
+            rationale=(
+                "claim says novel but back-edges incomplete — "
+                f"missing {re.get('missing_back_edges')}"
+            ),
+        )
+    return FalsifierItem(
+        name="l6.novelty_resolved_recomputed",
+        threshold="claim matches recompute (pending or novel based on back-edges)",
+        actual={
+            "claim": claim,
+            "recomputed": recomputed,
+            "structure_hash": re.get("structure_hash"),
+        },
+        status="pass",
     )
