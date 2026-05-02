@@ -1,46 +1,139 @@
-# Zer0pa Materials — Workstream Repository
+# Zer0pa Materials
 
-Canonical home for the Zer0pa Materials work stream. Multi-agent handoff: synthesis → orchestrator → overnight executor → Runpod migration. Repo is the source of truth across machines.
+> Live window into the Zer0pa lab. Materials is research infrastructure, not a productized materials service.
 
-## Boundary
+> Boundary: Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).
 
-Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).
+## What This Is
 
-## What is in here
+Materials is an in silico discovery pipeline workbench for battery and thermoelectric research, now entering H100 completion.
 
-| Path | Purpose | Author role |
-|---|---|---|
-| `MODUS-OPERANDI.md` | Reusable multi-agent pattern + parallel-exploration principle (Health, Materials, Energy run independently in parallel; convergence happens after all complete, not during) | Synthesis agent |
-| `HANDOFF-TO-ORCHESTRATOR.md` | Materials-specific brief for the next agent (the materials orchestrator) — defines what they inherit and what they must produce | Synthesis agent |
-| `ORCHESTRATOR-STARTUP-PROMPT.md` | The exact prompt the user pastes into a fresh agent session to spin up the materials orchestrator | Synthesis agent |
-| `source-briefs/` | Inherited research input — the research-agent handover note plus two technology-landscape briefs | External (consumer of synthesis) |
-| `synthesis/` | Fresh-eyes reading of the briefs and handover note — what is not yet seen, the variational-unification reframe, what an orchestrator should pressure-test | Synthesis agent |
-| `PRD.md` | The PRD that drives the overnight long-horizon execution on a Runpod-bound machine | Materials orchestrator |
-| `HANDOFF-TO-OVERNIGHT-EXECUTOR.md` | Materials-specific brief for the overnight executor — defines what they inherit, what they must produce, and the no-user-engagement execution mandate | Materials orchestrator |
-| `OVERNIGHT-EXECUTOR-STARTUP-PROMPT.md` | Paste-ready startup prompt for the dedicated overnight executor agent on another machine | Materials orchestrator |
+This repository is the Materials workstream's live engineering and research surface. It holds the CPU-side control plane for a multi-layer materials-discovery pipeline: contracts, schemas, layer adapters, audit trail, falsifiers, packet validators, Runpod dispatcher, parity tests, and H100 completion plan. The current pipeline is built around a battery MVP wedge (LLZO, Li6PS5Cl, and Li-Mg-Zr-Cl seed) with a thermoelectric sidecar (Bi2Te3, PbTe, and SnSe).
 
-## Build status (post-overnight execution + post-review remediation, 2026-04-30)
+The repo is intentionally visible as work-in-progress. It should not be read as a finished service, a commercial materials database, a regulatory artifact, or a claim that real H100-backed discovery is complete. The next gate is real GPU-backed `runpod_rest` execution producing artifacts that survive parity, hard-failure detectors, recompute acceptance gates, packet validation, and a falsification wave.
+
+## Pipeline Mechanics
+
+| Field | Value |
+| --- | --- |
+| Architecture | Seven-layer in silico materials pipeline with audit-first orchestration |
+| Layers | Phase 0 extraction; L1 DFT; L1.5 phonon/transport; L2 MLIP; L3 CALPHAD; L4 phase-field; L5 continuum; L6 generative; L7 orchestration/lab |
+| MVP Wedge | Solid-state battery evidence chain: LLZO, Li6PS5Cl, Li-Mg-Zr-Cl seed |
+| Sidecar | Thermoelectric evidence chain: Bi2Te3, PbTe, SnSe |
+| Execution | CPU-side complete; H100 Runpod completion required for real `runpod_rest` GPU artifacts |
+| Mechanics | universal envelopes, source manifests, rights claims, KG/audit trail, parity, falsification, raw-evidence recompute gates |
+| Open Gate | Real H100 endpoint/service execution and falsification over real outputs |
+
+## Key Metrics
+
+| Metric | Value | Baseline |
+| --- | --- | --- |
+| Test surface | 3,547 passing; 2 pycalphad skips | post-Wave-F local verification |
+| Falsification surface | 16 PRD failures + 7 raw-evidence recompute gates | Wave F production wiring |
+| Runpod status | ready to start H100 completion; not pipeline-complete | `runpod_rest` must produce real artifacts |
+| H100 completion estimate | 40-80 hours MVP; 120-250 hours hardening | single-H100 wall-clock planning |
+
+> Source: `EXECUTION-REPORT.md`, `phases/Falsification-wave/PHASE-REPORT-WAVE-F5.md`, `docs/RUNPOD-CUTOVER.md`, and the current README H100 mandate.
+
+## Repo Identity
+
+| Field | Value |
+| --- | --- |
+| Identifier | Zer0pa Materials |
+| Repository | https://github.com/Zer0pa/Materials |
+| Portfolio | Materials |
+| Visibility | INTERNAL |
+| Default Branch | main |
+| Authority Source | `PRD.md`; `EXECUTION-REPORT.md`; `phases/Falsification-wave/PHASE-REPORT-WAVE-F5.md` |
+| License | Proprietary Zer0pa research artifact unless superseded by repository legal files |
+
+## Readiness
+
+| Field | Value |
+| --- | --- |
+| Evidence posture | CPU-side control plane complete; H100 completion pending |
+| Current gate | real `runpod_rest` endpoints must execute GPU-backed layer jobs |
+| Verified locally | tests, parity, falsification, raw-evidence recompute production wiring |
+| Not complete until | real H100 artifacts survive acceptance, packet validation, and falsification |
+| Operator posture | anti-demo; no mock-equivalent success path |
+
+### Honest Blocker
+
+The repo can begin H100 work, but the pipeline is not complete until real GPU-backed artifacts exist. A schema-valid mock, local stub, or green first-base cutover does not satisfy the workstream objective.
+
+## What We Prove
+
+- The CPU-side pipeline contracts are present: envelopes, layer schemas, source manifests, rights claims, KG/audit records, and packet validators.
+- Runpod dispatch has an honest `runpod_rest` path that blocks without credentials and tests against mock-in-rest deception.
+- Production gates include raw-evidence recomputation for L2 disagreement, source linkage, novelty, ionic back-edges, NEB barrier, L3 sovereign state, and L5 artifact sidecars.
+- The falsification wave and Wave F recompute wiring catch forged evidence chains that the older shape-only gates would have accepted.
+- The H100 completion path is explicit: stand up real layer endpoints, produce real artifacts, run parity, run falsification, then promote evidence packets.
+
+## What We Don't Claim
+
+- Materials is not a finished commercial service, certification system, regulatory submission, or human-subject/clinical workflow.
+- The repo does not claim real H100-backed discovery is already complete.
+- A `runpod_mock` envelope is not evidence of scientific completion.
+- A passing schema or first green test is not a promoted materials result.
+- No novelty, ionic-conductivity, stability, or paper-grade packet claim is valid without raw evidence and audit provenance.
+- ITAR, weapons, regulatory certification, and human-subject applications are out of scope.
+
+## Verification Status
+
+| Code | Check | Verdict |
+| --- | --- | --- |
+| V_01 | CPU-side contracts, schemas, audit, falsifiers, packets, and dispatcher present | PASS |
+| V_02 | Full local suite: 3,547 passing, 2 pycalphad skips | PASS |
+| V_03 | `zer0pa-materials runpod parity`: 588 parity tests | PASS |
+| V_04 | Mock-in-rest-report deception rejected by parity tests | PASS |
+| V_05 | Raw-evidence recompute gates wired into production paths | PASS |
+| V_06 | Real H100 outputs survive falsification wave | OPEN |
+
+## Proof Anchors
+
+| Path | State |
+| --- | --- |
+| `PRD.md` | VERIFIED |
+| `EXECUTION-REPORT.md` | VERIFIED |
+| `docs/RUNPOD-CUTOVER.md` | VERIFIED |
+| `phases/Falsification-wave/PHASE-REPORT-WAVE-F5.md` | VERIFIED |
+| `tests/integration/test_recompute_wired_into_production.py` | VERIFIED |
+| `phases/Deep-Research/sources.jsonl` | VERIFIED |
+
+## Repo Shape
+
+| Field | Value |
+| --- | --- |
+| Proof Anchors | 6 display anchors |
+| Portfolio | Materials |
+| Authority Source | `PRD.md`; `EXECUTION-REPORT.md`; `phases/Falsification-wave/PHASE-REPORT-WAVE-F5.md` |
+| Pipeline Specs | `source-briefs/`; `synthesis/`; `PRD.md` |
+| Execution Surface | `src/zer0pa_materials/`; `tests/`; `fixtures/` |
+| Audit / Phases | `audit/`; `phases/`; `phases/Deep-Research/sources.jsonl` |
+| Support Sections | Build Status; H100 Completion Mandate; Workstream Contents; Read Order; Provenance; Cross-Workstream Principle |
+
+## Build Status
 
 The CPU-side control plane is **complete and post-review-hardened**. That means the repo has the contracts, schemas, audit trail, falsifiers, dispatcher, parity tests, packet validators, and acceptance-gate machinery required to begin H100 completion work. It does **not** mean the materials-discovery pipeline is scientifically complete. Pipeline completion requires real GPU-backed Runpod execution, real layer artifacts, and a successful falsification wave over those real outputs.
 
-A reviewer audit caught real weaknesses (silent runpod_rest fallback, "assumed-pass" precheck, falsifier-trust-fields anti-pattern, absolute-path tests) which have been fixed in Waves A–F. Run `git log` for the canonical commit chain; latest is the HEAD of `main` on [Zer0pa/Materials](https://github.com/Zer0pa/Materials).
+A reviewer audit caught real weaknesses (silent runpod_rest fallback, "assumed-pass" precheck, falsifier-trust-fields anti-pattern, absolute-path tests) which have been fixed in Waves A-F. Run `git log` for the canonical commit chain; latest is the HEAD of `main` on [Zer0pa/Materials](https://github.com/Zer0pa/Materials).
 
-* **Tests:** **3,547** passing post-Wave-F (the count grows as adversarial tests are added — run `pytest -q | tail -3` for the canonical current count), 2 skipped (pycalphad), 0 failed.
-* **Falsification wave:** 16 of 16 PRD-mandated deliberate failures fired correctly with hash-chained audit proof, plus **7 newly-hardened gates** that recompute from raw evidence (Wave D adversarial tests prove the prior shape-only gates would have passed forged envelopes).
-* **Hard gates:** scientific PASS, engineering PASS, brain-functionality PASS.
-* **runpod_rest dispatch:** real `httpx`-based REST client with `tenacity` retries; honest-block when credentials missing (no silent mock fallback).
+* **Tests:** **3,547** passing post-Wave-F (the count grows as adversarial tests are added; run `pytest -q | tail -3` for the canonical current count), 2 skipped (pycalphad), 0 failed.
+* **Falsification wave:** 16 of 16 PRD-mandated deliberate failures fired correctly with hash-chained audit proof, plus **7 newly-hardened gates** that recompute from raw evidence.
+* **Hard gates:** scientific PASS, engineering PASS, brain-functionality PASS on the CPU control plane.
+* **runpod_rest dispatch:** real `httpx`-based REST client with `tenacity` retries when installed; honest-block when credentials are missing.
 * **Precheck:** runs `pytest` subprocesses; the literal string "Assumed pass" is a hard reject in any precheck row.
-* **Repo hygiene:** all tests use `read_fixture(...)` (no absolute paths); `.env.*`, `*.sqlite`, `*.lock` gitignored; deep-research source manifests committed at `phases/Deep-Research/sources.jsonl`.
+* **Repo hygiene:** tests use repo fixtures rather than machine-specific absolute paths; `.env.*`, `*.sqlite`, `*.lock` gitignored; deep-research source manifests committed at `phases/Deep-Research/sources.jsonl`.
 
 For a 5-minute orientation see [`REVIEWER-GUIDE.md`](REVIEWER-GUIDE.md). For the full operator-facing report including the post-review remediation summary see [`EXECUTION-REPORT.md`](EXECUTION-REPORT.md). For the Runpod cutover runbook see [`docs/RUNPOD-CUTOVER.md`](docs/RUNPOD-CUTOVER.md).
 
-## H100 completion mandate
+## H100 Completion Mandate
 
 This is not a demo, mock showcase, or first-green-test milestone. The next workstream is enterprise-grade H100 completion: every layer that claims `runpod_rest` must be backed by real GPU execution or must block honestly. No result may be promoted because a schema-compatible stub exists, and no novelty, ionic-transport, stability, or packet claim may pass without raw-evidence recomputation and audit provenance.
 
 The repository is ready to **start** H100 completion work. It is not complete until the H100 run produces real artifacts and those artifacts survive parity, hard-failure detectors, acceptance gates, packet validation, and a falsification wave.
 
-### Work required to complete the pipeline
+### Work Required To Complete The Pipeline
 
 1. **Runpod service layer**
    - Stand up real `/v1/{layer}/{endpoint}` services on the H100.
@@ -77,7 +170,7 @@ The repository is ready to **start** H100 completion work. It is not complete un
    - No acceptance gate may trust claimed scalar fields where raw recomputation is available.
    - No pipeline-complete claim is valid until real H100 outputs survive the falsification wave.
 
-### H100 wall-clock estimate
+### H100 Wall-Clock Estimate
 
 For one H100, budget the workstream as follows:
 
@@ -95,28 +188,43 @@ For one H100, budget the workstream as follows:
 
 The H100 agent's first objective is not visible progress. Its objective is to turn the CPU-complete control plane into a real GPU-backed materials-discovery pipeline whose outputs can be defended from raw evidence through audit trail to falsification.
 
-## Read order
+## Workstream Contents
+
+| Path | Purpose | Author role |
+|---|---|---|
+| `MODUS-OPERANDI.md` | Reusable multi-agent pattern + parallel-exploration principle (Health, Materials, Energy run independently in parallel; convergence happens after all complete, not during) | Synthesis agent |
+| `HANDOFF-TO-ORCHESTRATOR.md` | Materials-specific brief for the next agent (the materials orchestrator) | Synthesis agent |
+| `ORCHESTRATOR-STARTUP-PROMPT.md` | Prompt the user pastes into a fresh agent session to spin up the materials orchestrator | Synthesis agent |
+| `source-briefs/` | Research-agent handover note plus two technology-landscape briefs | External research input |
+| `synthesis/` | Fresh-eyes reading of briefs and handover note | Synthesis agent |
+| `PRD.md` | Product/research requirements for overnight long-horizon execution | Materials orchestrator |
+| `HANDOFF-TO-OVERNIGHT-EXECUTOR.md` | Overnight executor brief and no-user-engagement mandate | Materials orchestrator |
+| `OVERNIGHT-EXECUTOR-STARTUP-PROMPT.md` | Paste-ready startup prompt for the dedicated overnight executor agent | Materials orchestrator |
+
+## Read Order
 
 For a fresh reviewer landing on this repo on another machine, read in this order:
 
-1. **[`REVIEWER-GUIDE.md`](REVIEWER-GUIDE.md)** — how to clone, install, run the test suite, and navigate the codebase.
-2. **[`EXECUTION-REPORT.md`](EXECUTION-REPORT.md)** — what was built, gates verdict, parked-for-Runpod table, open blockers, next actions.
-3. **[`docs/RUNPOD-CUTOVER.md`](docs/RUNPOD-CUTOVER.md)** — operator runbook for the Runpod machine.
-4. **[`phases/Falsification-wave/FALSIFICATION-WAVE-REPORT.md`](phases/Falsification-wave/FALSIFICATION-WAVE-REPORT.md)** — the 16-case wave verdict.
-5. **[`PRD.md`](PRD.md)** — original specification (the build is its implementation).
-6. **`phases/<wave-name>/PHASE-REPORT.md`** — per-wave detail (19 phase reports for the curious reviewer).
+1. **[`README.md`](README.md)** - front door, status, proof anchors, H100 completion mandate.
+2. **[`REVIEWER-GUIDE.md`](REVIEWER-GUIDE.md)** - how to clone, install, run the test suite, and navigate the codebase.
+3. **[`EXECUTION-REPORT.md`](EXECUTION-REPORT.md)** - what was built, gate verdict, parked-for-Runpod table, open blockers, next actions.
+4. **[`docs/RUNPOD-CUTOVER.md`](docs/RUNPOD-CUTOVER.md)** - operator runbook for the Runpod machine.
+5. **[`phases/Falsification-wave/FALSIFICATION-WAVE-REPORT.md`](phases/Falsification-wave/FALSIFICATION-WAVE-REPORT.md)** - 16-case falsification wave verdict.
+6. **[`phases/Falsification-wave/PHASE-REPORT-WAVE-F5.md`](phases/Falsification-wave/PHASE-REPORT-WAVE-F5.md)** - raw-evidence recompute gates wired into production.
+7. **[`PRD.md`](PRD.md)** - original specification.
+8. **`phases/<wave-name>/PHASE-REPORT.md`** - per-wave detail.
 
 For a previous-role agent reconstructing the pre-execution context:
 
-1. `MODUS-OPERANDI.md` — multi-agent work-stream pattern (reusable across Health / Materials / Energy).
-2. `HANDOFF-TO-ORCHESTRATOR.md` — materials orchestrator brief.
-3. `source-briefs/00-research-agent-handover-note.md` — research agent's self-assessment and the 5 pending decisions.
-4. `source-briefs/01-full-technology-landscape.md` — the 7-layer pipeline catalogue (Brief #1).
-5. `source-briefs/02-corrections-and-architecture.md` — corrections, gaps A-H, master tool table (Brief #2).
-6. `synthesis/01-fresh-eyes-on-materials-briefs.md` — synthesis-agent reframe.
-7. `synthesis/02-digest-of-source-briefs.md` — Wave 0 digest of Briefs #1+#2 for working-reference use.
-8. `HANDOFF-TO-OVERNIGHT-EXECUTOR.md` — overnight executor brief (this role's input).
-9. `phases/Pause-state-handoff/PAUSE-STATE.md` — mid-execution pause/resume handoff (historical).
+1. `MODUS-OPERANDI.md` - multi-agent workstream pattern.
+2. `HANDOFF-TO-ORCHESTRATOR.md` - materials orchestrator brief.
+3. `source-briefs/00-research-agent-handover-note.md` - research agent self-assessment and five pending decisions.
+4. `source-briefs/01-full-technology-landscape.md` - seven-layer pipeline catalogue.
+5. `source-briefs/02-corrections-and-architecture.md` - corrections, gaps A-H, master tool table.
+6. `synthesis/01-fresh-eyes-on-materials-briefs.md` - synthesis-agent reframe.
+7. `synthesis/02-digest-of-source-briefs.md` - Wave 0 digest.
+8. `HANDOFF-TO-OVERNIGHT-EXECUTOR.md` - overnight executor brief.
+9. `phases/Pause-state-handoff/PAUSE-STATE.md` - mid-execution pause/resume handoff.
 
 ## Provenance
 
@@ -124,8 +232,9 @@ For a previous-role agent reconstructing the pre-execution context:
 - Research agent: Perplexity (Briefs #1 and #2 plus handover note).
 - Synthesis agent: Claude Opus 4.7 (1M context), 2026-04-29.
 - Materials orchestrator: wrote `PRD.md`, `HANDOFF-TO-OVERNIGHT-EXECUTOR.md`, and `OVERNIGHT-EXECUTOR-STARTUP-PROMPT.md`, 2026-04-30.
-- Next agent: overnight executor on a Runpod-bound machine.
+- Overnight executor: implemented CPU-side control plane, falsification wave, Runpod scaffold, and post-review hardening waves.
+- H100 completion agent: next role; must produce real GPU-backed artifacts and falsification-surviving evidence.
 
-## Cross-workstream principle (deliberate)
+## Cross-Workstream Principle
 
-This workstream runs in parallel with `Zer0pa/Health` and (forthcoming) `Zer0pa/Energy`. Each workstream is built end-to-end as an independent pipeline. **No substrate is shared during build.** Redundancy across workstreams is a deliberate asset — surplus coding capacity buys diversity of architecture, not duplicated cost. Convergence (if any) happens in a separate merge step after all three workstreams complete. See `MODUS-OPERANDI.md` § Parallel-exploration principle.
+This workstream runs in parallel with `Zer0pa/Health` and `Zer0pa/Energy`. Each workstream is built end-to-end as an independent pipeline. **No substrate is shared during build.** Redundancy across workstreams is a deliberate asset: surplus coding capacity buys diversity of architecture, not duplicated cost. Convergence, if any, happens in a separate merge step after all three workstreams complete. See `MODUS-OPERANDI.md` § Parallel-exploration principle.
