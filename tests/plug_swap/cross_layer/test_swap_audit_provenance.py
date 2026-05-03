@@ -19,14 +19,12 @@ PRD §Plug-replaceability acceptance test, step 4c:
 
 from __future__ import annotations
 
-import pytest
-
-from zer0pa_materials.plugswap import PlugSwapHarness
+from zer0pa_materials_workbench.plugswap import PlugSwapHarness
 
 
 def pytest_generate_tests(metafunc):
     if "layer" in metafunc.fixturenames:
-        from zer0pa_materials.plugswap import GLOBAL_REGISTRY as REG
+        from zer0pa_materials_workbench.plugswap import GLOBAL_REGISTRY as REG
         layers = REG.layers()
         metafunc.parametrize("layer", layers, ids=layers)
 

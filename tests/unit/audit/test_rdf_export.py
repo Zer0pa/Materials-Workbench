@@ -2,19 +2,16 @@
 
 from __future__ import annotations
 
-from pathlib import Path
-
-import pytest
 from rdflib import Graph, URIRef
 from rdflib.namespace import RDF
 
-from zer0pa_materials.audit.kg import KGEdgeType, KGNodeType, MaterialsKG
-from zer0pa_materials.audit.rdf_export import (
+from zer0pa_materials_workbench.audit.kg import KGEdgeType, KGNodeType, MaterialsKG
+from zer0pa_materials_workbench.audit.rdf_export import (
     export_kg_graph,
     export_kg_to_turtle,
     round_trip_validate,
 )
-from zer0pa_materials.ontology.emmo import (
+from zer0pa_materials_workbench.ontology.emmo import (
     PROV_BASE_IRI,
     ZER0PA_EXTENSION_BASE_IRI,
 )

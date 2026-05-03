@@ -22,8 +22,9 @@ tests' contract.
 from __future__ import annotations
 
 import json
+from collections.abc import Iterable, Iterator
 from pathlib import Path
-from typing import Any, Iterable, Iterator
+from typing import Any
 
 import numpy as np
 
@@ -101,7 +102,7 @@ def detect_falsifier(fixture_dir: Path) -> list[str]:
     fired: list[str] = []
 
     if name == "invalid_cif":
-        from zer0pa_materials.envelope.hashing import parse_minimal_cif
+        from zer0pa_materials_workbench.envelope.hashing import parse_minimal_cif
 
         cif = (fixture_dir / "structure.cif").read_text()
         try:
@@ -111,7 +112,7 @@ def detect_falsifier(fixture_dir: Path) -> list[str]:
         return fired
 
     if name == "duplicate_candidate":
-        from zer0pa_materials.envelope.hashing import cif_hash_from_text
+        from zer0pa_materials_workbench.envelope.hashing import cif_hash_from_text
 
         # Compare against the LLZO cubic positive fixture's hash (committed
         # in fixtures/structures/LLZO/cubic/manifest.json).
@@ -126,7 +127,7 @@ def detect_falsifier(fixture_dir: Path) -> list[str]:
         return fired
 
     if name == "missing_boundary":
-        from zer0pa_materials.boundary import find_violations
+        from zer0pa_materials_workbench.boundary import find_violations
 
         env = json.loads((fixture_dir / "envelope.json").read_text())
         violations = find_violations(env)
@@ -139,7 +140,7 @@ def detect_falsifier(fixture_dir: Path) -> list[str]:
     if name == "ungrounded_property":
         from pydantic import ValidationError
 
-        from zer0pa_materials.envelope.layer_outputs import Phase0Output
+        from zer0pa_materials_workbench.envelope.layer_outputs import Phase0Output
 
         payload = json.loads((fixture_dir / "extraction.json").read_text())
         # Drop the boundary key (Phase0Output schema doesn't carry it).
@@ -200,7 +201,7 @@ def detect_falsifier(fixture_dir: Path) -> list[str]:
     if name == "runpod_schema_drift":
         from pydantic import ValidationError
 
-        from zer0pa_materials.envelope.envelope import Envelope
+        from zer0pa_materials_workbench.envelope.envelope import Envelope
 
         env = json.loads((fixture_dir / "envelope.json").read_text())
         # Envelope is sealed (extra='forbid'). The drift field violates that.

@@ -6,9 +6,7 @@ The ``uma_license_gate`` falsifier MUST return status == "fail".
 
 from __future__ import annotations
 
-import pytest
-
-from zer0pa_materials.falsifiers.l2_falsifiers import (
+from zer0pa_materials_workbench.falsifiers.l2_falsifiers import (
     dpa_mace_disagreement_routing,
     single_model_promotion_block,
     uma_license_gate,

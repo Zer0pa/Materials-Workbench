@@ -31,18 +31,18 @@ L4 is implemented as a **solver-ensemble layer**, not a single phase-field tool 
 
 | Path | Lines | Purpose |
 |---|---|---|
-| `src/zer0pa_materials/adapters/l4/__init__.py` | 63 | Public surface |
-| `src/zer0pa_materials/adapters/l4/base.py` | 96 | `L4Adapter` ABC + `L4PredictRequest` dataclass |
-| `src/zer0pa_materials/adapters/l4/contracts.py` | 296 | Canonical specs + `MesoscaleRunResult` + trajectory |
-| `src/zer0pa_materials/adapters/l4/prisms_pf.py` | 395 | PRISMS-PF stub, synthetic AC/CH/MPF time series |
-| `src/zer0pa_materials/adapters/l4/moose.py` | 234 | MOOSE/MARMOT stub for cross-code disagreement |
-| `src/zer0pa_materials/adapters/l4/microsim.py` | 384 | MICROSIM grand-potential, GPL-3 subprocess-quarantined |
-| `src/zer0pa_materials/adapters/l4/spparks.py` | 369 | SPPARKS Potts kMC stub, T=0 monotonic gate |
-| `src/zer0pa_materials/adapters/l4/neural_operator.py` | 424 | U-AFNO / DeepONet surrogate, advisory-only |
-| `src/zer0pa_materials/adapters/l4/ensemble.py` | 236 | `L4SolverEnsemble` primary user-facing |
-| `src/zer0pa_materials/services/l4_service.py` | 180 | FastAPI REST stub |
-| `src/zer0pa_materials/cli/l4.py` | 183 | Typer sub-app |
-| `src/zer0pa_materials/falsifiers/l4_falsifiers.py` | 393 | Six L4 falsifiers |
+| `src/zer0pa_materials_workbench/adapters/l4/__init__.py` | 63 | Public surface |
+| `src/zer0pa_materials_workbench/adapters/l4/base.py` | 96 | `L4Adapter` ABC + `L4PredictRequest` dataclass |
+| `src/zer0pa_materials_workbench/adapters/l4/contracts.py` | 296 | Canonical specs + `MesoscaleRunResult` + trajectory |
+| `src/zer0pa_materials_workbench/adapters/l4/prisms_pf.py` | 395 | PRISMS-PF stub, synthetic AC/CH/MPF time series |
+| `src/zer0pa_materials_workbench/adapters/l4/moose.py` | 234 | MOOSE/MARMOT stub for cross-code disagreement |
+| `src/zer0pa_materials_workbench/adapters/l4/microsim.py` | 384 | MICROSIM grand-potential, GPL-3 subprocess-quarantined |
+| `src/zer0pa_materials_workbench/adapters/l4/spparks.py` | 369 | SPPARKS Potts kMC stub, T=0 monotonic gate |
+| `src/zer0pa_materials_workbench/adapters/l4/neural_operator.py` | 424 | U-AFNO / DeepONet surrogate, advisory-only |
+| `src/zer0pa_materials_workbench/adapters/l4/ensemble.py` | 236 | `L4SolverEnsemble` primary user-facing |
+| `src/zer0pa_materials_workbench/services/l4_service.py` | 180 | FastAPI REST stub |
+| `src/zer0pa_materials_workbench/cli/l4.py` | 183 | Typer sub-app |
+| `src/zer0pa_materials_workbench/falsifiers/l4_falsifiers.py` | 393 | Six L4 falsifiers |
 | **Total source** | **3253** | |
 
 ### Test modules
@@ -93,7 +93,7 @@ All four real backends are gated behind `BlockedSourceManifest` entries until th
 
 The MICROSIM entry is the load-bearing one: its `blocker_detail` records the GPL-3 quarantine rationale, and its `retry_strategy` mandates that any future enablement must (1) run in a container, (2) keep `isolation_mode` set to `subprocess` or `container`, (3) verify the falsifier passes on every emitted envelope.
 
-`zer0pa-materials l4 blocked` aggregates and de-duplicates these for operator inspection.
+`zer0pa-materials-workbench l4 blocked` aggregates and de-duplicates these for operator inspection.
 
 ## Plug-swap test verdict
 
@@ -127,7 +127,7 @@ $ .venv/bin/python -m pytest tests/unit/adapters/l4 tests/contract/l4 tests/plug
 $ .venv/bin/python -m pytest tests -q
 2329 passed, 2 skipped in 24.12s
 
-$ .venv/bin/zer0pa-materials l4 --help
+$ .venv/bin/zer0pa-materials-workbench l4 --help
 L4 phase-field / kMC / neural-operator commands.
   run        Run the L4 ensemble (PRISMS-PF + MOOSE) on a spec JSON.
   kmc        Run SPPARKS kMC stub on a spec JSON.
@@ -145,4 +145,4 @@ L4 phase-field / kMC / neural-operator commands.
 
 ## Divergence from spec
 
-None of the wire-level keys diverge. The only schema-level adjustment was at the `MesoscaleRunResult.backend` Literal: PRD-mandated subprocess isolation for MICROSIM is recorded under `_l4_meta.isolation_mode` (a separate, documented field) rather than as an envelope-level `tool_adapter.backend = "subprocess"` value. The envelope-level `Backend` Literal is owned by `zer0pa_materials.envelope.envelope.Backend = Literal["stub", "local_cpu", "runpod_mock", "runpod_rest"]` (set by A0); adding `subprocess` there would have broken every other layer's plug-swap schema. Documented in the adapter's `__init__`.
+None of the wire-level keys diverge. The only schema-level adjustment was at the `MesoscaleRunResult.backend` Literal: PRD-mandated subprocess isolation for MICROSIM is recorded under `_l4_meta.isolation_mode` (a separate, documented field) rather than as an envelope-level `tool_adapter.backend = "subprocess"` value. The envelope-level `Backend` Literal is owned by `zer0pa_materials_workbench.envelope.envelope.Backend = Literal["stub", "local_cpu", "runpod_mock", "runpod_rest"]` (set by A0); adding `subprocess` there would have broken every other layer's plug-swap schema. Documented in the adapter's `__init__`.

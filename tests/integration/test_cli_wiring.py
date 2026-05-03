@@ -1,6 +1,6 @@
 """CLI integration tests — every layer subapp is reachable from the root entrypoint.
 
-This test pins the Wave 4b CLI integration: ``zer0pa-materials <layer> --help``
+This test pins the Wave 4b CLI integration: ``zer0pa-materials-workbench <layer> --help``
 must succeed for every layer that has been built. When Wave 4a (L7) lands, its
 subapp is added here too.
 
@@ -17,8 +17,7 @@ from __future__ import annotations
 import pytest
 from typer.testing import CliRunner
 
-from zer0pa_materials.cli.main import app
-
+from zer0pa_materials_workbench.cli.main import app
 
 # Layers wired in Wave 4b. The "l7" entry is added once Wave 4a completes;
 # until then, the test suite still passes for the layers that exist.
@@ -71,7 +70,7 @@ def test_root_version(runner: CliRunner) -> None:
 
 def test_envelope_schema_for_each_layer(runner: CliRunner) -> None:
     """The envelope-schema --layer flag accepts every layer-output registry key."""
-    from zer0pa_materials.envelope import LAYER_OUTPUT_REGISTRY
+    from zer0pa_materials_workbench.envelope import LAYER_OUTPUT_REGISTRY
 
     for layer in LAYER_OUTPUT_REGISTRY:
         result = runner.invoke(app, ["envelope-schema", "--layer", layer, "--compact"])

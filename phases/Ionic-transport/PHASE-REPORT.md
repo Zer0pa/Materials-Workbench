@@ -169,7 +169,7 @@ src:blocked:electrochemical-window-real-backend
 src:blocked:interface-stability-real-backend
 ```
 
-Each is exposed at module level via `from zer0pa_materials.adapters.ionic import NEB_BLOCKED_MANIFEST, MLIP_MD_BLOCKED_MANIFEST, AIMD_BLOCKED_MANIFEST, ELECTROCHEMICAL_WINDOW_BLOCKED_MANIFEST, INTERFACE_STABILITY_BLOCKED_MANIFEST` and tested in the unit suite. They are designed to be appended to the audit `sources.jsonl` log via `AuditLog.append_event("sources", manifest.model_dump())` when the operator first attempts the real backend.
+Each is exposed at module level via `from zer0pa_materials_workbench_workbench.adapters.ionic import NEB_BLOCKED_MANIFEST, MLIP_MD_BLOCKED_MANIFEST, AIMD_BLOCKED_MANIFEST, ELECTROCHEMICAL_WINDOW_BLOCKED_MANIFEST, INTERFACE_STABILITY_BLOCKED_MANIFEST` and tested in the unit suite. They are designed to be appended to the audit `sources.jsonl` log via `AuditLog.append_event("sources", manifest.model_dump())` when the operator first attempts the real backend.
 
 ## Calibration discrepancy with the wave brief
 
@@ -181,13 +181,13 @@ The physically-correct Nernst-Einstein formula gives ~1.24e-**2** S/cm at those 
 
 Touched only the files in the ionic/ scope plus the CLI registration:
 
-- WROTE: `src/zer0pa_materials/adapters/ionic/{__init__,base,nernst_einstein,neb,mlip_md,aimd,arrhenius,electrochemical_window,interface_stability}.py`
-- WROTE: `src/zer0pa_materials/services/ionic_transport_service.py`
-- WROTE: `src/zer0pa_materials/services/__init__.py` (added ionic re-exports)
-- WROTE: `src/zer0pa_materials/falsifiers/ionic_falsifiers.py`
-- WROTE: `src/zer0pa_materials/cli/ionic.py`
+- WROTE: `src/zer0pa_materials_workbench/adapters/ionic/{__init__,base,nernst_einstein,neb,mlip_md,aimd,arrhenius,electrochemical_window,interface_stability}.py`
+- WROTE: `src/zer0pa_materials_workbench/services/ionic_transport_service.py`
+- WROTE: `src/zer0pa_materials_workbench/services/__init__.py` (added ionic re-exports)
+- WROTE: `src/zer0pa_materials_workbench/falsifiers/ionic_falsifiers.py`
+- WROTE: `src/zer0pa_materials_workbench/cli/ionic.py`
 - WROTE: `tests/unit/adapters/ionic/`, `tests/contract/ionic/`, `tests/plug_swap/ionic/`, `tests/falsification_wave/ionic/`
-- TOUCHED: `src/zer0pa_materials/cli/main.py` — added a single line registering the ionic Typer app under `add_typer(name="ionic")`. No foundation modules were modified.
+- TOUCHED: `src/zer0pa_materials_workbench/cli/main.py` — added a single line registering the ionic Typer app under `add_typer(name="ionic")`. No foundation modules were modified.
 
 The phase0/l6 imports already in `cli/main.py` were present in the working tree from earlier waves; no functional change to them.
 

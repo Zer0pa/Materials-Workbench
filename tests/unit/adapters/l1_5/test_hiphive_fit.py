@@ -11,12 +11,12 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.adapters.l1_5.base import L15JobParams
-from zer0pa_materials.adapters.l1_5.hiphive_fit import (
+from zer0pa_materials_workbench.adapters.l1_5.base import L15JobParams
+from zer0pa_materials_workbench.adapters.l1_5.hiphive_fit import (
     HiPhiveForceConstantFitAdapter,
     hiphive_frequency_rmse,
 )
-from zer0pa_materials.envelope import Envelope, L15PhononOutput
+from zer0pa_materials_workbench.envelope import Envelope, L15PhononOutput
 
 
 class TestHiPhiveFrequencyRmse:

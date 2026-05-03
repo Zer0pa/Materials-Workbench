@@ -2,20 +2,18 @@
 
 from __future__ import annotations
 
-import pytest
 import numpy as np
+import pytest
 
-from zer0pa_materials.adapters.l5.homogenisation import (
-    HomogenisationOperator,
+from zer0pa_materials_workbench.adapters.l5.homogenisation import (
     DEFAULT_MATERIAL_LIBRARY,
-    _isotropic_3x3,
-    _conductivity_3x3,
-    _voigt_average,
-    _reuss_average,
+    HomogenisationOperator,
     _hill_average,
     _is_spd,
+    _isotropic_3x3,
+    _reuss_average,
+    _voigt_average,
 )
-
 
 # ---------------------------------------------------------------------------
 # SPD helper tests

@@ -52,7 +52,7 @@ Or query each IRI directly:
 curl -L "https://w3id.org/emmo#EMMO_25aacccd_5d10_4dad_a6d7_4d5e35e18d10"
 ```
 
-If any UUID returns 404, replace with the candidate UUID identified above and update `src/zer0pa_materials/ontology/emmo.py`.
+If any UUID returns 404, replace with the candidate UUID identified above and update `src/zer0pa_materials_workbench/ontology/emmo.py`.
 
 ## EMMO version note
 

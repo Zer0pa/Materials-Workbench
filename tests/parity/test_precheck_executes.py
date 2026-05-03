@@ -32,12 +32,9 @@ import subprocess
 from pathlib import Path
 from typing import Any
 
-import pytest
-
-from zer0pa_materials.envelope.config import MaterialsConfig
-from zer0pa_materials.runpod import cutover as cutover_module
-from zer0pa_materials.runpod.cutover import RunpodCutover
-
+from zer0pa_materials_workbench.envelope.config import MaterialsConfig
+from zer0pa_materials_workbench.runpod import cutover as cutover_module
+from zer0pa_materials_workbench.runpod.cutover import RunpodCutover
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -65,7 +62,7 @@ def test_precheck_fast_skips_subprocess_checks_with_concrete_evidence(tmp_path, 
     """fast=True must NOT claim pass on P5/P6/P7/P8."""
     # Redirect audit + repo writes into the tmp tree so we don't touch the
     # repo's actual audit/runtime directory during the test.
-    monkeypatch.setenv("ZER0PA_MATERIALS_REPO_ROOT", str(_make_fake_repo_root(tmp_path)))
+    monkeypatch.setenv("ZER0PA_MATERIALS_WORKBENCH_REPO_ROOT", str(_make_fake_repo_root(tmp_path)))
 
     cfg = _cfg(MATERIALS_MODE="runpod_mock")
     orchestrator = RunpodCutover(config=cfg)
@@ -91,7 +88,7 @@ def test_precheck_fast_skips_subprocess_checks_with_concrete_evidence(tmp_path, 
 
 def test_precheck_fast_runpod_connectivity_records_concrete_evidence(tmp_path, monkeypatch):
     """P1 records exactly what is missing when creds are absent."""
-    monkeypatch.setenv("ZER0PA_MATERIALS_REPO_ROOT", str(_make_fake_repo_root(tmp_path)))
+    monkeypatch.setenv("ZER0PA_MATERIALS_WORKBENCH_REPO_ROOT", str(_make_fake_repo_root(tmp_path)))
     cfg = _cfg(MATERIALS_MODE="runpod_mock", RUNPOD_BASE_URL=None, RUNPOD_API_TOKEN=None)
     orchestrator = RunpodCutover(config=cfg)
     report = orchestrator.precheck(fast=True, persist=False)
@@ -104,7 +101,7 @@ def test_precheck_fast_runpod_connectivity_records_concrete_evidence(tmp_path, m
 
 
 def test_precheck_mode_acceptable_passes_when_runpod_mock(tmp_path, monkeypatch):
-    monkeypatch.setenv("ZER0PA_MATERIALS_REPO_ROOT", str(_make_fake_repo_root(tmp_path)))
+    monkeypatch.setenv("ZER0PA_MATERIALS_WORKBENCH_REPO_ROOT", str(_make_fake_repo_root(tmp_path)))
     cfg = _cfg(MATERIALS_MODE="runpod_mock")
     report = RunpodCutover(config=cfg).precheck(fast=True, persist=False)
     assert report.preconditions["materials_mode_acceptable"] is True
@@ -114,7 +111,7 @@ def test_precheck_mode_acceptable_passes_when_runpod_mock(tmp_path, monkeypatch)
 def test_precheck_uma_hf_gate_records_manifest_pending(tmp_path, monkeypatch):
     """P2 records `manifest pending` when phases/UMA-license/manifest.json absent."""
     fake_root = _make_fake_repo_root(tmp_path)
-    monkeypatch.setenv("ZER0PA_MATERIALS_REPO_ROOT", str(fake_root))
+    monkeypatch.setenv("ZER0PA_MATERIALS_WORKBENCH_REPO_ROOT", str(fake_root))
     cfg = _cfg(UMA_HF_ORG=None, UMA_HF_TOKEN=None)
     report = RunpodCutover(config=cfg).precheck(fast=True, persist=False)
     ev = report.evidence["uma_hf_aup_gate"]
@@ -128,7 +125,7 @@ def test_precheck_uma_hf_gate_passes_when_manifest_and_creds_present(tmp_path, m
     """When UMA env vars set AND a fully-valid manifest exists → P2 True.
 
     Wave F.6 hardening: the precheck now delegates to
-    :func:`zer0pa_materials.falsifiers.uma_manifest.verify_uma_manifest`
+    :func:`zer0pa_materials_workbench.falsifiers.uma_manifest.verify_uma_manifest`
     which schema-validates against ``UmaAupLicenseManifest``, recomputes
     the manifest hash, and rejects placeholder values.  A *minimal*
     manifest with just ``aup_accepted_at`` is no longer enough.
@@ -138,14 +135,14 @@ def test_precheck_uma_hf_gate_passes_when_manifest_and_creds_present(tmp_path, m
     ``phases/UMA-license/manifest.template.json``) so the precheck
     correctly returns True.
     """
-    from zer0pa_materials.falsifiers.uma_manifest import (
+    from zer0pa_materials_workbench.falsifiers.uma_manifest import (
         RESTRICTED_JURISDICTIONS,  # noqa: F401 — informational
         UmaAupLicenseManifest,
         compute_manifest_hash,
     )
 
     fake_root = _make_fake_repo_root(tmp_path)
-    monkeypatch.setenv("ZER0PA_MATERIALS_REPO_ROOT", str(fake_root))
+    monkeypatch.setenv("ZER0PA_MATERIALS_WORKBENCH_REPO_ROOT", str(fake_root))
 
     uma_dir = fake_root / "phases" / "UMA-license"
     uma_dir.mkdir(parents=True, exist_ok=True)
@@ -201,7 +198,7 @@ def test_precheck_full_runs_pytest_subprocess_and_records_returncode(tmp_path, m
     pytest args* and *records the returncode in evidence*.
     """
     fake_root = _make_fake_repo_root(tmp_path)
-    monkeypatch.setenv("ZER0PA_MATERIALS_REPO_ROOT", str(fake_root))
+    monkeypatch.setenv("ZER0PA_MATERIALS_WORKBENCH_REPO_ROOT", str(fake_root))
 
     invocations: list[list[str]] = []
 
@@ -260,7 +257,7 @@ def test_precheck_full_runs_pytest_subprocess_and_records_returncode(tmp_path, m
 def test_precheck_full_records_failure_when_pytest_returns_nonzero(tmp_path, monkeypatch):
     """A non-zero pytest returncode is surfaced as passed=False with concrete evidence."""
     fake_root = _make_fake_repo_root(tmp_path)
-    monkeypatch.setenv("ZER0PA_MATERIALS_REPO_ROOT", str(fake_root))
+    monkeypatch.setenv("ZER0PA_MATERIALS_WORKBENCH_REPO_ROOT", str(fake_root))
 
     class _FakeCompleted:
         def __init__(self, returncode: int, stdout: bytes, stderr: bytes) -> None:
@@ -295,7 +292,7 @@ def test_precheck_full_records_failure_when_pytest_returns_nonzero(tmp_path, mon
 def test_precheck_full_handles_subprocess_timeout(tmp_path, monkeypatch):
     """A subprocess.TimeoutExpired is converted into passed=False with evidence."""
     fake_root = _make_fake_repo_root(tmp_path)
-    monkeypatch.setenv("ZER0PA_MATERIALS_REPO_ROOT", str(fake_root))
+    monkeypatch.setenv("ZER0PA_MATERIALS_WORKBENCH_REPO_ROOT", str(fake_root))
 
     def fake_run(cmd: list[str], **kwargs: Any):
         raise subprocess.TimeoutExpired(cmd, 5.0)
@@ -317,7 +314,7 @@ def test_precheck_full_handles_subprocess_timeout(tmp_path, monkeypatch):
 def test_precheck_persists_jsonl_when_persist_true(tmp_path, monkeypatch):
     """A precheck with persist=True appends one JSONL row to audit/runtime/precheck.jsonl."""
     fake_root = _make_fake_repo_root(tmp_path)
-    monkeypatch.setenv("ZER0PA_MATERIALS_REPO_ROOT", str(fake_root))
+    monkeypatch.setenv("ZER0PA_MATERIALS_WORKBENCH_REPO_ROOT", str(fake_root))
 
     cfg = _cfg(MATERIALS_MODE="runpod_mock")
     report = RunpodCutover(config=cfg).precheck(fast=True, persist=True)
@@ -380,13 +377,13 @@ def _make_fake_repo_root(tmp_path: Path) -> Path:
     """Create a synthetic repo tree the precheck can resolve via repo_root().
 
     repo_root() walks up looking for ``pyproject.toml`` containing
-    ``name = "zer0pa-materials"``.  We synthesise that file in tmp_path
+    ``name = "zer0pa-materials-workbench"``.  We synthesise that file in tmp_path
     so :class:`RunpodCutover` writes its precheck.jsonl into a directory
     that does NOT touch the real repo audit log.
     """
     pyproject = tmp_path / "pyproject.toml"
     pyproject.write_text(
-        '[project]\nname = "zer0pa-materials"\nversion = "0.0.0"\n',
+        '[project]\nname = "zer0pa-materials-workbench"\nversion = "0.0.0"\n',
         encoding="utf-8",
     )
     (tmp_path / "phases").mkdir(exist_ok=True)

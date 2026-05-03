@@ -25,13 +25,12 @@ the dedupe pipeline:
 
 from __future__ import annotations
 
-from zer0pa_materials.envelope.hashing import structure_hash
-from zer0pa_materials.falsifiers.l6_falsifiers import (
+from zer0pa_materials_workbench.envelope.hashing import structure_hash
+from zer0pa_materials_workbench.falsifiers.l6_falsifiers import (
     novelty_status_gate_recomputed,
     recompute_novelty,
 )
-from zer0pa_materials.falsifiers.raw_evidence import llzo_cubic_reference_structure
-
+from zer0pa_materials_workbench.falsifiers.raw_evidence import llzo_cubic_reference_structure
 
 # ---------------------------------------------------------------------------
 # Fixture helpers

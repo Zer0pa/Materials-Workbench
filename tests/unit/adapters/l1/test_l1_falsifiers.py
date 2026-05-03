@@ -4,16 +4,14 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.adapters.l1.pyscf import PyScfMolecularSolver
-from zer0pa_materials.adapters.l1.base import L1JobParams
-from zer0pa_materials.envelope import L1DftOutput, cif_hash_from_text
-from zer0pa_materials.falsifiers.l1_falsifiers import (
-    convergence_delta_screening_threshold,
+from zer0pa_materials_workbench import read_fixture
+from zer0pa_materials_workbench.adapters.l1.pyscf import PyScfMolecularSolver
+from zer0pa_materials_workbench.envelope import L1DftOutput
+from zer0pa_materials_workbench.falsifiers.l1_falsifiers import (
     convergence_delta_publication_threshold,
+    convergence_delta_screening_threshold,
     force_threshold_check,
 )
-
-from zer0pa_materials import read_fixture
 
 H2_CIF = read_fixture("structures", "H2", "structure.cif")
 

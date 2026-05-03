@@ -20,7 +20,6 @@ from tests.unit.fixtures.conftest import (
     total_committed_bytes,
 )
 
-
 REQUIRED_KEYS = (
     "research_boundary",
     "fixture_id",

@@ -10,14 +10,14 @@ import importlib.util
 
 import pytest
 
-from zer0pa_materials.adapters.quantum.pennylane_vqe import (
-    PennyLaneVqeSolver,
+from zer0pa_materials_workbench.adapters.quantum.pennylane_vqe import (
     PENNYLANE_BLOCKED_MANIFEST,
+    PennyLaneVqeSolver,
     _H2_FCI_Ha,
     _H2_VQE_STUB_Ha,
 )
-from zer0pa_materials.envelope import L1QuantumVqeOutput, Envelope
-from zer0pa_materials.falsifiers.quantum_falsifiers import vqe_h2_classical_match
+from zer0pa_materials_workbench.envelope import Envelope, L1QuantumVqeOutput
+from zer0pa_materials_workbench.falsifiers.quantum_falsifiers import vqe_h2_classical_match
 
 PENNYLANE_AVAILABLE = importlib.util.find_spec("pennylane") is not None
 
@@ -83,7 +83,7 @@ def test_h2_envelope_falsifier_block_passes(h2_envelope: Envelope) -> None:
 
 
 def test_h2_envelope_has_boundary(h2_envelope: Envelope) -> None:
-    from zer0pa_materials.boundary import RESEARCH_BOUNDARY
+    from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
     assert h2_envelope.research_boundary == RESEARCH_BOUNDARY
 
 

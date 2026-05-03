@@ -2,10 +2,10 @@
 
 import pytest
 
-from zer0pa_materials.adapters.phase0.langgraph_extraction import LangGraphExtractionWorkflow
-from zer0pa_materials.audit.sources import SourceManifest
-from zer0pa_materials.boundary import RESEARCH_BOUNDARY
-from zer0pa_materials.envelope.envelope import Envelope
+from zer0pa_materials_workbench.adapters.phase0.langgraph_extraction import LangGraphExtractionWorkflow
+from zer0pa_materials_workbench.audit.sources import SourceManifest
+from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
+from zer0pa_materials_workbench.envelope.envelope import Envelope
 
 
 @pytest.fixture

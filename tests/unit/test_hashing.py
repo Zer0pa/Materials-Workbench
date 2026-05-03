@@ -7,7 +7,7 @@ import math
 import numpy as np
 import pytest
 
-from zer0pa_materials.envelope import (
+from zer0pa_materials_workbench.envelope import (
     HASH_REGEX,
     canonical_json_bytes,
     cif_hash_from_text,
@@ -15,7 +15,6 @@ from zer0pa_materials.envelope import (
     sha256_of,
     structure_hash,
 )
-
 
 # ----------------------------------------------------------------------------
 # canonical_json_bytes
@@ -36,7 +35,7 @@ def test_canonical_json_bytes_handles_numpy():
 
 
 def test_canonical_json_bytes_handles_pydantic_model():
-    from zer0pa_materials.envelope import FalsifierItem
+    from zer0pa_materials_workbench.envelope import FalsifierItem
     fi = FalsifierItem(name="t", threshold=">0", actual=1.0, status="pass")
     a = canonical_json_bytes(fi)
     b = canonical_json_bytes(fi.model_dump(mode="json"))

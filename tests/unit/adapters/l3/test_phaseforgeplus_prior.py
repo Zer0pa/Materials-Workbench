@@ -14,9 +14,9 @@ import datetime as _dt
 
 import pytest
 
-from zer0pa_materials.adapters.l3 import L3CalphadRequest, PhaseForgePlusMlipPriorAdapter
-from zer0pa_materials.envelope import Envelope, L3CalphadOutput
-from zer0pa_materials.falsifiers.l3_falsifiers import phaseforgeplus_license_gate
+from zer0pa_materials_workbench.adapters.l3 import L3CalphadRequest, PhaseForgePlusMlipPriorAdapter
+from zer0pa_materials_workbench.envelope import Envelope, L3CalphadOutput
+from zer0pa_materials_workbench.falsifiers.l3_falsifiers import phaseforgeplus_license_gate
 
 
 def _req(suffix: str = "001") -> L3CalphadRequest:

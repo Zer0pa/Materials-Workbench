@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.audit.rights import (
+from zer0pa_materials_workbench.audit.rights import (
     RIGHTS_TABLE,
     RightsClaim,
     RightsViolationError,
@@ -12,7 +12,6 @@ from zer0pa_materials.audit.rights import (
     default_reuse_scope_for,
     is_reuse_scope_compatible,
 )
-
 
 # ----------------------------------------------------------------------------
 # Rights table integrity

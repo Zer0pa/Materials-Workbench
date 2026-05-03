@@ -10,7 +10,7 @@ L2 MLIP ensemble adapters (DPA-3 + MACE mandatory by construction), UMA license 
 
 ## Files created
 
-### Source modules (`src/zer0pa_materials/`)
+### Source modules (`src/zer0pa_materials_workbench/`)
 
 | Path | Purpose | Lines |
 |---|---|---|

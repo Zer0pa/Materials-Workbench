@@ -12,16 +12,16 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.adapters.l4.base import L4PredictRequest
-from zer0pa_materials.adapters.l4.contracts import (
+from zer0pa_materials_workbench.adapters.l4.base import L4PredictRequest
+from zer0pa_materials_workbench.adapters.l4.contracts import (
     PhaseFieldDomain,
     PhaseFieldMaterial,
     PhaseFieldMesh,
     PhaseFieldRunSpec,
 )
-from zer0pa_materials.adapters.l4.neural_operator import NeuralOperatorPhaseFieldAdapter
-from zer0pa_materials.boundary import RESEARCH_BOUNDARY
-from zer0pa_materials.envelope.envelope import Envelope
+from zer0pa_materials_workbench.adapters.l4.neural_operator import NeuralOperatorPhaseFieldAdapter
+from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
+from zer0pa_materials_workbench.envelope.envelope import Envelope
 
 
 @pytest.fixture
@@ -143,7 +143,7 @@ class TestSchemaParityWithClassicalSolvers:
     """Wire schema must match PRISMS-PF / MOOSE for the plug-swap invariant."""
 
     def test_neural_op_envelope_keys_match_prisms(self, request_obj):
-        from zer0pa_materials.adapters.l4.prisms_pf import PrismsPfAdapter
+        from zer0pa_materials_workbench.adapters.l4.prisms_pf import PrismsPfAdapter
 
         prisms = PrismsPfAdapter().run(_make_spec(), request_obj)
         neural = NeuralOperatorPhaseFieldAdapter().run(_make_spec(), request_obj)
@@ -152,7 +152,7 @@ class TestSchemaParityWithClassicalSolvers:
         assert prisms_keys == neural_keys
 
     def test_output_keys_match(self, request_obj):
-        from zer0pa_materials.adapters.l4.prisms_pf import PrismsPfAdapter
+        from zer0pa_materials_workbench.adapters.l4.prisms_pf import PrismsPfAdapter
 
         prisms = PrismsPfAdapter().run(_make_spec(), request_obj)
         neural = NeuralOperatorPhaseFieldAdapter().run(_make_spec(), request_obj)

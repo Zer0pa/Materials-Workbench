@@ -2,20 +2,19 @@
 
 from __future__ import annotations
 
-import json
 from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
 
-from zer0pa_materials.services.l7_service import create_l7_app
+from zer0pa_materials_workbench.services.l7_service import create_l7_app
 
 
 @pytest.fixture
 def client(tmp_path: Path) -> TestClient:
     app = create_l7_app()
     # Reset in-memory state between tests.
-    from zer0pa_materials.services import l7_service as svc
+    from zer0pa_materials_workbench.services import l7_service as svc
 
     svc._ACTIVE_CAMPAIGNS.clear()
     return TestClient(app)
@@ -202,7 +201,7 @@ def test_resume_returns_state(client, runtime_paths):
         },
     )
     # Clear in-memory and resume.
-    from zer0pa_materials.services import l7_service as svc
+    from zer0pa_materials_workbench.services import l7_service as svc
 
     svc._ACTIVE_CAMPAIGNS.clear()
     resp = client.post(

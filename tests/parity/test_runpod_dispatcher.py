@@ -30,23 +30,21 @@ out of scope (Meta UMA Acceptable Use Policy and operator policy).
 
 from __future__ import annotations
 
-import json
 from typing import Any
 
 import httpx
 import pytest
 
-from zer0pa_materials.audit.sources import BlockedSourceManifest
-from zer0pa_materials.boundary import RESEARCH_BOUNDARY
-from zer0pa_materials.envelope.config import MaterialsConfig
-from zer0pa_materials.envelope.hashing import HASH_REGEX
-from zer0pa_materials.runpod.dispatcher import (
+from zer0pa_materials_workbench.audit.sources import BlockedSourceManifest
+from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
+from zer0pa_materials_workbench.envelope.config import MaterialsConfig
+from zer0pa_materials_workbench.envelope.hashing import HASH_REGEX
+from zer0pa_materials_workbench.runpod.dispatcher import (
     DispatchResult,
     RunpodCredentialsError,
     RunpodDispatcher,
 )
-from zer0pa_materials.runpod.rest_client import RunpodRestClient
-
+from zer0pa_materials_workbench.runpod.rest_client import RunpodRestClient
 
 # ---------------------------------------------------------------------------
 # Helpers — these construct configs WITHOUT touching the on-disk .env so the
@@ -335,8 +333,8 @@ def test_credentials_ok_when_both_present():
 
 def test_dispatch_runpod_rest_5xx_retries_then_raises_runpod_rest_error(monkeypatch):
     """A 500 response triggers retry; after the cap we surface RunpodRestError."""
-    from zer0pa_materials.runpod import rest_client as rc_module
-    from zer0pa_materials.runpod.rest_client import RunpodRestError
+    from zer0pa_materials_workbench.runpod import rest_client as rc_module
+    from zer0pa_materials_workbench.runpod.rest_client import RunpodRestError
 
     # Speed the test up — short waits so we don't sit through ~10s of backoff.
     monkeypatch.setattr(rc_module, "RETRY_WAIT_MIN_S", 0.0)
@@ -386,7 +384,7 @@ def test_adversarial_mock_relabelled_runpod_rest_is_flagged_by_resource_metrics(
     parity test suite ALSO checks for ``audit.source_manifest_refs``
     being non-empty (real REST calls cite the model card).
     """
-    from zer0pa_materials.runpod.mock_backends import build_runpod_mock_envelope
+    from zer0pa_materials_workbench.runpod.mock_backends import build_runpod_mock_envelope
 
     fake = build_runpod_mock_envelope(
         layer="L2",

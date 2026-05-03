@@ -18,15 +18,13 @@ PRD §Plug-replaceability acceptance test, step 4a:
 
 from __future__ import annotations
 
-import pytest
-
-from zer0pa_materials.envelope.envelope import Envelope
-from zer0pa_materials.plugswap import PlugSwapHarness
+from zer0pa_materials_workbench.envelope.envelope import Envelope
+from zer0pa_materials_workbench.plugswap import PlugSwapHarness
 
 
 def pytest_generate_tests(metafunc):
     if "layer" in metafunc.fixturenames:
-        from zer0pa_materials.plugswap import GLOBAL_REGISTRY as REG
+        from zer0pa_materials_workbench.plugswap import GLOBAL_REGISTRY as REG
         layers = REG.layers()
         metafunc.parametrize("layer", layers, ids=layers)
 
@@ -56,7 +54,7 @@ def test_no_downstream_breakage_for_layer(layer: str, plug_swap_harness: PlugSwa
     assert re_b.layer == result.envelope_b.layer
 
     # Both must carry the research boundary.
-    from zer0pa_materials.boundary import RESEARCH_BOUNDARY
+    from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
     assert result.envelope_a.research_boundary == RESEARCH_BOUNDARY, (
         f"Layer {layer!r} adapter_a missing boundary"
     )

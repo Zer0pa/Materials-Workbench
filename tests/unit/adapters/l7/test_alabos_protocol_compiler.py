@@ -4,11 +4,11 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.adapters.l7 import (
+from zer0pa_materials_workbench.adapters.l7 import (
     AlabosExecutableInRecipeOnlyError,
     AlabOSProtocolCompilerStub,
 )
-from zer0pa_materials.adapters.l7.base import L7CampaignParams
+from zer0pa_materials_workbench.adapters.l7.base import L7CampaignParams
 
 
 def test_default_mode_is_recipe_only():

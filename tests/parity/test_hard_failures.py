@@ -14,12 +14,10 @@ out of scope (Meta UMA Acceptable Use Policy and operator policy).
 from __future__ import annotations
 
 import pytest
-from pathlib import Path
 
-from zer0pa_materials.boundary import RESEARCH_BOUNDARY
-from zer0pa_materials.envelope.hashing import sha256_of
-from zer0pa_materials.runpod.hard_failures import HardFailureDetector
-from zer0pa_materials.runpod.mock_backends import build_runpod_mock_envelope
+from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
+from zer0pa_materials_workbench.runpod.hard_failures import HardFailureDetector
+from zer0pa_materials_workbench.runpod.mock_backends import build_runpod_mock_envelope
 
 
 @pytest.fixture
@@ -156,7 +154,7 @@ def test_caller_changes_pass_allowed_dirs(detector):
 
 
 def test_caller_changes_fail_forbidden_dir(detector):
-    git_status = "M src/zer0pa_materials/adapters/l1/pyscf.py"
+    git_status = "M src/zer0pa_materials_workbench/adapters/l1/pyscf.py"
     result = detector.detect_caller_changes(git_status)
     assert not result.passed
     assert "pyscf.py" in result.evidence or "src" in result.evidence

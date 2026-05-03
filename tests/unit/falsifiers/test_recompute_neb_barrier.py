@@ -31,14 +31,13 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.falsifiers.ionic_falsifiers import (
+from zer0pa_materials_workbench.falsifiers.ionic_falsifiers import (
     ARRHENIUS_BARRIER_BAND_AT_1E_3_EV,
     MAX_PLAUSIBLE_BARRIER_EV,
     MIN_PLAUSIBLE_BARRIER_EV,
     neb_barrier_range_check,
 )
-from zer0pa_materials.falsifiers.raw_evidence import implied_arrhenius_barrier_eV
-
+from zer0pa_materials_workbench.falsifiers.raw_evidence import implied_arrhenius_barrier_eV
 
 # ---------------------------------------------------------------------------
 # Old shape — there was no equivalent gate before Wave D.

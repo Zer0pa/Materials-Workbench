@@ -4,11 +4,11 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.adapters.l7 import (
+from zer0pa_materials_workbench.adapters.l7 import (
     BoTorchAcquisitionAdapter,
     ForbiddenAcquisitionError,
 )
-from zer0pa_materials.falsifiers.l7_falsifiers import (
+from zer0pa_materials_workbench.falsifiers.l7_falsifiers import (
     botorch_acquisition_function_allowed,
 )
 

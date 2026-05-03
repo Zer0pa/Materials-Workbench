@@ -2,11 +2,8 @@
 
 from __future__ import annotations
 
-import pytest
-
-from zer0pa_materials.orchestration.disagreement_aggregator import (
+from zer0pa_materials_workbench.orchestration.disagreement_aggregator import (
     DEFAULT_NORMALISERS,
-    AggregateDisagreement,
     CrossLayerDisagreementAggregator,
     LayerDisagreementInput,
 )

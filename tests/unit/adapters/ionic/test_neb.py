@@ -4,11 +4,11 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.adapters.ionic.base import (
+from zer0pa_materials_workbench.adapters.ionic.base import (
     IONIC_TRANSPORT_SERVICE_REF,
     IonicJobParams,
 )
-from zer0pa_materials.adapters.ionic.neb import (
+from zer0pa_materials_workbench.adapters.ionic.neb import (
     NEB_BLOCKED_MANIFEST,
     NebMigrationBarrierAdapter,
     fixture_barrier_eV,

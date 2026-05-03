@@ -10,13 +10,11 @@ pass.
 
 from __future__ import annotations
 
-import pytest
-
-from zer0pa_materials.adapters.ionic.base import IonicJobParams
-from zer0pa_materials.adapters.ionic.interface_stability import (
+from zer0pa_materials_workbench.adapters.ionic.base import IonicJobParams
+from zer0pa_materials_workbench.adapters.ionic.interface_stability import (
     InterfaceStabilityAdapter,
 )
-from zer0pa_materials.falsifiers.ionic_falsifiers import (
+from zer0pa_materials_workbench.falsifiers.ionic_falsifiers import (
     li_metal_reduction_route_compatibility,
 )
 

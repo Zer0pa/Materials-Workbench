@@ -21,14 +21,14 @@ Wave F5 wires every Wave D recompute gate into every production promotion path a
 
 | Path | Change |
 |---|---|
-| `src/zer0pa_materials/orchestration/acceptance_gates.py` | Added `recompute_consistency` sub-gate; `GateContext` now accepts an optional `audit_log` and `novelty_reference_hashes`; new `claim_recompute_mismatch` failure reason; module docstring updated. (~150 LOC added) |
-| `src/zer0pa_materials/services/ionic_transport_service.py` | `promote_battery_candidate()` now invokes every Wave D recompute gate against the bundle's NEB envelope plus optional `extra_envelopes` for L2/L6/L5/L3/phase0; `inconclusive` is fail-closed. (~120 LOC added) |
-| `src/zer0pa_materials/falsifiers/wave_runner.py` | `FalsificationWaveRunner.run_all()` now ends with a post-PRD recompute sweep (`_run_recompute_sweep`) over a synthetic forged-evidence chain; new `RecomputeSweepResult` dataclass; results recorded in `falsifiers.jsonl`. (~210 LOC added) |
-| `src/zer0pa_materials/falsifiers/wave_report.py` | New "Wave F5 post-PRD recompute sweep" section in the markdown report. (~25 LOC added) |
-| `src/zer0pa_materials/packets/validators.py` | New `_check_recompute_gates_per_envelope()` walker invokes every Wave D gate against each nested envelope. (~150 LOC added) |
-| `src/zer0pa_materials/packets/_envelope_builders.py` | `l6_known_control_envelope()` accepts `cif_text`, `structure`, `back_edges` so the recompute can hash from raw evidence. (~30 LOC added) |
-| `src/zer0pa_materials/packets/battery_packet.py` | Pipes the fixture's `structure.cif` and back-edge placeholders into the L6 envelope builder. (~20 LOC added) |
-| `src/zer0pa_materials/packets/thermoelectric_packet.py` | Same wiring for thermoelectric packets. (~12 LOC added) |
+| `src/zer0pa_materials_workbench/orchestration/acceptance_gates.py` | Added `recompute_consistency` sub-gate; `GateContext` now accepts an optional `audit_log` and `novelty_reference_hashes`; new `claim_recompute_mismatch` failure reason; module docstring updated. (~150 LOC added) |
+| `src/zer0pa_materials_workbench/services/ionic_transport_service.py` | `promote_battery_candidate()` now invokes every Wave D recompute gate against the bundle's NEB envelope plus optional `extra_envelopes` for L2/L6/L5/L3/phase0; `inconclusive` is fail-closed. (~120 LOC added) |
+| `src/zer0pa_materials_workbench/falsifiers/wave_runner.py` | `FalsificationWaveRunner.run_all()` now ends with a post-PRD recompute sweep (`_run_recompute_sweep`) over a synthetic forged-evidence chain; new `RecomputeSweepResult` dataclass; results recorded in `falsifiers.jsonl`. (~210 LOC added) |
+| `src/zer0pa_materials_workbench/falsifiers/wave_report.py` | New "Wave F5 post-PRD recompute sweep" section in the markdown report. (~25 LOC added) |
+| `src/zer0pa_materials_workbench/packets/validators.py` | New `_check_recompute_gates_per_envelope()` walker invokes every Wave D gate against each nested envelope. (~150 LOC added) |
+| `src/zer0pa_materials_workbench/packets/_envelope_builders.py` | `l6_known_control_envelope()` accepts `cif_text`, `structure`, `back_edges` so the recompute can hash from raw evidence. (~30 LOC added) |
+| `src/zer0pa_materials_workbench/packets/battery_packet.py` | Pipes the fixture's `structure.cif` and back-edge placeholders into the L6 envelope builder. (~20 LOC added) |
+| `src/zer0pa_materials_workbench/packets/thermoelectric_packet.py` | Same wiring for thermoelectric packets. (~12 LOC added) |
 | `tests/integration/test_recompute_wired_into_production.py` | NEW — adversarial integration test: forged-evidence chain reaches every production path; each path must block. (~600 LOC added) |
 | `tests/unit/orchestration/test_acceptance_gate.py` | Updated fixtures so the recompute gate finds consistent claims (force_rmse fixed to match per-model predictions; L6 envelope now carries a `structure` dict and `back_edges`). (~30 LOC changed) |
 | `tests/integration/test_full_falsification_wave.py` | Updated `total_falsifier_rows_written` assertion to acknowledge the 7 sweep rows. (~10 LOC changed) |

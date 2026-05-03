@@ -29,11 +29,9 @@ from pathlib import Path
 
 import pytest
 
-from zer0pa_materials.audit.episodic import reconstruct_from_repo, snapshot_state
-from zer0pa_materials.audit.kg import MaterialsKG
-from zer0pa_materials.audit.log import AuditLog
-from zer0pa_materials.orchestration import Campaign, CampaignSpec
-
+from zer0pa_materials_workbench.audit.kg import MaterialsKG
+from zer0pa_materials_workbench.audit.log import AuditLog
+from zer0pa_materials_workbench.orchestration import Campaign, CampaignSpec
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -133,7 +131,7 @@ from pathlib import Path
 repo_root = Path(sys.argv[1])
 sys.path.insert(0, str(repo_root / "src"))
 
-from zer0pa_materials.audit.episodic import reconstruct_from_repo
+from zer0pa_materials_workbench.audit.episodic import reconstruct_from_repo
 
 state = reconstruct_from_repo(repo_root)
 result = {
@@ -194,11 +192,12 @@ class TestBrainFunctionalityGate:
 
         # Write a minimal pyproject.toml so the src/ path lookup works.
         (tmp_path / "src").mkdir(parents=True, exist_ok=True)
-        import zer0pa_materials
         import shutil as _shutil
+
+        import zer0pa_materials_workbench
         _shutil.copytree(
-            Path(zer0pa_materials.__file__).parent,
-            tmp_path / "src" / "zer0pa_materials",
+            Path(zer0pa_materials_workbench.__file__).parent,
+            tmp_path / "src" / "zer0pa_materials_workbench",
             dirs_exist_ok=True,
         )
 
@@ -212,11 +211,12 @@ class TestBrainFunctionalityGate:
         campaign_id = "campaign:brain-func-test/root"
         _run_full_battery_campaign(audit, kg, campaign_id)
 
-        import zer0pa_materials
         import shutil as _shutil
+
+        import zer0pa_materials_workbench
         _shutil.copytree(
-            Path(zer0pa_materials.__file__).parent,
-            tmp_path / "src" / "zer0pa_materials",
+            Path(zer0pa_materials_workbench.__file__).parent,
+            tmp_path / "src" / "zer0pa_materials_workbench",
             dirs_exist_ok=True,
         )
 
@@ -230,11 +230,12 @@ class TestBrainFunctionalityGate:
         expected_nodes = kg.count_nodes()
         expected_edges = kg.count_edges()
 
-        import zer0pa_materials
         import shutil as _shutil
+
+        import zer0pa_materials_workbench
         _shutil.copytree(
-            Path(zer0pa_materials.__file__).parent,
-            tmp_path / "src" / "zer0pa_materials",
+            Path(zer0pa_materials_workbench.__file__).parent,
+            tmp_path / "src" / "zer0pa_materials_workbench",
             dirs_exist_ok=True,
         )
 
@@ -252,18 +253,19 @@ class TestBrainFunctionalityGate:
         camp = _run_full_battery_campaign(audit, kg, campaign_id)
 
         # Count live rows per category.
-        from zer0pa_materials.audit.log import AUDIT_CATEGORIES
+        from zer0pa_materials_workbench.audit.log import AUDIT_CATEGORIES
 
         live_counts = {}
         for cat in AUDIT_CATEGORIES:
             rows = list(audit.iter_rows(cat))
             live_counts[cat] = len(rows)
 
-        import zer0pa_materials
         import shutil as _shutil
+
+        import zer0pa_materials_workbench
         _shutil.copytree(
-            Path(zer0pa_materials.__file__).parent,
-            tmp_path / "src" / "zer0pa_materials",
+            Path(zer0pa_materials_workbench.__file__).parent,
+            tmp_path / "src" / "zer0pa_materials_workbench",
             dirs_exist_ok=True,
         )
 
@@ -281,11 +283,12 @@ class TestBrainFunctionalityGate:
         campaign_id = "campaign:brain-func-test/actions"
         _run_full_battery_campaign(audit, kg, campaign_id)
 
-        import zer0pa_materials
         import shutil as _shutil
+
+        import zer0pa_materials_workbench
         _shutil.copytree(
-            Path(zer0pa_materials.__file__).parent,
-            tmp_path / "src" / "zer0pa_materials",
+            Path(zer0pa_materials_workbench.__file__).parent,
+            tmp_path / "src" / "zer0pa_materials_workbench",
             dirs_exist_ok=True,
         )
 

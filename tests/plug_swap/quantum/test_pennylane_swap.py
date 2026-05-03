@@ -4,9 +4,9 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.adapters.quantum.pennylane_vqe import PennyLaneVqeSolver
-from zer0pa_materials.adapters.quantum.qiskit_nature_vqe import QiskitNatureVqeSolver
-from zer0pa_materials.envelope import Envelope, L1QuantumVqeOutput
+from zer0pa_materials_workbench.adapters.quantum.pennylane_vqe import PennyLaneVqeSolver
+from zer0pa_materials_workbench.adapters.quantum.qiskit_nature_vqe import QiskitNatureVqeSolver
+from zer0pa_materials_workbench.envelope import Envelope, L1QuantumVqeOutput
 
 SOLVERS = [PennyLaneVqeSolver, QiskitNatureVqeSolver]
 
@@ -61,7 +61,7 @@ def test_lih_solver_delta_within_5e3(solver) -> None:
 
 
 def test_all_solvers_have_boundary(solver) -> None:
-    from zer0pa_materials.boundary import RESEARCH_BOUNDARY
+    from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
     envelope = solver.solve_h2()
     assert envelope.research_boundary == RESEARCH_BOUNDARY
 

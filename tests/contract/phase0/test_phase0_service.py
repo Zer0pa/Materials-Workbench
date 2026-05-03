@@ -3,8 +3,8 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from zer0pa_materials.boundary import RESEARCH_BOUNDARY
-from zer0pa_materials.services.phase0_service import app
+from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
+from zer0pa_materials_workbench.services.phase0_service import app
 
 
 @pytest.fixture
@@ -91,10 +91,13 @@ class TestPhase0KGWrites:
 
     def test_kg_nodes_can_be_written(self):
         """Verify KG write round-trip for a Phase 0 extraction."""
-        import tempfile, os
+        import tempfile
         from pathlib import Path
-        from zer0pa_materials.adapters.phase0.langgraph_extraction import LangGraphExtractionWorkflow
-        from zer0pa_materials.audit.kg import MaterialsKG, KGNodeType, KGEdgeType, KGNode, KGEdge
+
+        from zer0pa_materials_workbench.adapters.phase0.langgraph_extraction import (
+            LangGraphExtractionWorkflow,
+        )
+        from zer0pa_materials_workbench.audit.kg import KGEdgeType, KGNodeType, MaterialsKG
 
         with tempfile.TemporaryDirectory() as tmpdir:
             kg = MaterialsKG(Path(tmpdir) / "kg.db")
@@ -132,6 +135,6 @@ class TestPhase0KGWrites:
                 run_id=run_id,
             )
 
-            from zer0pa_materials.falsifiers.phase0_falsifiers import assert_kg_nodes_for
+            from zer0pa_materials_workbench.falsifiers.phase0_falsifiers import assert_kg_nodes_for
             items = assert_kg_nodes_for(env, kg)
             assert all(i.status == "pass" for i in items)

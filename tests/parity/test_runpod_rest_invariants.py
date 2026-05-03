@@ -43,37 +43,25 @@ out of scope (Meta UMA Acceptable Use Policy and operator policy).
 
 from __future__ import annotations
 
-import re
 from typing import Any
 
 import httpx
 import pytest
 
-from zer0pa_materials.boundary import RESEARCH_BOUNDARY
-from zer0pa_materials.envelope.config import MaterialsConfig
-from zer0pa_materials.envelope.hashing import HASH_REGEX, sha256_of
-from zer0pa_materials.envelope.layer_outputs import (
-    IonicTransportOutput,
-    L1DftOutput,
-    L1QuantumVqeOutput,
-    L2MlipOutput,
-    L3CalphadOutput,
-    L4PhaseFieldOutput,
-    L5ContinuumOutput,
-    L6GenerativeOutput,
-    L15PhononOutput,
+from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
+from zer0pa_materials_workbench.envelope.config import MaterialsConfig
+from zer0pa_materials_workbench.envelope.hashing import HASH_REGEX, sha256_of
+from zer0pa_materials_workbench.envelope.layer_outputs import (
     validate_layer_output,
 )
-from zer0pa_materials.runpod.dispatcher import (
+from zer0pa_materials_workbench.runpod.dispatcher import (
     RunpodCredentialsError,
     RunpodDispatcher,
 )
-from zer0pa_materials.runpod.mock_backends import (
-    RUNPOD_MOCK_LAYERS,
+from zer0pa_materials_workbench.runpod.mock_backends import (
     build_runpod_mock_envelope,
 )
-from zer0pa_materials.runpod.rest_client import RunpodRestClient
-
+from zer0pa_materials_workbench.runpod.rest_client import RunpodRestClient
 
 # ---------------------------------------------------------------------------
 # Helpers

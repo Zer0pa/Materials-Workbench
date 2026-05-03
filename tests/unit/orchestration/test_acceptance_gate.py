@@ -14,11 +14,9 @@ from __future__ import annotations
 
 from typing import Any
 
-import pytest
-
-from zer0pa_materials.audit.rights import RightsClaim
-from zer0pa_materials.boundary import RESEARCH_BOUNDARY
-from zer0pa_materials.envelope import (
+from zer0pa_materials_workbench.audit.rights import RightsClaim
+from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
+from zer0pa_materials_workbench.envelope import (
     AuditBlock,
     Envelope,
     FalsifierBlock,
@@ -31,12 +29,11 @@ from zer0pa_materials.envelope import (
     ToolAdapter,
     sha256_of,
 )
-from zer0pa_materials.envelope.layer_outputs import L2ModelPrediction, L6DedupResult
-from zer0pa_materials.orchestration.acceptance_gates import (
+from zer0pa_materials_workbench.envelope.layer_outputs import L2ModelPrediction, L6DedupResult
+from zer0pa_materials_workbench.orchestration.acceptance_gates import (
     AcceptanceGate,
     GateContext,
 )
-
 
 # ---------------------------------------------------------------------------
 # Builder helpers

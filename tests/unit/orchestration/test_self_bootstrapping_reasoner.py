@@ -4,12 +4,10 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.orchestration.self_bootstrapping import (
-    ALL_ACTIONS,
-    BayesianActionPosterior,
+from zer0pa_materials_workbench.orchestration.self_bootstrapping import (
     SelfBootstrappingReasoner,
 )
-from zer0pa_materials.reasoner.tuples import ReasonerTuple
+from zer0pa_materials_workbench.reasoner.tuples import ReasonerTuple
 
 
 def _tuple(

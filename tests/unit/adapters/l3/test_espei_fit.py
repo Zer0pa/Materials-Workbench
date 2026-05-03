@@ -16,14 +16,13 @@ from pathlib import Path
 
 import pytest
 
-from zer0pa_materials.adapters.l3 import (
-    EspeiBayesianFitAdapter,
+from zer0pa_materials_workbench.adapters.l3 import (
     ESPEI_AVAILABLE,
+    EspeiBayesianFitAdapter,
     L3CalphadRequest,
 )
-from zer0pa_materials.adapters.l3.espei_fit import INFORMATION_GEOMETRY_NOTE
-from zer0pa_materials.envelope import Envelope, L3CalphadOutput
-
+from zer0pa_materials_workbench.adapters.l3.espei_fit import INFORMATION_GEOMETRY_NOTE
+from zer0pa_materials_workbench.envelope import Envelope, L3CalphadOutput
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
 CU_MG_TDB = REPO_ROOT / "fixtures" / "tdb" / "Cu-Mg-toy.tdb"

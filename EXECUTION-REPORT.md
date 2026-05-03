@@ -1,9 +1,9 @@
-# Zer0pa Materials — Overnight Execution Report (with post-review remediation)
+# Zer0pa Materials Workbench — Overnight Execution Report (with post-review remediation)
 
 **Executor:** Claude Opus 4.7 (1M context) acting as Opus Max-class lead agent + Sonnet/Opus subagents per PRD §Agent Topology.
 **Execution window:** 2026-04-30, ~14 hours wall-clock with one ~2h operator-requested pause and one substantive review-and-remediation pass.
 **Latest commit:** see `git log` on `main` (the report is updated as part of the remediation commit; check repo HEAD for the commit hash that includes this prose).
-**GitHub canonical:** https://github.com/Zer0pa/Materials
+**GitHub canonical:** https://github.com/Zer0pa/Materials-Workbench
 
 ## Post-review remediation summary (Waves A–E)
 
@@ -12,7 +12,7 @@ A reviewer audit on top of the initial overnight build caught real weaknesses I 
 | Wave | Issue caught | Fix |
 |---|---|---|
 | **A** | Repo-root resolution scattered; CLI artifacts could land outside the repo; `kg.sqlite` committed as binary; deep-research source manifests claimed but only present in gitignored `audit/runtime/`; `.env.runpod` not in gitignore; docs referenced a non-existent `[gpu]` extra | Centralised `repo_root` helper (env-var → walk-up); `.env.*` + `*.sqlite` + `*.lock` gitignored; relocated 27 source manifests to `phases/Deep-Research/sources.jsonl`; added real `[gpu]` and `[runpod]` extras to `pyproject.toml` |
-| **B** | 9 tests had `open("/Users/zer0palab/...")` hardcoded — would break on a fresh clone | All 9 replaced with `from zer0pa_materials import read_fixture` |
+| **B** | 9 tests had `open("/Users/zer0palab/...")` hardcoded — would break on a fresh clone | All 9 replaced with `from zer0pa_materials_workbench import read_fixture` |
 | **C** | `runpod_rest` was a label, not a dispatch path: any code claiming `backend=runpod_rest` was relabelling a mock; precheck had P5/P6/P7 hardcoded to `True` with the literal string "Assumed pass" | Real `httpx`-based `RunpodRestClient` with `tenacity` retries; central `RunpodDispatcher` raises `RunpodCredentialsError` and emits `BlockedSourceManifest` when creds missing (never falls back to mock); precheck rewrites P5–P8 to spawn `pytest` subprocesses and record `returncode` + tail line as evidence; "Assumed pass" is a hard-reject substring in any precheck row; new parity tests (`test_runpod_rest_invariants.py`, `test_runpod_dispatcher.py`, `test_precheck_executes.py`) use `httpx.MockTransport` to simulate real REST responses against runpod_mock schema/provenance invariants |
 | **D** | Many falsifiers TRUSTED FIELDS rather than recomputing from raw evidence — the shape-match-as-identity-match anti-pattern at the falsifier layer | 7 hardened gates each with adversarial test proving the prior shape-only gate would have passed a forged envelope: L2 disagreement (recompute from per-model predictions), source-manifest linkage (walk the chain), novelty (re-dedupe against reference set + per-batch + back-edges), ionic back-edge (resolve `audit_record_id` to events.jsonl), NEB barrier range (literature band + Arrhenius consistency), L5 sidecar (re-read bytes, recompute sha256, require sidecar JSON), L3 sovereign (verify enable decision in decisions.jsonl). Plus a verifiable UMA AUP/license manifest schema with starter (failing-state) + template (working-shape) committed at `phases/UMA-license/` |
 | **E** | `runpod promote-backend` referenced in docs but not exposed as a CLI command; HEAD ref hardcoded in README; EXECUTION-REPORT cited stale commit | `runpod promote-backend` wired as a real CLI subcommand (audited path that records a Decision row); doc HEAD references replaced with "see git log"; this report regenerated |
@@ -129,7 +129,7 @@ Full per-case detail in `phases/Falsification-wave/FALSIFICATION-WAVE-REPORT.md`
 
 Per PRD §Operating Mandate ("reversible engineering decisions that move the system toward more performant, more dataful, more powerful, and more falsifiable outcomes"):
 
-1. **Package layout**: `src/zer0pa_materials/` with subpackages per concern (`envelope`, `audit`, `adapters/<layer>`, `services`, `falsifiers`, `orchestration`, `packets`, `plugswap`, `runpod`, `cli`, `ontology`, `reasoner`). Recorded as PRD §Open Questions Executor #4 resolved via codebase emergence.
+1. **Package layout**: `src/zer0pa_materials_workbench/` with subpackages per concern (`envelope`, `audit`, `adapters/<layer>`, `services`, `falsifiers`, `orchestration`, `packets`, `plugswap`, `runpod`, `cli`, `ontology`, `reasoner`). Recorded as PRD §Open Questions Executor #4 resolved via codebase emergence.
 2. **KG backend**: SQLite property graph with RDF/Turtle export. Per PRD §Open Questions Executor #2 ("SQLite/property graph with RDF export is acceptable"). RDF round-trip validated.
 3. **`IonicTransportService` scope**: Built BOTH NEB stubs AND MD diffusion stubs in the first pass (PRD §Open Questions Executor #3 left this to executive discretion; both contracts were required regardless).
 4. **Quantum slot architecture**: Three-slot dispatcher (L1 VQE / L4 QAOA / L7 amplitude amplification) at the variational-engine abstraction layer per the synthesis recommendation, with only L1 VQE implemented today and the other two cleanly stubbed via `BlockedSourceManifest`.
@@ -169,19 +169,19 @@ These do NOT block the Runpod cutover (the architecture stands without them) but
 6. **Cubic-LLZO MP ID**: `fixtures/structures/LLZO/cubic/manifest.json` cites `TBD-cubic-LLZO-Ia3d` after the correction (mp-942733 was tetragonal). The cubic Ia-3d MP ID lookup requires a Materials Project API key. Annotation-only — does not affect the L1/L1.5/ionic adapters which use the CIF directly.
 7. **EMMO 6 unverified UUIDs**: 4 of 10 EMMO IRIs live-verified; 6 (Composition, Structure, Phase, Model, Simulation, Reasoning) annotated with deferred-verification note. Annotation-only; runtime not affected.
 8. **Bi2Te3 thermoelectric review**: Two additional canonical references added (Snyder & Toberer 2008 Nature Materials; Poudel 2008 Science). User may prefer one as the primary citation.
-9. **Cosmetic: KG edge `src_id->dst_id` format breaks RDF URI serialization**: Wave 4c discovered this; not in 4c scope to fix. Suggest a 1-line patch in `src/zer0pa_materials/audit/rdf_export.py` to URL-encode `>` → `%3E`.
+9. **Cosmetic: KG edge `src_id->dst_id` format breaks RDF URI serialization**: Wave 4c discovered this; not in 4c scope to fix. Suggest a 1-line patch in `src/zer0pa_materials_workbench/audit/rdf_export.py` to URL-encode `>` → `%3E`.
 
 ## Next actions for the operator
 
 1. **Provision Runpod machine** per `docs/RUNPOD-CUTOVER.md` step-by-step runbook.
-2. **Clone the repo** on the Runpod machine (`git clone https://github.com/Zer0pa/Materials.git`).
+2. **Clone the repo** on the Runpod machine (`git clone https://github.com/Zer0pa/Materials-Workbench.git`).
 3. **Install GPU/Docker dependencies** (Runpod-only).
 4. **Set backend flags** to `runpod_rest` for the layers parked above; UMA additionally needs HF org + token + AUP timestamp.
-5. **Run the sentinel campaign** via `zer0pa-materials runpod sentinel` — runs LLZO + Li6PS5Cl + Li-Mg-Zr-Cl-seed + Bi2Te3 through every layer with backend flags set; compares to the `runpod_mock` baseline.
-6. **Run the parity tests** via `zer0pa-materials runpod parity` — verifies schema parity, hash chains, resource metrics.
-7. **Promote backend from mock to real** via `zer0pa-materials runpod promote-backend` — only after parity passes.
-8. **Re-run the full falsification wave** post-cutover via `zer0pa-materials falsification run` — verify nothing regressed.
-9. **Generate the first MVP evidence packet** via `zer0pa-materials packets assemble battery <candidate-id>` and submit the publishable paper.
+5. **Run the sentinel campaign** via `zer0pa-materials-workbench runpod sentinel` — runs LLZO + Li6PS5Cl + Li-Mg-Zr-Cl-seed + Bi2Te3 through every layer with backend flags set; compares to the `runpod_mock` baseline.
+6. **Run the parity tests** via `zer0pa-materials-workbench runpod parity` — verifies schema parity, hash chains, resource metrics.
+7. **Promote backend from mock to real** via `zer0pa-materials-workbench runpod promote-backend` — only after parity passes.
+8. **Re-run the full falsification wave** post-cutover via `zer0pa-materials-workbench falsification run` — verify nothing regressed.
+9. **Generate the first MVP evidence packet** via `zer0pa-materials-workbench packets assemble battery <candidate-id>` and submit the publishable paper.
 
 ## Reproducibility
 

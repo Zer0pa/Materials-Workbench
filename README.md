@@ -1,12 +1,12 @@
-# Zer0pa Materials
+# Zer0pa Materials Workbench
 
-> Live window into the Zer0pa lab. Materials is research infrastructure, not a productized materials service.
+> Live window into the Zer0pa lab. Materials Workbench is research infrastructure, not a productized materials service.
 
 > Boundary: Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).
 
 ## What This Is
 
-Materials is an in silico discovery pipeline workbench for battery and thermoelectric research, now entering H100 completion.
+Materials Workbench is an in silico discovery pipeline workbench for battery and thermoelectric research, now entering H100 completion.
 
 This repository is the Materials workstream's live engineering and research surface. It holds the CPU-side control plane for a multi-layer materials-discovery pipeline: contracts, schemas, layer adapters, audit trail, falsifiers, packet validators, Runpod dispatcher, parity tests, and H100 completion plan. The current pipeline is built around a battery MVP wedge (LLZO, Li6PS5Cl, and Li-Mg-Zr-Cl seed) with a thermoelectric sidecar (Bi2Te3, PbTe, and SnSe).
 
@@ -39,9 +39,9 @@ The repo is intentionally visible as work-in-progress. It should not be read as 
 
 | Field | Value |
 | --- | --- |
-| Identifier | Zer0pa Materials |
-| Repository | https://github.com/Zer0pa/Materials |
-| Portfolio | Materials |
+| Identifier | Zer0pa Materials Workbench |
+| Repository | https://github.com/Zer0pa/Materials-Workbench |
+| Portfolio | Materials Workbench |
 | Visibility | INTERNAL |
 | Default Branch | main |
 | Authority Source | `PRD.md`; `EXECUTION-REPORT.md`; `phases/Falsification-wave/PHASE-REPORT-WAVE-F5.md` |
@@ -71,7 +71,7 @@ The repo can begin H100 work, but the pipeline is not complete until real GPU-ba
 
 ## What We Don't Claim
 
-- Materials is not a finished commercial service, certification system, regulatory submission, or human-subject/clinical workflow.
+- Materials Workbench is not a finished commercial service, certification system, regulatory submission, or human-subject/clinical workflow.
 - The repo does not claim real H100-backed discovery is already complete.
 - A `runpod_mock` envelope is not evidence of scientific completion.
 - A passing schema or first green test is not a promoted materials result.
@@ -84,7 +84,7 @@ The repo can begin H100 work, but the pipeline is not complete until real GPU-ba
 | --- | --- | --- |
 | V_01 | CPU-side contracts, schemas, audit, falsifiers, packets, and dispatcher present | PASS |
 | V_02 | Full local suite: 3,547 passing, 2 pycalphad skips | PASS |
-| V_03 | `zer0pa-materials runpod parity`: 588 parity tests | PASS |
+| V_03 | `zer0pa-materials-workbench runpod parity`: 588 parity tests | PASS |
 | V_04 | Mock-in-rest-report deception rejected by parity tests | PASS |
 | V_05 | Raw-evidence recompute gates wired into production paths | PASS |
 | V_06 | Real H100 outputs survive falsification wave | OPEN |
@@ -105,10 +105,10 @@ The repo can begin H100 work, but the pipeline is not complete until real GPU-ba
 | Field | Value |
 | --- | --- |
 | Proof Anchors | 6 display anchors |
-| Portfolio | Materials |
+| Portfolio | Materials Workbench |
 | Authority Source | `PRD.md`; `EXECUTION-REPORT.md`; `phases/Falsification-wave/PHASE-REPORT-WAVE-F5.md` |
 | Pipeline Specs | `source-briefs/`; `synthesis/`; `PRD.md` |
-| Execution Surface | `src/zer0pa_materials/`; `tests/`; `fixtures/` |
+| Execution Surface | `src/zer0pa_materials_workbench/`; `tests/`; `fixtures/` |
 | Audit / Phases | `audit/`; `phases/`; `phases/Deep-Research/sources.jsonl` |
 | Support Sections | Build Status; H100 Completion Mandate; Workstream Contents; Read Order; Provenance; Cross-Workstream Principle |
 
@@ -116,7 +116,7 @@ The repo can begin H100 work, but the pipeline is not complete until real GPU-ba
 
 The CPU-side control plane is **complete and post-review-hardened**. That means the repo has the contracts, schemas, audit trail, falsifiers, dispatcher, parity tests, packet validators, and acceptance-gate machinery required to begin H100 completion work. It does **not** mean the materials-discovery pipeline is scientifically complete. Pipeline completion requires real GPU-backed Runpod execution, real layer artifacts, and a successful falsification wave over those real outputs.
 
-A reviewer audit caught real weaknesses (silent runpod_rest fallback, "assumed-pass" precheck, falsifier-trust-fields anti-pattern, absolute-path tests) which have been fixed in Waves A-F. Run `git log` for the canonical commit chain; latest is the HEAD of `main` on [Zer0pa/Materials](https://github.com/Zer0pa/Materials).
+A reviewer audit caught real weaknesses (silent runpod_rest fallback, "assumed-pass" precheck, falsifier-trust-fields anti-pattern, absolute-path tests) which have been fixed in Waves A-F. Run `git log` for the canonical commit chain; latest is the HEAD of `main` on [Zer0pa/Materials-Workbench](https://github.com/Zer0pa/Materials-Workbench).
 
 * **Tests:** **3,547** passing post-Wave-F (the count grows as adversarial tests are added; run `pytest -q | tail -3` for the canonical current count), 2 skipped (pycalphad), 0 failed.
 * **Falsification wave:** 16 of 16 PRD-mandated deliberate failures fired correctly with hash-chained audit proof, plus **7 newly-hardened gates** that recompute from raw evidence.

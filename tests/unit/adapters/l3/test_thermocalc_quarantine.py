@@ -17,14 +17,13 @@ from pathlib import Path
 
 import pytest
 
-from zer0pa_materials.adapters.l3 import (
+from zer0pa_materials_workbench.adapters.l3 import (
     CommercialTdbQuarantineError,
     L3CalphadRequest,
     ThermoCalcTdbReadOnlyAdapter,
 )
-from zer0pa_materials.envelope import Envelope, L3CalphadOutput
-from zer0pa_materials.falsifiers.l3_falsifiers import tdb_quarantine_breach
-
+from zer0pa_materials_workbench.envelope import Envelope, L3CalphadOutput
+from zer0pa_materials_workbench.falsifiers.l3_falsifiers import tdb_quarantine_breach
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
 CU_MG_TDB = REPO_ROOT / "fixtures" / "tdb" / "Cu-Mg-toy.tdb"

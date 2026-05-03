@@ -11,10 +11,10 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.adapters.l1_5.amset import AmsetScatteringTransportAdapter, AMSET_OFFSETS
-from zer0pa_materials.adapters.l1_5.base import L15JobParams
-from zer0pa_materials.adapters.l1_5.boltztrap2 import BoltzTraP2RigidBandTransportAdapter
-from zer0pa_materials.envelope import Envelope, L15PhononOutput
+from zer0pa_materials_workbench.adapters.l1_5.amset import AmsetScatteringTransportAdapter
+from zer0pa_materials_workbench.adapters.l1_5.base import L15JobParams
+from zer0pa_materials_workbench.adapters.l1_5.boltztrap2 import BoltzTraP2RigidBandTransportAdapter
+from zer0pa_materials_workbench.envelope import Envelope, L15PhononOutput
 
 
 class TestAmsetScatteringTransportAdapter:

@@ -9,7 +9,7 @@ from __future__ import annotations
 import pytest
 from fastapi.testclient import TestClient
 
-from zer0pa_materials.services.l1_5_service import (
+from zer0pa_materials_workbench.services.l1_5_service import (
     L15_SERVICE_NAME,
     L15_SERVICE_VERSION,
     create_l15_app,

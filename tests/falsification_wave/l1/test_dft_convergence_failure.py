@@ -8,17 +8,14 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.adapters.l1.pyscf import PyScfMolecularSolver
-from zer0pa_materials.adapters.l1.base import L1JobParams
-from zer0pa_materials.envelope import L1DftOutput, cif_hash_from_text
-from zer0pa_materials.falsifiers.l1_falsifiers import (
-    convergence_delta_screening_threshold,
+from zer0pa_materials_workbench import read_fixture
+from zer0pa_materials_workbench.envelope import L1DftOutput
+from zer0pa_materials_workbench.falsifiers.l1_falsifiers import (
     convergence_delta_publication_threshold,
-    force_threshold_check,
+    convergence_delta_screening_threshold,
     cross_code_disagreement,
+    force_threshold_check,
 )
-
-from zer0pa_materials import read_fixture
 
 H2_CIF = read_fixture("structures", "H2", "structure.cif")
 
@@ -101,11 +98,15 @@ def test_force_passes_at_or_below_default(force: float) -> None:
 
 def test_cross_code_disagreement_fails_for_large_energy_spread() -> None:
     """Manually construct two envelopes with large energy difference."""
-    from zer0pa_materials.adapters.l1.qe_aiida import QuantumEspressoAiiDASolver
-    from zer0pa_materials.envelope import (
-        Envelope, AuditBlock, RightsBlock, ToolAdapter, sha256_of, canonical_json_bytes
+    from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
+    from zer0pa_materials_workbench.envelope import (
+        AuditBlock,
+        Envelope,
+        RightsBlock,
+        ToolAdapter,
+        canonical_json_bytes,
+        sha256_of,
     )
-    from zer0pa_materials.boundary import RESEARCH_BOUNDARY
 
     def _envelope(energy_eV: float, code: str) -> Envelope:
         output = L1DftOutput(
@@ -151,10 +152,15 @@ def test_cross_code_disagreement_fails_for_large_energy_spread() -> None:
 
 def test_cross_code_disagreement_passes_for_small_spread() -> None:
     """Two envelopes with same energy → pass."""
-    from zer0pa_materials.envelope import (
-        Envelope, AuditBlock, RightsBlock, ToolAdapter, sha256_of, canonical_json_bytes
+    from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
+    from zer0pa_materials_workbench.envelope import (
+        AuditBlock,
+        Envelope,
+        RightsBlock,
+        ToolAdapter,
+        canonical_json_bytes,
+        sha256_of,
     )
-    from zer0pa_materials.boundary import RESEARCH_BOUNDARY
 
     def _envelope(energy_eV: float) -> Envelope:
         output = L1DftOutput(

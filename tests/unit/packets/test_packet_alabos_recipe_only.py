@@ -19,14 +19,14 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.adapters.l7.alabos_protocol import (
-    AlabOSProtocolCompilerStub,
+from zer0pa_materials_workbench.adapters.l7.alabos_protocol import (
     AlabosExecutableInRecipeOnlyError,
+    AlabOSProtocolCompilerStub,
 )
-from zer0pa_materials.falsifiers.packet_falsifiers import (
+from zer0pa_materials_workbench.falsifiers.packet_falsifiers import (
     packet_alabos_recipe_only_section,
 )
-from zer0pa_materials.packets import (
+from zer0pa_materials_workbench.packets import (
     assemble_battery_packet,
     validate_evidence_packet,
 )

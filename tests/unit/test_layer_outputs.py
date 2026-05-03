@@ -5,9 +5,9 @@ from __future__ import annotations
 import pytest
 from pydantic import ValidationError
 
-from zer0pa_materials.envelope import (
+from zer0pa_materials_workbench.envelope import (
+    LAYER_OUTPUT_REGISTRY,
     IonicTransportOutput,
-    L15PhononOutput,
     L1DftOutput,
     L1QuantumVqeOutput,
     L2MlipOutput,
@@ -16,20 +16,19 @@ from zer0pa_materials.envelope import (
     L5ContinuumOutput,
     L6GenerativeOutput,
     L7CampaignOutput,
-    LAYER_OUTPUT_REGISTRY,
+    L15PhononOutput,
     Phase0ExtractedProperty,
     Phase0Output,
     Phase0PropertyGrounding,
     sha256_of,
     validate_layer_output,
 )
-from zer0pa_materials.envelope.layer_outputs import (
+from zer0pa_materials_workbench.envelope.layer_outputs import (
     IonicArrhenius,
     L2ModelPrediction,
     L5TensorRecord,
     L6DedupResult,
 )
-
 
 # ----------------------------------------------------------------------------
 # Registry coverage

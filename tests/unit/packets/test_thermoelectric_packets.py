@@ -23,11 +23,11 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.packets import (
+from zer0pa_materials_workbench.packets import (
     assemble_thermoelectric_packet,
     validate_evidence_packet,
 )
-from zer0pa_materials.packets.validators import THERMOELECTRIC_REQUIRED_SECTIONS
+from zer0pa_materials_workbench.packets.validators import THERMOELECTRIC_REQUIRED_SECTIONS
 
 
 @pytest.mark.parametrize("fixture", ["Si", "Bi2Te3", "PbTe", "SnSe"])

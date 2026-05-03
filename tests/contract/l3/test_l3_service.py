@@ -12,8 +12,7 @@ httpx = pytest.importorskip("httpx", reason="httpx required for contract tests")
 
 from fastapi.testclient import TestClient
 
-from zer0pa_materials.boundary import RESEARCH_BOUNDARY
-
+from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 CU_MG_TDB = REPO_ROOT / "fixtures" / "tdb" / "Cu-Mg-toy.tdb"
@@ -65,7 +64,7 @@ QUARANTINE_PAYLOAD = {
 
 @pytest.fixture(scope="module")
 def client():
-    from zer0pa_materials.services.l3_service import _make_app
+    from zer0pa_materials_workbench.services.l3_service import _make_app
     app = _make_app()
     with TestClient(app) as c:
         yield c

@@ -47,70 +47,69 @@ from pathlib import Path
 
 import pytest
 
-from zer0pa_materials.envelope import cif_hash_from_text
-from zer0pa_materials.plugswap import GLOBAL_REGISTRY, PlugSwapHarness, SwapRegistry
-
-# ---------------------------------------------------------------------------
-# Layer-specific imports
-# ---------------------------------------------------------------------------
-
-# phase0
-from zer0pa_materials.adapters.phase0.optimade import OptimadeFederatedQueryAdapter
-from zer0pa_materials.adapters.phase0.langgraph_extraction import LangGraphExtractionWorkflow
-
-# L1
-from zer0pa_materials.adapters.l1.pyscf import PyScfMolecularSolver
-from zer0pa_materials.adapters.l1.qe_aiida import QuantumEspressoAiiDASolver
-from zer0pa_materials.adapters.l1.base import L1JobParams
-
-# quantum
-from zer0pa_materials.adapters.quantum.pennylane_vqe import PennyLaneVqeSolver
-from zer0pa_materials.adapters.quantum.qiskit_nature_vqe import QiskitNatureVqeSolver
-
-# L2
-from zer0pa_materials.adapters.l2.deepmd_dpa import DeepmdDpaCalculatorAdapter
-from zer0pa_materials.adapters.l2.mace_mp import MaceMpCalculatorAdapter
-from zer0pa_materials.adapters.l2.base import L2PredictRequest
+from zer0pa_materials_workbench.adapters.ionic.base import IonicJobParams
+from zer0pa_materials_workbench.adapters.ionic.mlip_md import MlipMdDiffusionAdapter
 
 # ionic
-from zer0pa_materials.adapters.ionic.neb import NebMigrationBarrierAdapter
-from zer0pa_materials.adapters.ionic.mlip_md import MlipMdDiffusionAdapter
-from zer0pa_materials.adapters.ionic.base import IonicJobParams
+from zer0pa_materials_workbench.adapters.ionic.neb import NebMigrationBarrierAdapter
+from zer0pa_materials_workbench.adapters.l1.base import L1JobParams
+
+# L1
+from zer0pa_materials_workbench.adapters.l1.pyscf import PyScfMolecularSolver
+from zer0pa_materials_workbench.adapters.l1.qe_aiida import QuantumEspressoAiiDASolver
+from zer0pa_materials_workbench.adapters.l1_5.base import L15JobParams
+from zer0pa_materials_workbench.adapters.l1_5.phono3py_bte import Phono3pyAnharmonicBTEAdapter
 
 # L1.5
-from zer0pa_materials.adapters.l1_5.phonopy_harmonic import PhonopyHarmonicAdapter
-from zer0pa_materials.adapters.l1_5.phono3py_bte import Phono3pyAnharmonicBTEAdapter
-from zer0pa_materials.adapters.l1_5.base import L15JobParams
+from zer0pa_materials_workbench.adapters.l1_5.phonopy_harmonic import PhonopyHarmonicAdapter
+from zer0pa_materials_workbench.adapters.l2.base import L2PredictRequest
+
+# L2
+from zer0pa_materials_workbench.adapters.l2.deepmd_dpa import DeepmdDpaCalculatorAdapter
+from zer0pa_materials_workbench.adapters.l2.mace_mp import MaceMpCalculatorAdapter
+from zer0pa_materials_workbench.adapters.l3.base import L3CalphadRequest
+from zer0pa_materials_workbench.adapters.l3.espei_fit import EspeiBayesianFitAdapter
 
 # L3
-from zer0pa_materials.adapters.l3.pycalphad_equilibrium import PyCalphadEquilibriumAdapter
-from zer0pa_materials.adapters.l3.espei_fit import EspeiBayesianFitAdapter
-from zer0pa_materials.adapters.l3.base import L3CalphadRequest
-
-# L4
-from zer0pa_materials.adapters.l4.prisms_pf import PrismsPfAdapter
-from zer0pa_materials.adapters.l4.moose import MoosePhaseFieldAdapter
-from zer0pa_materials.adapters.l4.base import L4PredictRequest
-from zer0pa_materials.adapters.l4.contracts import (
+from zer0pa_materials_workbench.adapters.l3.pycalphad_equilibrium import PyCalphadEquilibriumAdapter
+from zer0pa_materials_workbench.adapters.l4.base import L4PredictRequest
+from zer0pa_materials_workbench.adapters.l4.contracts import (
     PhaseFieldDomain,
     PhaseFieldMaterial,
     PhaseFieldMesh,
     PhaseFieldRunSpec,
 )
+from zer0pa_materials_workbench.adapters.l4.moose import MoosePhaseFieldAdapter
+
+# L4
+from zer0pa_materials_workbench.adapters.l4.prisms_pf import PrismsPfAdapter
+from zer0pa_materials_workbench.adapters.l5.base import L5ContinuumRequest
+from zer0pa_materials_workbench.adapters.l5.dealii import DealIIStructuralAdapter
 
 # L5
-from zer0pa_materials.adapters.l5.fenicsx import FEniCSxContinuumAdapter
-from zer0pa_materials.adapters.l5.dealii import DealIIStructuralAdapter
-from zer0pa_materials.adapters.l5.base import L5ContinuumRequest
+from zer0pa_materials_workbench.adapters.l5.fenicsx import FEniCSxContinuumAdapter
+from zer0pa_materials_workbench.adapters.l6.diffcsp import DiffCspGeneratorAdapter
 
 # L6
-from zer0pa_materials.adapters.l6.mattergen import MatterGenGeneratorAdapter
-from zer0pa_materials.adapters.l6.diffcsp import DiffCspGeneratorAdapter
+from zer0pa_materials_workbench.adapters.l6.mattergen import MatterGenGeneratorAdapter
+from zer0pa_materials_workbench.adapters.l7.base import L7CampaignParams
+from zer0pa_materials_workbench.adapters.l7.langgraph_reasoner import LangGraphReasonerAdapter
 
 # L7
-from zer0pa_materials.adapters.l7.prefect_campaign import PrefectCampaignAdapter
-from zer0pa_materials.adapters.l7.langgraph_reasoner import LangGraphReasonerAdapter
-from zer0pa_materials.adapters.l7.base import L7CampaignParams
+from zer0pa_materials_workbench.adapters.l7.prefect_campaign import PrefectCampaignAdapter
+from zer0pa_materials_workbench.adapters.phase0.langgraph_extraction import LangGraphExtractionWorkflow
+
+# ---------------------------------------------------------------------------
+# Layer-specific imports
+# ---------------------------------------------------------------------------
+# phase0
+from zer0pa_materials_workbench.adapters.phase0.optimade import OptimadeFederatedQueryAdapter
+
+# quantum
+from zer0pa_materials_workbench.adapters.quantum.pennylane_vqe import PennyLaneVqeSolver
+from zer0pa_materials_workbench.adapters.quantum.qiskit_nature_vqe import QiskitNatureVqeSolver
+from zer0pa_materials_workbench.envelope import cif_hash_from_text
+from zer0pa_materials_workbench.plugswap import GLOBAL_REGISTRY, PlugSwapHarness, SwapRegistry
 
 # ---------------------------------------------------------------------------
 # Golden seed constants
@@ -155,7 +154,7 @@ def _quantum_call(adapter, seed):
 
 # L2 — adapter.predict(structure, request) -> dict -> Envelope
 def _l2_call(adapter, seed):
-    from zer0pa_materials.envelope.envelope import Envelope as _Env
+    from zer0pa_materials_workbench.envelope.envelope import Envelope as _Env
     structure, request = seed
     result = adapter.predict(structure, request)
     clean = {k: v for k, v in result.items() if not k.startswith("_")}
@@ -171,14 +170,14 @@ def _l15_call(adapter, seed):
 
 # L3 — adapter.run(request) -> dict -> Envelope
 def _l3_call(adapter, seed):
-    from zer0pa_materials.envelope.envelope import Envelope as _Env
+    from zer0pa_materials_workbench.envelope.envelope import Envelope as _Env
     result = adapter.run(seed)
     clean = {k: v for k, v in result.items() if not k.startswith("_")}
     return _Env.model_validate(clean)
 
 # L4 — adapter.run(spec, request) -> dict -> Envelope
 def _l4_call(adapter, seed):
-    from zer0pa_materials.envelope.envelope import Envelope as _Env
+    from zer0pa_materials_workbench.envelope.envelope import Envelope as _Env
     spec, request = seed
     result = adapter.run(spec, request)
     clean = {k: v for k, v in result.items() if not k.startswith("_")}
@@ -186,7 +185,7 @@ def _l4_call(adapter, seed):
 
 # L5 — adapter.run(request) -> dict -> Envelope
 def _l5_call(adapter, seed):
-    from zer0pa_materials.envelope.envelope import Envelope as _Env
+    from zer0pa_materials_workbench.envelope.envelope import Envelope as _Env
     result = adapter.run(seed)
     clean = {k: v for k, v in result.items() if not k.startswith("_")}
     return _Env.model_validate(clean)

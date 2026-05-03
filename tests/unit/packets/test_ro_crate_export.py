@@ -15,8 +15,8 @@ from pathlib import Path
 
 import pytest
 
-from zer0pa_materials.boundary import RESEARCH_BOUNDARY
-from zer0pa_materials.packets import (
+from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
+from zer0pa_materials_workbench.packets import (
     assemble_battery_packet,
     assemble_thermoelectric_packet,
     export_packet_to_ro_crate,

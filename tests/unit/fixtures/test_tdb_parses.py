@@ -18,7 +18,6 @@ from tests.unit.fixtures.conftest import (
     _tdb_syntactically_well_formed,
 )
 
-
 TDB_PATHS = sorted(
     p for p in (FIXTURES_ROOT / "tdb").rglob("*.tdb")
 )

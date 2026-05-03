@@ -16,15 +16,14 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.boundary import RESEARCH_BOUNDARY
-from zer0pa_materials.envelope.hashing import HASH_REGEX, sha256_of
-from zer0pa_materials.runpod.cutover import RunpodCutover, SENTINEL_SEEDS
-from zer0pa_materials.runpod.hard_failures import HardFailureDetector, _schema_diff
-from zer0pa_materials.runpod.mock_backends import (
+from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
+from zer0pa_materials_workbench.envelope.hashing import HASH_REGEX
+from zer0pa_materials_workbench.runpod.cutover import SENTINEL_SEEDS, RunpodCutover
+from zer0pa_materials_workbench.runpod.hard_failures import HardFailureDetector
+from zer0pa_materials_workbench.runpod.mock_backends import (
     RUNPOD_MOCK_LAYERS,
     build_runpod_mock_envelope,
 )
-
 
 # ---------------------------------------------------------------------------
 # Sentinel campaign fixture (runs once for the whole module)
@@ -143,7 +142,7 @@ def test_parity_report_passed():
 
 def test_hard_failure_detector_all_pass_on_mock():
     """All 10 hard-failure detectors pass on a well-formed runpod_mock envelope."""
-    from zer0pa_materials.runpod.mock_backends import build_runpod_mock_envelope
+    from zer0pa_materials_workbench.runpod.mock_backends import build_runpod_mock_envelope
     detector = HardFailureDetector()
     inp = {"chemical_system": "Li-La-Zr-O", "layer": "L1"}
     env = build_runpod_mock_envelope(layer="L1", input_payload=inp)
@@ -170,7 +169,7 @@ def test_sentinel_backend_field_is_runpod_mock(sentinel_report):
 
 def test_precheck_returns_report():
     """RunpodCutover.precheck() returns a CutoverPrecheckReport with all fields."""
-    from zer0pa_materials.runpod.cutover import CutoverPrecheckReport
+    from zer0pa_materials_workbench.runpod.cutover import CutoverPrecheckReport
     cutover = RunpodCutover()
     report = cutover.precheck()
     assert isinstance(report, CutoverPrecheckReport)
@@ -204,7 +203,7 @@ def test_promote_backend_blocked_without_parity():
 
 def test_promote_backend_approved_after_parity():
     """promote_backend is approved when parity passes."""
-    from zer0pa_materials.runpod.cutover import ParityReport
+    from zer0pa_materials_workbench.runpod.cutover import ParityReport
     cutover = RunpodCutover()
     parity = ParityReport(
         passed=True,

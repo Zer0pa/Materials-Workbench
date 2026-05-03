@@ -4,9 +4,9 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.audit.log import AuditLog
-from zer0pa_materials.audit.rights import RightsViolationError
-from zer0pa_materials.reasoner.tuples import (
+from zer0pa_materials_workbench.audit.log import AuditLog
+from zer0pa_materials_workbench.audit.rights import RightsViolationError
+from zer0pa_materials_workbench.reasoner.tuples import (
     ReasonerTuple,
     enforce_reuse_scope_export,
     filter_exportable_tuples,

@@ -12,13 +12,13 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.adapters.l1_5.base import L15JobParams
-from zer0pa_materials.adapters.l1_5.zt_assembler import (
+from zer0pa_materials_workbench.adapters.l1_5.base import L15JobParams
+from zer0pa_materials_workbench.adapters.l1_5.zt_assembler import (
     ThermoelectricZtAssembler,
-    assemble_zt,
     ZtAssemblyResult,
+    assemble_zt,
 )
-from zer0pa_materials.envelope import Envelope, L15PhononOutput
+from zer0pa_materials_workbench.envelope import Envelope, L15PhononOutput
 
 
 class TestAssembleZt:

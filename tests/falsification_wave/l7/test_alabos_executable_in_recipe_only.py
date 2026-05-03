@@ -12,12 +12,11 @@ from pathlib import Path
 
 import pytest
 
-from zer0pa_materials.adapters.l7 import (
+from zer0pa_materials_workbench.adapters.l7 import (
     AlabosExecutableInRecipeOnlyError,
     AlabOSProtocolCompilerStub,
 )
-from zer0pa_materials.falsifiers.l7_falsifiers import alabos_recipe_only_enforcement
-
+from zer0pa_materials_workbench.falsifiers.l7_falsifiers import alabos_recipe_only_enforcement
 
 FIXTURE_ROOT = Path(__file__).resolve().parents[3] / "fixtures" / "negatives" / "alabos_executable_in_recipe_only"
 

@@ -7,10 +7,10 @@ downstream consumers.
 
 import pytest
 
-from zer0pa_materials.adapters.l6.crystallm import CrystaLlmCifGeneratorAdapter
-from zer0pa_materials.adapters.l6.diffcsp import DiffCspGeneratorAdapter
-from zer0pa_materials.adapters.l6.mattergen import MatterGenGeneratorAdapter
-from zer0pa_materials.envelope.envelope import Envelope
+from zer0pa_materials_workbench.adapters.l6.crystallm import CrystaLlmCifGeneratorAdapter
+from zer0pa_materials_workbench.adapters.l6.diffcsp import DiffCspGeneratorAdapter
+from zer0pa_materials_workbench.adapters.l6.mattergen import MatterGenGeneratorAdapter
+from zer0pa_materials_workbench.envelope.envelope import Envelope
 
 
 @pytest.fixture
@@ -69,14 +69,14 @@ class TestL6SwapSchemaParity:
 
     def test_l6_json_schema_stable(self):
         """The L6GenerativeOutput JSON Schema must not drift."""
-        from zer0pa_materials.envelope.layer_outputs import L6GenerativeOutput
+        from zer0pa_materials_workbench.envelope.layer_outputs import L6GenerativeOutput
         schema = L6GenerativeOutput.model_json_schema()
         assert "structure_hash" in str(schema)
         assert "novelty_status" in str(schema)
         assert "dedup_results" in str(schema)
 
     def test_cif_text_parseable_all(self, mg_env, dc_env, cl_env):
-        from zer0pa_materials.envelope.hashing import cif_hash_from_text
+        from zer0pa_materials_workbench.envelope.hashing import cif_hash_from_text
         for env in (mg_env, dc_env, cl_env):
             cif_text = env.output.get("cif_text", "")
             if cif_text.strip():

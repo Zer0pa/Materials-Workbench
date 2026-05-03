@@ -36,7 +36,7 @@
 **source_manifest_ids**: `src:emmo:material`, `src:emmo:composition`, `src:emmo:structure`, `src:emmo:phase`, `src:emmo:property`, `src:emmo:process`, `src:emmo:model`, `src:emmo:simulation`, `src:emmo:measurement`, `src:emmo:reasoning`
 
 **Patches for lead agent**:
-- `src/zer0pa_materials/ontology/emmo.py` → Composition parent note (EMMO_25aacccd): mark as `note="UUID unverified against EMMO 1.0.3; resolve via EMMOntoPy before Wave 5 export"` for the 6 blocked terms.
+- `src/zer0pa_materials_workbench/ontology/emmo.py` → Composition parent note (EMMO_25aacccd): mark as `note="UUID unverified against EMMO 1.0.3; resolve via EMMOntoPy before Wave 5 export"` for the 6 blocked terms.
 
 ---
 
@@ -349,7 +349,7 @@ PennyLane official demo: "Using PennyLane with PySCF and OpenFermion." URL: http
 
 ### NON-BLOCKING — EMMO UUID Verification
 
-**File**: `src/zer0pa_materials/ontology/emmo.py`  
+**File**: `src/zer0pa_materials_workbench/ontology/emmo.py`  
 **Action**: Add note to the 6 unverified terms (Composition, Structure, Phase, Model, Simulation, Reasoning) that their UUIDs are pending Wave 4c EMMOntoPy verification. No IRI change required yet.
 
 ---

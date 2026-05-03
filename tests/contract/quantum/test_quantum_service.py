@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 from fastapi.testclient import TestClient
 
-from zer0pa_materials.services.quantum_service import app
+from zer0pa_materials_workbench.services.quantum_service import app
 
 
 @pytest.fixture

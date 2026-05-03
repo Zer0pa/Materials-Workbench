@@ -2,10 +2,8 @@
 
 from __future__ import annotations
 
-import pytest
-
-from zer0pa_materials.adapters.l7 import BoTorchAcquisitionAdapter
-from zer0pa_materials.adapters.l7.botorch_acquisition import AcquisitionInput
+from zer0pa_materials_workbench.adapters.l7 import BoTorchAcquisitionAdapter
+from zer0pa_materials_workbench.adapters.l7.botorch_acquisition import AcquisitionInput
 
 
 def _ai(cid: str, fidelities: dict[str, float]) -> AcquisitionInput:

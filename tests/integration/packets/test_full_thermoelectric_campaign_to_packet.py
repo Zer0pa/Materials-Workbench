@@ -20,11 +20,11 @@ from pathlib import Path
 
 import pytest
 
-from zer0pa_materials.audit.kg import MaterialsKG
-from zer0pa_materials.audit.log import AuditLog
-from zer0pa_materials.envelope import Envelope
-from zer0pa_materials.orchestration.campaign import Campaign, CampaignSpec
-from zer0pa_materials.packets import (
+from zer0pa_materials_workbench.audit.kg import MaterialsKG
+from zer0pa_materials_workbench.audit.log import AuditLog
+from zer0pa_materials_workbench.envelope import Envelope
+from zer0pa_materials_workbench.orchestration.campaign import Campaign, CampaignSpec
+from zer0pa_materials_workbench.packets import (
     assemble_thermoelectric_packet,
     export_packet_to_ro_crate,
     parse_packet_ro_crate,

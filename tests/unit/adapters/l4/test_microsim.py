@@ -4,16 +4,16 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.adapters.l4.base import L4PredictRequest
-from zer0pa_materials.adapters.l4.contracts import (
+from zer0pa_materials_workbench.adapters.l4.base import L4PredictRequest
+from zer0pa_materials_workbench.adapters.l4.contracts import (
     PhaseFieldDomain,
     PhaseFieldMaterial,
     PhaseFieldMesh,
     PhaseFieldRunSpec,
 )
-from zer0pa_materials.adapters.l4.microsim import MicrosimGrandPotentialAdapter
-from zer0pa_materials.boundary import RESEARCH_BOUNDARY
-from zer0pa_materials.envelope.envelope import Envelope
+from zer0pa_materials_workbench.adapters.l4.microsim import MicrosimGrandPotentialAdapter
+from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
+from zer0pa_materials_workbench.envelope.envelope import Envelope
 
 
 @pytest.fixture
@@ -119,7 +119,7 @@ class TestNoMicrosimImport:
     def test_no_microsim_import_in_adapter_source(self):
         from pathlib import Path
 
-        adapter_path = Path(__file__).parent.parent.parent.parent.parent / "src" / "zer0pa_materials" / "adapters" / "l4" / "microsim.py"
+        adapter_path = Path(__file__).parent.parent.parent.parent.parent / "src" / "zer0pa_materials_workbench" / "adapters" / "l4" / "microsim.py"
         text = adapter_path.read_text()
         # Must not have ``import microsim`` or similar
         assert "import microsim" not in text.lower()

@@ -5,7 +5,7 @@
 > No clinical or human-subject use. ITAR / weapons applications are out of scope
 > (Meta UMA Acceptable Use Policy and operator policy).
 
-This runbook is the operator guide for promoting the Zer0pa Materials pipeline
+This runbook is the operator guide for promoting the Zer0pa Materials Workbench pipeline
 from `runpod_mock` to `runpod_rest` — the real GPU backend on Runpod.
 The cutover is a **config-flag-only swap**: no architecture changes to
 adapters, services, or falsifiers are required.
@@ -29,7 +29,7 @@ Before starting, confirm:
 SSH into the Runpod pod and run:
 
 ```bash
-git clone https://github.com/Zer0pa/Materials .
+git clone https://github.com/Zer0pa/Materials-Workbench .
 cd Materials
 ```
 
@@ -111,7 +111,7 @@ cp .env.runpod .env
 ## Step 4 — Run the precheck
 
 ```bash
-zer0pa-materials runpod precheck
+zer0pa-materials-workbench runpod precheck
 ```
 
 All 7 preconditions must show `PASS`. If any show `BLOCKED`, resolve the
@@ -128,7 +128,7 @@ issue and re-run. Common blockers:
 ## Step 5 — Run the sentinel campaign
 
 ```bash
-zer0pa-materials runpod sentinel --backend runpod_rest
+zer0pa-materials-workbench runpod sentinel --backend runpod_rest
 ```
 
 This runs LLZO, Li6PS5Cl, Li-Mg-Zr-Cl, and Bi2Te3 through every GPU-bound
@@ -142,7 +142,7 @@ Expected duration: ~45-90 minutes for a full run (A100 × all 9 layers × 4 seed
 ## Step 6 — Verify parity
 
 ```bash
-zer0pa-materials runpod parity
+zer0pa-materials-workbench runpod parity
 ```
 
 This runs `tests/parity/` against both the `runpod_mock` baseline and the
@@ -158,7 +158,7 @@ just-completed `runpod_rest` sentinel. Every parity test must pass:
 
 If parity fails:
 1. Check the sentinel report for which layer/seed failed.
-2. Run the hard-failure detectors: `zer0pa-materials runpod hard-failures`.
+2. Run the hard-failure detectors: `zer0pa-materials-workbench runpod hard-failures`.
 3. Check `phases/Runpod-cutover/parity-result.txt` for detail.
 
 ---
@@ -178,7 +178,7 @@ should differ from the `runpod_mock` baseline. Any other changes are a
 ## Step 8 — Promote backend from mock to real
 
 ```bash
-zer0pa-materials runpod precheck  # re-verify
+zer0pa-materials-workbench runpod precheck  # re-verify
 ```
 
 If precheck passes with `MATERIALS_MODE=runpod_rest`, the cutover is complete.
@@ -188,7 +188,7 @@ Record the promotion decision:
 
 ```bash
 python -c "
-from zer0pa_materials.runpod.cutover import RunpodCutover, ParityReport
+from zer0pa_materials_workbench_workbench.runpod.cutover import RunpodCutover, ParityReport
 c = RunpodCutover()
 r = c.promote_backend('all', 'runpod_mock', 'runpod_rest',
     parity_report=ParityReport(passed=True, schema_drifts={}, hash_mismatches={},
@@ -210,7 +210,7 @@ nano .env
 # Restore all *_BACKEND flags to their pre-cutover values
 
 # Verify
-zer0pa-materials runpod precheck
+zer0pa-materials-workbench runpod precheck
 
 # Notify the lead agent with the checkpoint decision_id
 ```
@@ -219,7 +219,7 @@ Rollback via API:
 
 ```bash
 python -c "
-from zer0pa_materials.runpod.cutover import RunpodCutover
+from zer0pa_materials_workbench_workbench.runpod.cutover import RunpodCutover
 c = RunpodCutover()
 result = c.rollback('decision:promote:<your-checkpoint-id>')
 print(result['instructions'])
@@ -233,7 +233,7 @@ print(result['instructions'])
 Run all detectors:
 
 ```bash
-zer0pa-materials runpod hard-failures
+zer0pa-materials-workbench runpod hard-failures
 ```
 
 | # | Detector | What triggers it | Fix |
@@ -266,7 +266,7 @@ UMA (Universal Model for Atoms, FAIR Chemistry License v1) requires:
    ```
 4. **Verify**:
    ```bash
-   zer0pa-materials runpod hard-failures --layer L2
+   zer0pa-materials-workbench runpod hard-failures --layer L2
    # Detector 8 must show PASS
    ```
 5. **Scope**: UMA is used only for L2 MLIP at scale. It is NOT used for

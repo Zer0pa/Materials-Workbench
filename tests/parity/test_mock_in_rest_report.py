@@ -19,10 +19,8 @@ from __future__ import annotations
 import os
 from contextlib import contextmanager
 
-import pytest
-
-from zer0pa_materials.envelope.config import MaterialsConfig
-from zer0pa_materials.runpod.cutover import (
+from zer0pa_materials_workbench.envelope.config import MaterialsConfig
+from zer0pa_materials_workbench.runpod.cutover import (
     ParityReport,
     RunpodCutover,
     SentinelCampaignReport,

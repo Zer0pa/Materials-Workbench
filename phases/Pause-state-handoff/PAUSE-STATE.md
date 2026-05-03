@@ -1,4 +1,4 @@
-# Pause-State Handoff — Zer0pa Materials Overnight Executor
+# Pause-State Handoff — Zer0pa Materials Workbench Overnight Executor
 
 ## Boundary
 
@@ -7,7 +7,7 @@ Research infrastructure for in silico materials science discovery. Outputs are r
 ## Status at pause
 
 - **Pause time:** 2026-04-30 (approximate)
-- **Last commit:** `371bf01` — Wave 3B complete, pushed to `Zer0pa/Materials` main
+- **Last commit:** `371bf01` — Wave 3B complete, pushed to `Zer0pa/Materials-Workbench` main
 - **Test state:** 2329 passed, 2 skipped (pycalphad), 0 failed
 - **LOC:** ~28,421 src + ~21,465 tests
 - **Pause reason:** Claude usage allocation near limit; resume after refresh (operator request)
@@ -105,10 +105,10 @@ The PRD §CPU-First Build Sequence requires steps 12–16 still:
 
 ## Authority chain
 
-- GitHub canonical: https://github.com/Zer0pa/Materials
+- GitHub canonical: https://github.com/Zer0pa/Materials-Workbench
 - gh CLI authenticated as Zer0pa-Architect-Prime
 - git config: user.name=Zer0pa-Architect-Prime, user.email=architects@zer0pa.ai
-- Working dir: clone of `https://github.com/Zer0pa/Materials.git` (the central `zer0pa_materials.repo_root.repo_root()` helper resolves the path on any machine; do not hardcode absolute paths)
+- Working dir: clone of `https://github.com/Zer0pa/Materials-Workbench.git` (the central `zer0pa_materials_workbench.repo_root.repo_root()` helper resolves the path on any machine; do not hardcode absolute paths)
 - Python venv: `.venv/` (Python 3.13.12)
 - Package: editable-installed via `pip install -e .`
 
@@ -125,4 +125,4 @@ These do NOT block CPU-side completion. They are research/citation lookups appro
 
 ## Pause-state attestation
 
-All work to this point is committed and pushed to `Zer0pa/Materials@main`. No uncommitted state. No partial subagent runs in flight.
+All work to this point is committed and pushed to `Zer0pa/Materials-Workbench@main`. No uncommitted state. No partial subagent runs in flight.

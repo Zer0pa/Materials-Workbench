@@ -28,12 +28,11 @@ The OLD gate would pass the envelope; the NEW gate routes to ``hard_reject``.
 
 from __future__ import annotations
 
-from zer0pa_materials.falsifiers.l2_falsifiers import (
+from zer0pa_materials_workbench.falsifiers.l2_falsifiers import (
     dpa_mace_disagreement_routing,
     dpa_mace_disagreement_routing_recomputed,
 )
-from zer0pa_materials.falsifiers.raw_evidence import recompute_l2_disagreement
-
+from zer0pa_materials_workbench.falsifiers.raw_evidence import recompute_l2_disagreement
 
 # ---------------------------------------------------------------------------
 # Forged envelope helpers

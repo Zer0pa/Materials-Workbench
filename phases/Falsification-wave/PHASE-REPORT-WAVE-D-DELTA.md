@@ -18,15 +18,15 @@ The Wave D delta identifies **seven** such gates and replaces / augments each on
 
 | Path | Change |
 |---|---|
-| `src/zer0pa_materials/falsifiers/raw_evidence.py` | NEW — shared recompute primitives. |
-| `src/zer0pa_materials/falsifiers/uma_manifest.py` | NEW — verifiable UMA AUP/license manifest. |
-| `src/zer0pa_materials/falsifiers/l2_falsifiers.py` | Added `dpa_mace_disagreement_routing_recomputed`. |
-| `src/zer0pa_materials/falsifiers/phase0_falsifiers.py` | Added `verify_source_manifest_linkage`. |
-| `src/zer0pa_materials/falsifiers/l6_falsifiers.py` | Added `recompute_novelty`, `novelty_status_gate_recomputed`. |
-| `src/zer0pa_materials/falsifiers/ionic_falsifiers.py` | Added `verify_ionic_service_back_edge`, `neb_barrier_range_check`, plus literature-band constants. |
-| `src/zer0pa_materials/falsifiers/l5_falsifiers.py` | Added `verify_l5_artifact_sidecar` (re-reads bytes, recomputes sha256). |
-| `src/zer0pa_materials/falsifiers/l3_falsifiers.py` | Added `verify_l3_sovereign_block_enforced`. |
-| `src/zer0pa_materials/falsifiers/__init__.py` | Re-export hardened gates and UMA manifest API. |
+| `src/zer0pa_materials_workbench/falsifiers/raw_evidence.py` | NEW — shared recompute primitives. |
+| `src/zer0pa_materials_workbench/falsifiers/uma_manifest.py` | NEW — verifiable UMA AUP/license manifest. |
+| `src/zer0pa_materials_workbench/falsifiers/l2_falsifiers.py` | Added `dpa_mace_disagreement_routing_recomputed`. |
+| `src/zer0pa_materials_workbench/falsifiers/phase0_falsifiers.py` | Added `verify_source_manifest_linkage`. |
+| `src/zer0pa_materials_workbench/falsifiers/l6_falsifiers.py` | Added `recompute_novelty`, `novelty_status_gate_recomputed`. |
+| `src/zer0pa_materials_workbench/falsifiers/ionic_falsifiers.py` | Added `verify_ionic_service_back_edge`, `neb_barrier_range_check`, plus literature-band constants. |
+| `src/zer0pa_materials_workbench/falsifiers/l5_falsifiers.py` | Added `verify_l5_artifact_sidecar` (re-reads bytes, recomputes sha256). |
+| `src/zer0pa_materials_workbench/falsifiers/l3_falsifiers.py` | Added `verify_l3_sovereign_block_enforced`. |
+| `src/zer0pa_materials_workbench/falsifiers/__init__.py` | Re-export hardened gates and UMA manifest API. |
 | `phases/UMA-license/manifest.json` | NEW — operator-fillable starter manifest. |
 | `phases/UMA-license/manifest.template.json` | NEW — safe-defaults template. |
 | `phases/UMA-license/PHASE-REPORT-WAVE-D.md` | NEW — UMA manifest phase report. |

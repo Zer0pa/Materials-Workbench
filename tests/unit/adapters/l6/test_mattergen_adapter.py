@@ -2,10 +2,10 @@
 
 import pytest
 
-from zer0pa_materials.adapters.l6.mattergen import MatterGenGeneratorAdapter
-from zer0pa_materials.audit.sources import BlockedSourceManifest
-from zer0pa_materials.boundary import RESEARCH_BOUNDARY
-from zer0pa_materials.envelope.envelope import Envelope
+from zer0pa_materials_workbench.adapters.l6.mattergen import MatterGenGeneratorAdapter
+from zer0pa_materials_workbench.audit.sources import BlockedSourceManifest
+from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
+from zer0pa_materials_workbench.envelope.envelope import Envelope
 
 
 @pytest.fixture
@@ -101,8 +101,8 @@ class TestMatterGenBasic:
 
 class TestMatterGenRealBackendBlocked:
     def test_blocked_manifest_emitted_for_real_backend(self):
-        from zer0pa_materials.envelope.config import MaterialsConfig
-        import os
+
+        from zer0pa_materials_workbench.envelope.config import MaterialsConfig
         # Monkeypatch env to fake mattergen_runpod backend.
         config = MaterialsConfig()
         adapter = MatterGenGeneratorAdapter(config=config, n_candidates=1)

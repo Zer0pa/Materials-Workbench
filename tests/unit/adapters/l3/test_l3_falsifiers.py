@@ -8,10 +8,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-import pytest
-
-from zer0pa_materials.envelope import RESEARCH_BOUNDARY
-from zer0pa_materials.falsifiers.l3_falsifiers import (
+from zer0pa_materials_workbench.envelope import RESEARCH_BOUNDARY
+from zer0pa_materials_workbench.falsifiers.l3_falsifiers import (
     commercial_tdb_provider_disabled_by_default,
     espei_posterior_diagnostics,
     phase_boundary_drift,
@@ -21,7 +19,6 @@ from zer0pa_materials.falsifiers.l3_falsifiers import (
     tdb_parses_in_pycalphad,
     tdb_quarantine_breach,
 )
-
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
 CU_MG_TDB = REPO_ROOT / "fixtures" / "tdb" / "Cu-Mg-toy.tdb"

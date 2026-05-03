@@ -2,8 +2,8 @@
 
 import pytest
 
-from zer0pa_materials.adapters.l6.mattergen import MatterGenGeneratorAdapter
-from zer0pa_materials.falsifiers.l6_falsifiers import (
+from zer0pa_materials_workbench.adapters.l6.mattergen import MatterGenGeneratorAdapter
+from zer0pa_materials_workbench.falsifiers.l6_falsifiers import (
     ChargeNeutralityError,
     DuplicateStructureError,
     InvalidCifError,
@@ -18,7 +18,6 @@ from zer0pa_materials.falsifiers.l6_falsifiers import (
     structure_hash_dedupe,
     valid_cif_only,
 )
-
 
 # ---------------------------------------------------------------------------
 # valid_cif_only

@@ -14,16 +14,16 @@ PRD §L3 decision: sovereign pycalphad/ESPEI build by default; commercial Thermo
 
 | Path | Purpose | LOC |
 |---|---|---|
-| `src/zer0pa_materials/adapters/l3/__init__.py` | Public surface re-exports | 64 |
-| `src/zer0pa_materials/adapters/l3/base.py` | `L3CalphadAdapter`, `L3CalphadRequest`, `CommercialTdbQuarantineError` | 123 |
-| `src/zer0pa_materials/adapters/l3/pycalphad_equilibrium.py` | Open-path equilibrium adapter (real pycalphad with deterministic stub fallback) | 332 |
-| `src/zer0pa_materials/adapters/l3/espei_fit.py` | ESPEI Bayesian MCMC fit; **information-geometry note** (Brief #2 Gap C) baked into every envelope | 440 |
-| `src/zer0pa_materials/adapters/l3/phaseforgeplus_prior.py` | MLIP→CALPHAD prior, default-blocked behind `enable_with_verified_license` | 293 |
-| `src/zer0pa_materials/adapters/l3/thermocalc_quarantine.py` | QUARANTINE adapter; default-blocked; hash-only `tdb_ref`; never copies plaintext | 368 |
-| `src/zer0pa_materials/adapters/l3/sovereign_pipeline.py` | PRIMARY user-facing adapter — DFT/MLIP → prior → ESPEI → pycalphad chain at battery-relevant temperatures (300 K + 700 K default) | 394 |
-| `src/zer0pa_materials/services/l3_service.py` | FastAPI service with five endpoints (`/equilibrium`, `/fit-tdb`, `/sovereign-pipeline`, `/quarantine-thermocalc-read`, `/healthz`) | 251 |
-| `src/zer0pa_materials/falsifiers/l3_falsifiers.py` | Eight falsifiers (parses, drift, Jaccard, JS divergence, ESPEI diagnostics, quarantine breach, PhaseForgePlus license gate, commercial-default-disabled) | 665 |
-| `src/zer0pa_materials/cli/l3.py` | Typer sub-app: `equilibrium`, `fit`, `sovereign`, `quarantine-status`, `blocked`, `healthz`, `pfp-enable` | 255 |
+| `src/zer0pa_materials_workbench/adapters/l3/__init__.py` | Public surface re-exports | 64 |
+| `src/zer0pa_materials_workbench/adapters/l3/base.py` | `L3CalphadAdapter`, `L3CalphadRequest`, `CommercialTdbQuarantineError` | 123 |
+| `src/zer0pa_materials_workbench/adapters/l3/pycalphad_equilibrium.py` | Open-path equilibrium adapter (real pycalphad with deterministic stub fallback) | 332 |
+| `src/zer0pa_materials_workbench/adapters/l3/espei_fit.py` | ESPEI Bayesian MCMC fit; **information-geometry note** (Brief #2 Gap C) baked into every envelope | 440 |
+| `src/zer0pa_materials_workbench/adapters/l3/phaseforgeplus_prior.py` | MLIP→CALPHAD prior, default-blocked behind `enable_with_verified_license` | 293 |
+| `src/zer0pa_materials_workbench/adapters/l3/thermocalc_quarantine.py` | QUARANTINE adapter; default-blocked; hash-only `tdb_ref`; never copies plaintext | 368 |
+| `src/zer0pa_materials_workbench/adapters/l3/sovereign_pipeline.py` | PRIMARY user-facing adapter — DFT/MLIP → prior → ESPEI → pycalphad chain at battery-relevant temperatures (300 K + 700 K default) | 394 |
+| `src/zer0pa_materials_workbench/services/l3_service.py` | FastAPI service with five endpoints (`/equilibrium`, `/fit-tdb`, `/sovereign-pipeline`, `/quarantine-thermocalc-read`, `/healthz`) | 251 |
+| `src/zer0pa_materials_workbench/falsifiers/l3_falsifiers.py` | Eight falsifiers (parses, drift, Jaccard, JS divergence, ESPEI diagnostics, quarantine breach, PhaseForgePlus license gate, commercial-default-disabled) | 665 |
+| `src/zer0pa_materials_workbench/cli/l3.py` | Typer sub-app: `equilibrium`, `fit`, `sovereign`, `quarantine-status`, `blocked`, `healthz`, `pfp-enable` | 255 |
 
 **Total source: ~3,440 LOC across 10 files.**
 
@@ -151,4 +151,4 @@ All five PRD §L3 falsifier gates implemented and tested. Three falsification-wa
 
 6. **CLI surface stable.** The `l3` Typer sub-app exposes `equilibrium`, `fit`, `sovereign`, `quarantine-status`, `blocked`, `healthz`, `pfp-enable`. The L7 campaign runner can shell-out to these for diagnostic snapshots without going through the FastAPI service.
 
-7. **REST stub on port 8043** (`uvicorn zer0pa_materials.services.l3_service:app --port 8043`). All five PRD-mandated endpoints implemented. Contract tests use FastAPI TestClient — no live server needed.
+7. **REST stub on port 8043** (`uvicorn zer0pa_materials_workbench.services.l3_service:app --port 8043`). All five PRD-mandated endpoints implemented. Contract tests use FastAPI TestClient — no live server needed.

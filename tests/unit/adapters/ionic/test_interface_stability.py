@@ -2,13 +2,11 @@
 
 from __future__ import annotations
 
-import pytest
-
-from zer0pa_materials.adapters.ionic.base import (
+from zer0pa_materials_workbench.adapters.ionic.base import (
     IONIC_TRANSPORT_SERVICE_REF,
     IonicJobParams,
 )
-from zer0pa_materials.adapters.ionic.interface_stability import (
+from zer0pa_materials_workbench.adapters.ionic.interface_stability import (
     INTERFACE_STABILITY_BLOCKED_MANIFEST,
     InterfaceStabilityAdapter,
     classify_interface,

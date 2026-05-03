@@ -2,13 +2,11 @@
 
 from __future__ import annotations
 
-import os
 from pathlib import Path
 
 import pytest
 
-from zer0pa_materials.envelope import MaterialsConfig
-
+from zer0pa_materials_workbench.envelope import MaterialsConfig
 
 # ----------------------------------------------------------------------------
 # Helpers

@@ -19,11 +19,10 @@ DECISION row for any envelope claiming a restricted backend.
 
 from __future__ import annotations
 
-from zer0pa_materials.falsifiers.l3_falsifiers import (
+from zer0pa_materials_workbench.falsifiers.l3_falsifiers import (
     phaseforgeplus_license_gate,
     verify_l3_sovereign_block_enforced,
 )
-
 
 # ---------------------------------------------------------------------------
 # Fixture helpers

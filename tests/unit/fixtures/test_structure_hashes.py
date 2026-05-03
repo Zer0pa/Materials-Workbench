@@ -3,7 +3,7 @@
 Each positive fixture under ``fixtures/structures/<name>/`` ships with a
 ``structure.cif`` and a ``manifest.json`` that records the deterministic
 ``structure_hash``. This test recomputes the hash via
-``zer0pa_materials.envelope.hashing.cif_hash_from_text`` and asserts
+``zer0pa_materials_workbench.envelope.hashing.cif_hash_from_text`` and asserts
 exact equality. Any future drift in the parser, the canonicalisation, or
 the CIF coordinate values is caught here.
 """
@@ -15,14 +15,12 @@ from pathlib import Path
 
 import pytest
 
-from zer0pa_materials.envelope.hashing import (
+from tests.unit.fixtures.conftest import FIXTURES_ROOT
+from zer0pa_materials_workbench.envelope.hashing import (
     cif_hash_from_text,
     parse_minimal_cif,
     structure_hash,
 )
-
-from tests.unit.fixtures.conftest import FIXTURES_ROOT
-
 
 # Walk fixtures/structures/ and collect every directory that contains a
 # structure.cif AND a manifest.json. Some fixtures (LLZO/cubic, LLZO/tetragonal)

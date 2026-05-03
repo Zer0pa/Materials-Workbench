@@ -22,31 +22,27 @@ from typing import Any
 
 import pytest
 
-from zer0pa_materials.adapters.ionic.base import IonicJobParams
-from zer0pa_materials.adapters.l1.base import L1JobParams
-from zer0pa_materials.adapters.l1_5.base import L15JobParams, make_l15_envelope
-from zer0pa_materials.adapters.l2.base import L2PredictRequest
-from zer0pa_materials.audit.kg import MaterialsKG
-from zer0pa_materials.audit.log import AuditLog
-from zer0pa_materials.boundary import RESEARCH_BOUNDARY
-from zer0pa_materials.envelope.envelope import Envelope
-from zer0pa_materials.envelope.layer_outputs import L15PhononOutput
-from zer0pa_materials.falsifiers.ionic_falsifiers import (
-    requires_ionic_transport_service,
+from zer0pa_materials_workbench.adapters.ionic.base import IonicJobParams
+from zer0pa_materials_workbench.adapters.l2.base import L2PredictRequest
+from zer0pa_materials_workbench.audit.kg import MaterialsKG
+from zer0pa_materials_workbench.audit.log import AuditLog
+from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
+from zer0pa_materials_workbench.envelope.envelope import Envelope
+from zer0pa_materials_workbench.envelope.layer_outputs import L15PhononOutput
+from zer0pa_materials_workbench.falsifiers.ionic_falsifiers import (
     oxidative_stability_threshold,
+    requires_ionic_transport_service,
 )
-from zer0pa_materials.falsifiers.l1_5_falsifiers import (
+from zer0pa_materials_workbench.falsifiers.l1_5_falsifiers import (
     dynamical_stability,
     phonon_does_not_substitute_for_ionic,
 )
-from zer0pa_materials.falsifiers.l7_falsifiers import (
+from zer0pa_materials_workbench.falsifiers.l7_falsifiers import (
     alabos_recipe_only_enforcement,
     candidate_promotion_provenance,
     tenant_only_tuple_leak,
-    botorch_acquisition_function_allowed,
 )
-from zer0pa_materials.orchestration import Campaign, CampaignSpec
-
+from zer0pa_materials_workbench.orchestration import Campaign, CampaignSpec
 
 # ---------------------------------------------------------------------------
 # Fixture paths
@@ -240,7 +236,7 @@ class TestUnstablePhonon:
 
     def test_force_rmse_passes_separately(self) -> None:
         """Only dynamical_stability fires; mlip_dft_force_rmse should pass."""
-        from zer0pa_materials.falsifiers.l1_5_falsifiers import mlip_dft_force_rmse
+        from zer0pa_materials_workbench.falsifiers.l1_5_falsifiers import mlip_dft_force_rmse
         data = _neg("unstable_phonon", "phonon_spectrum.json")
         env = _make_envelope_from_fixture(
             {
@@ -332,11 +328,11 @@ class TestMissingBoundary:
         )
 
     def test_acceptance_gate_fails_boundary(self) -> None:
-        from zer0pa_materials.orchestration.acceptance_gates import (
+        from zer0pa_materials_workbench.audit.rights import RightsClaim
+        from zer0pa_materials_workbench.orchestration.acceptance_gates import (
             AcceptanceGate,
             GateContext,
         )
-        from zer0pa_materials.audit.rights import RightsClaim
 
         data = _neg("missing_boundary", "envelope.json")
         # Verify the fixture has the wrong boundary string.
@@ -347,7 +343,12 @@ class TestMissingBoundary:
         # Build a GateContext with a bad envelope using model_construct on both
         # GateContext and the envelope to bypass Pydantic's validation — we need
         # to inject a wrong boundary to test the gate itself.
-        from zer0pa_materials.envelope.envelope import AuditBlock, RightsBlock, ToolAdapter, FalsifierBlock
+        from zer0pa_materials_workbench.envelope.envelope import (
+            AuditBlock,
+            FalsifierBlock,
+            RightsBlock,
+            ToolAdapter,
+        )
         bad_env = Envelope.model_construct(
             research_boundary=data["research_boundary"],  # intentionally wrong
             run_id=data["run_id"],
@@ -426,9 +427,9 @@ class TestAlabosExecutableInRecipeOnly:
         )
 
     def test_alabos_compiler_raises(self) -> None:
-        from zer0pa_materials.adapters.l7.alabos_protocol import (
-            AlabOSProtocolCompilerStub,
+        from zer0pa_materials_workbench.adapters.l7.alabos_protocol import (
             AlabosExecutableInRecipeOnlyError,
+            AlabOSProtocolCompilerStub,
         )
         data = _neg("alabos_executable_in_recipe_only", "protocol.json")
         # The compiler is instantiated in recipe_only mode (the default per PRD).
@@ -464,13 +465,12 @@ class TestDuplicateCandidate:
         assert path.exists()
 
     def test_duplicate_candidate_rejected_by_gate(self) -> None:
-        from zer0pa_materials.orchestration.acceptance_gates import (
+        from zer0pa_materials_workbench.adapters.l2.ensemble import L2EnsembleRunner
+        from zer0pa_materials_workbench.audit.rights import RightsClaim
+        from zer0pa_materials_workbench.orchestration.acceptance_gates import (
             AcceptanceGate,
             GateContext,
         )
-        from zer0pa_materials.audit.rights import RightsClaim
-        from zer0pa_materials.adapters.l2.ensemble import L2EnsembleRunner
-        from zer0pa_materials.adapters.l2.base import L2PredictRequest
 
         _structure = {
             "lattice_vectors": [[3.84, 0.0, 0.0], [0.0, 3.84, 0.0], [0.0, 0.0, 3.84]],
@@ -553,7 +553,7 @@ class TestLi6PS5ClOxidationGate:
     """Li6PS5Cl fails the oxidation gate and must be rejected."""
 
     def test_oxidative_stability_threshold_fails(self) -> None:
-        from zer0pa_materials.adapters.ionic.electrochemical_window import (
+        from zer0pa_materials_workbench.adapters.ionic.electrochemical_window import (
             ElectrochemicalWindowAdapter,
         )
 

@@ -8,7 +8,7 @@ Every artifact you produce must carry the boundary block above verbatim.
 
 ## Role
 
-You are the overnight executor for the Zer0pa Materials work stream. You inherit the orchestrator PRD and must convert it into a working CPU-side materials discovery pipeline with contracts, stubs, audit trail, KG, falsifier ledger, MVP evidence packets, and Runpod-ready migration path.
+You are the overnight executor for the Zer0pa Materials Workbench work stream. You inherit the orchestrator PRD and must convert it into a working CPU-side materials discovery pipeline with contracts, stubs, audit trail, KG, falsifier ledger, MVP evidence packets, and Runpod-ready migration path.
 
 You are an Opus Max-class lead agent operating as chief engineer and scientific integrator. Use Sonnet-level subagents at minimum. Use Opus-level subagents when a task requires high-context scientific reasoning, architecture arbitration, falsifier design, ontology/data-rights semantics, audit/KG semantics, or cross-layer tradeoff decisions.
 
@@ -28,7 +28,7 @@ Read in this order:
 8. `PRD.md`
 9. `HANDOFF-TO-OVERNIGHT-EXECUTOR.md`
 
-The GitHub repo is canonical: `https://github.com/Zer0pa/Materials`. Use authenticated git/gh access. Commit and push all work for handoff.
+The GitHub repo is canonical: `https://github.com/Zer0pa/Materials-Workbench`. Use authenticated git/gh access. Commit and push all work for handoff.
 
 The originating-machine external folder (operator-private — do not record absolute paths in committed artifacts) contained the same two large research briefs that have since been committed to this repo under `source-briefs/`; do not depend on the originating local path on another machine. The repo plus `pip install -e '.[dev]'` is fully self-contained.
 

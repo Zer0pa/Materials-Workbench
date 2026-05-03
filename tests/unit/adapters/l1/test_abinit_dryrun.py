@@ -4,11 +4,10 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.adapters.l1.abinit_aiida import AbinitAiiDASolver, ABINIT_BLOCKED_MANIFEST
-from zer0pa_materials.adapters.l1.base import L1JobParams
-from zer0pa_materials.envelope import L1DftOutput, cif_hash_from_text
-
-from zer0pa_materials import read_fixture
+from zer0pa_materials_workbench import read_fixture
+from zer0pa_materials_workbench.adapters.l1.abinit_aiida import ABINIT_BLOCKED_MANIFEST, AbinitAiiDASolver
+from zer0pa_materials_workbench.adapters.l1.base import L1JobParams
+from zer0pa_materials_workbench.envelope import L1DftOutput, cif_hash_from_text
 
 H2_CIF = read_fixture("structures", "H2", "structure.cif")
 
@@ -37,7 +36,7 @@ def test_engine_is_abinit(solver: AbinitAiiDASolver) -> None:
 
 
 def test_submit_job_returns_envelope(solver: AbinitAiiDASolver, h2_params: L1JobParams) -> None:
-    from zer0pa_materials.envelope import Envelope
+    from zer0pa_materials_workbench.envelope import Envelope
     envelope = solver.submit_job(H2_CIF, h2_params)
     assert isinstance(envelope, Envelope)
 

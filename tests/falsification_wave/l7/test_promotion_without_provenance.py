@@ -2,9 +2,7 @@
 
 from __future__ import annotations
 
-import pytest
-
-from zer0pa_materials.falsifiers.l7_falsifiers import candidate_promotion_provenance
+from zer0pa_materials_workbench.falsifiers.l7_falsifiers import candidate_promotion_provenance
 
 
 def test_missing_audit_record_id_triggers_falsifier():

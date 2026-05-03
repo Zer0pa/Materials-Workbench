@@ -60,3 +60,5 @@ checkpoints/
 *.log
 logs/
 :memory:
+.claude/
+.venv-rename/

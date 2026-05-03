@@ -7,8 +7,8 @@ a second stub call to confirm the adapter contract is stable.
 
 import pytest
 
-from zer0pa_materials.adapters.phase0.optimade import OptimadeFederatedQueryAdapter
-from zer0pa_materials.envelope.envelope import Envelope
+from zer0pa_materials_workbench.adapters.phase0.optimade import OptimadeFederatedQueryAdapter
+from zer0pa_materials_workbench.envelope.envelope import Envelope
 
 
 @pytest.fixture
@@ -57,7 +57,7 @@ class TestOptimadeSwapSchemaParity:
 
     def test_schema_json_schema_stable(self):
         """The JSON Schema for phase0 output must not drift between backends."""
-        from zer0pa_materials.envelope.layer_outputs import Phase0Output
+        from zer0pa_materials_workbench.envelope.layer_outputs import Phase0Output
         schema = Phase0Output.model_json_schema()
         assert "extracted_properties" in str(schema)
         assert "units_normalised" in str(schema)

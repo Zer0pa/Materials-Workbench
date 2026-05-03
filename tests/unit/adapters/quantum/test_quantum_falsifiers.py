@@ -4,22 +4,21 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.adapters.quantum.pennylane_vqe import PennyLaneVqeSolver
-from zer0pa_materials.adapters.l1.pyscf import _H2_FCI_Ha, _LIH_CASCI_Ha
-from zer0pa_materials.envelope import (
+from zer0pa_materials_workbench.adapters.l1.pyscf import _H2_FCI_Ha, _LIH_CASCI_Ha
+from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
+from zer0pa_materials_workbench.envelope import (
     AuditBlock,
     Envelope,
     L1QuantumVqeOutput,
     RightsBlock,
     ToolAdapter,
-    sha256_of,
     canonical_json_bytes,
+    sha256_of,
 )
-from zer0pa_materials.boundary import RESEARCH_BOUNDARY
-from zer0pa_materials.falsifiers.quantum_falsifiers import (
+from zer0pa_materials_workbench.falsifiers.quantum_falsifiers import (
+    quantum_slot_classical_simulation_only,
     vqe_h2_classical_match,
     vqe_lih_active_space_match,
-    quantum_slot_classical_simulation_only,
 )
 
 

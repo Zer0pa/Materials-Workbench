@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.adapters.quantum.dispatcher import QuantumProblemDispatcher
-from zer0pa_materials.envelope import Envelope, L1QuantumVqeOutput
+from zer0pa_materials_workbench.adapters.quantum.dispatcher import QuantumProblemDispatcher
+from zer0pa_materials_workbench.envelope import Envelope, L1QuantumVqeOutput
 
 
 @pytest.fixture
@@ -76,7 +76,7 @@ def test_l4_blocked_reason_is_other(dispatcher: QuantumProblemDispatcher) -> Non
 
 
 def test_l1_vqe_envelope_passes_falsifier_gate(dispatcher: QuantumProblemDispatcher) -> None:
-    from zer0pa_materials.falsifiers.quantum_falsifiers import vqe_h2_classical_match
+    from zer0pa_materials_workbench.falsifiers.quantum_falsifiers import vqe_h2_classical_match
     envelope = dispatcher.dispatch(slot="L1-VQE", system="H2")
     item = vqe_h2_classical_match(envelope)
     assert item.status == "pass"

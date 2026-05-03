@@ -15,7 +15,7 @@ from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 
-from zer0pa_materials.services.packets_service import (
+from zer0pa_materials_workbench.services.packets_service import (
     PACKETS_SERVICE_NAME,
     PACKETS_SERVICE_VERSION,
     create_packets_app,

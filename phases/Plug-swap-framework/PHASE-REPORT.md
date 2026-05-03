@@ -23,9 +23,9 @@ invariant. The invariant is no longer documented by assertion — it is
 
 | File | LOC | Purpose |
 |------|-----|---------|
-| `src/zer0pa_materials/plugswap/__init__.py` | 36 | Module public surface |
-| `src/zer0pa_materials/plugswap/framework.py` | 717 | PlugSwapHarness, SwapRegistry, PlugSwapResult, assertion methods |
-| `src/zer0pa_materials/plugswap/timing.py` | 195 | measure_swap_wallclock, SwapWallclockResult |
+| `src/zer0pa_materials_workbench/plugswap/__init__.py` | 36 | Module public surface |
+| `src/zer0pa_materials_workbench/plugswap/framework.py` | 717 | PlugSwapHarness, SwapRegistry, PlugSwapResult, assertion methods |
+| `src/zer0pa_materials_workbench/plugswap/timing.py` | 195 | measure_swap_wallclock, SwapWallclockResult |
 | `tests/plug_swap/conftest.py` | 420 | Shared fixtures: plug_swap_registry, plug_swap_harness; all 11 layers registered |
 | `tests/plug_swap/cross_layer/__init__.py` | 0 | Package marker |
 | `tests/plug_swap/cross_layer/test_every_layer_has_swap_test.py` | 72 | PRD §Acceptance Gates: each layer has ≥1 plug-swap test |

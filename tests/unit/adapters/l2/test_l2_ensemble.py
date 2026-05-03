@@ -4,12 +4,11 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.adapters.l2.base import L2PredictRequest
-from zer0pa_materials.adapters.l2.ensemble import L2EnsembleRunner, _decide_routing
-from zer0pa_materials.boundary import RESEARCH_BOUNDARY
-from zer0pa_materials.envelope.envelope import Envelope
-from zer0pa_materials.envelope.layer_outputs import L2MlipOutput
-
+from zer0pa_materials_workbench.adapters.l2.base import L2PredictRequest
+from zer0pa_materials_workbench.adapters.l2.ensemble import L2EnsembleRunner, _decide_routing
+from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
+from zer0pa_materials_workbench.envelope.envelope import Envelope
+from zer0pa_materials_workbench.envelope.layer_outputs import L2MlipOutput
 
 SI_STRUCTURE = {
     "lattice_vectors": [[3.84, 0.0, 0.0], [0.0, 3.84, 0.0], [0.0, 0.0, 3.84]],
@@ -168,7 +167,7 @@ class TestSingleModelPromotionBlocked:
 
     def test_single_model_envelope_fails_falsifier(self):
         """Envelope with single model + routing_decision=promote fails single_model_promotion_block."""
-        from zer0pa_materials.falsifiers.l2_falsifiers import single_model_promotion_block
+        from zer0pa_materials_workbench.falsifiers.l2_falsifiers import single_model_promotion_block
 
         single_model_envelope = {
             "output": {
@@ -182,7 +181,7 @@ class TestSingleModelPromotionBlocked:
         assert result.status == "fail"
 
     def test_dual_model_promote_passes_falsifier(self):
-        from zer0pa_materials.falsifiers.l2_falsifiers import single_model_promotion_block
+        from zer0pa_materials_workbench.falsifiers.l2_falsifiers import single_model_promotion_block
 
         dual_model_envelope = {
             "output": {

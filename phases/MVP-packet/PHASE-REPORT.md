@@ -14,7 +14,7 @@ Wave 5a delivers the publishable-paper deliverable per PRD §Final Output Requir
 
 ## Source files
 
-### `src/zer0pa_materials/packets/` (this wave's exclusive directory)
+### `src/zer0pa_materials_workbench/packets/` (this wave's exclusive directory)
 
 | File | LOC | Purpose |
 |---|---|---|
@@ -26,7 +26,7 @@ Wave 5a delivers the publishable-paper deliverable per PRD §Final Output Requir
 | `validators.py` | 428 | `validate_evidence_packet` runs 13 falsifier checks; produces `ValidationReport` with overall status |
 | `ro_crate_export.py` | 206 | `export_packet_to_ro_crate` + `parse_packet_ro_crate` round-trip; uses A1's `RoCrateEntry` + `write_ro_crate_metadata` primitives |
 
-### `src/zer0pa_materials/cli/packets.py` (228 LOC)
+### `src/zer0pa_materials_workbench/cli/packets.py` (228 LOC)
 
 `packets` Typer subapp with subcommands:
 - `packets healthz`
@@ -36,7 +36,7 @@ Wave 5a delivers the publishable-paper deliverable per PRD §Final Output Requir
 - `packets validate <packet-path>`
 - `packets export-ro-crate <packet-path> <out-dir>`
 
-### `src/zer0pa_materials/services/packets_service.py` (238 LOC)
+### `src/zer0pa_materials_workbench/services/packets_service.py` (238 LOC)
 
 FastAPI service with 6 endpoints:
 - `GET  /v1/packets/healthz`
@@ -46,7 +46,7 @@ FastAPI service with 6 endpoints:
 - `POST /v1/packets/validate`
 - `POST /v1/packets/export-ro-crate`
 
-### `src/zer0pa_materials/falsifiers/packet_falsifiers.py` (357 LOC)
+### `src/zer0pa_materials_workbench/falsifiers/packet_falsifiers.py` (357 LOC)
 
 Seven packet-level falsifiers:
 - `packet_completeness` — every PRD-required section present
@@ -126,10 +126,10 @@ PRD §AlabOS Integration: "Default ALABOS_MODE='recipe_only' until Phase 2." Two
 
 ## File ownership compliance
 
-- WROTE (exclusive): `src/zer0pa_materials/packets/__init__.py`, `evidence_packet.py`, `battery_packet.py`, `thermoelectric_packet.py`, `_envelope_builders.py`, `validators.py`, `ro_crate_export.py`
-- WROTE (exclusive): `src/zer0pa_materials/cli/packets.py`
-- WROTE (exclusive): `src/zer0pa_materials/services/packets_service.py`
-- WROTE (exclusive): `src/zer0pa_materials/falsifiers/packet_falsifiers.py`
+- WROTE (exclusive): `src/zer0pa_materials_workbench/packets/__init__.py`, `evidence_packet.py`, `battery_packet.py`, `thermoelectric_packet.py`, `_envelope_builders.py`, `validators.py`, `ro_crate_export.py`
+- WROTE (exclusive): `src/zer0pa_materials_workbench/cli/packets.py`
+- WROTE (exclusive): `src/zer0pa_materials_workbench/services/packets_service.py`
+- WROTE (exclusive): `src/zer0pa_materials_workbench/falsifiers/packet_falsifiers.py`
 - WROTE (exclusive): `tests/unit/packets/`, `tests/contract/packets/`, `tests/integration/packets/`
 - WROTE: `phases/MVP-packet/PHASE-REPORT.md` (this file)
 
@@ -150,10 +150,10 @@ DID NOT TOUCH:
 
 ## CLI integration (deferred to lead agent)
 
-The brief states: "DO NOT touch `cli/main.py` (I will wire your subapp afterwards)." `packets_app` is exported from `zer0pa_materials.cli.packets`. The lead agent's wiring change is a single line:
+The brief states: "DO NOT touch `cli/main.py` (I will wire your subapp afterwards)." `packets_app` is exported from `zer0pa_materials_workbench.cli.packets`. The lead agent's wiring change is a single line:
 
 ```python
-from zer0pa_materials.cli.packets import packets_app
+from zer0pa_materials_workbench_workbench.cli.packets import packets_app
 app.add_typer(packets_app, name="packets")
 ```
 

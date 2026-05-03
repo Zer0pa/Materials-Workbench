@@ -12,7 +12,7 @@ This phase delivers the verifiable record layer for Meta UMA enablement. Wave 3A
 
 | Artifact | Path | Purpose |
 |---|---|---|
-| Schema + falsifier + wrapper | `src/zer0pa_materials/falsifiers/uma_manifest.py` | `UmaAupLicenseManifest` Pydantic model, `verify_uma_manifest`, `enable_uma_with_manifest` wrapper |
+| Schema + falsifier + wrapper | `src/zer0pa_materials_workbench/falsifiers/uma_manifest.py` | `UmaAupLicenseManifest` Pydantic model, `verify_uma_manifest`, `enable_uma_with_manifest` wrapper |
 | Starter manifest | `phases/UMA-license/manifest.json` | Operator-fillable; INTENTIONALLY rejects until filled. |
 | Template manifest | `phases/UMA-license/manifest.template.json` | Safe defaults (ZA jurisdiction, ownership ack, valid timestamps). The operator copies this and fills the placeholder fields. |
 | Tests | `tests/unit/falsifiers/test_uma_manifest.py` | 22 tests covering schema, hash recompute, restricted jurisdictions, future timestamps, ownership, repo-committed manifests, wrapper behaviour. |
@@ -48,10 +48,10 @@ class UmaAupLicenseManifest(BaseModel):
 ## Verification path
 
 ```python
-from zer0pa_materials.falsifiers.uma_manifest import (
+from zer0pa_materials_workbench_workbench.falsifiers.uma_manifest import (
     enable_uma_with_manifest, verify_uma_manifest
 )
-from zer0pa_materials.adapters.l2.uma import UmaCalculatorAdapter
+from zer0pa_materials_workbench_workbench.adapters.l2.uma import UmaCalculatorAdapter
 
 adapter = UmaCalculatorAdapter()
 # Refuses to unblock unless manifest verifies
@@ -76,12 +76,12 @@ enable_uma_with_manifest(
 2. Replace the `TEMPLATE-REPLACE-WITH-*` placeholders with real values.
 3. Recompute the hash:
    ```python
-   from zer0pa_materials.falsifiers.uma_manifest import compute_manifest_hash
+   from zer0pa_materials_workbench_workbench.falsifiers.uma_manifest import compute_manifest_hash
    payload["hash"] = compute_manifest_hash(payload)
    ```
 4. Validate:
    ```python
-   from zer0pa_materials.falsifiers.uma_manifest import verify_uma_manifest
+   from zer0pa_materials_workbench_workbench.falsifiers.uma_manifest import verify_uma_manifest
    item = verify_uma_manifest("phases/UMA-license/manifest.json")
    assert item.status == "pass"
    ```

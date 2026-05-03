@@ -9,10 +9,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-import pytest
-
-from zer0pa_materials.falsifiers.l7_falsifiers import tenant_only_tuple_leak
-
+from zer0pa_materials_workbench.falsifiers.l7_falsifiers import tenant_only_tuple_leak
 
 FIXTURE_ROOT = Path(__file__).resolve().parents[3] / "fixtures" / "negatives" / "tenant_only_tuple_leak"
 

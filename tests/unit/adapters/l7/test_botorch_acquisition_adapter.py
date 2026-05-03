@@ -4,9 +4,9 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.adapters.l7 import BoTorchAcquisitionAdapter, ForbiddenAcquisitionError
-from zer0pa_materials.adapters.l7.base import L7CampaignParams
-from zer0pa_materials.adapters.l7.botorch_acquisition import AcquisitionInput
+from zer0pa_materials_workbench.adapters.l7 import BoTorchAcquisitionAdapter, ForbiddenAcquisitionError
+from zer0pa_materials_workbench.adapters.l7.base import L7CampaignParams
+from zer0pa_materials_workbench.adapters.l7.botorch_acquisition import AcquisitionInput
 
 
 def _ai(cid: str, var: float = 0.05, fidelities: dict[str, float] | None = None) -> AcquisitionInput:

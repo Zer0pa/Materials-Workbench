@@ -64,7 +64,7 @@ Research infrastructure for in silico materials science discovery. Outputs are r
 
 When downstream waves spawn:
 
-1. `from zer0pa_materials.audit import AuditLog, MaterialsKG, SourceManifest, BlockedSourceManifest, RightsClaim, assert_rights_for, Decision, ReasonerTuple` (or via `from zer0pa_materials.reasoner import ReasonerTuple`).
+1. `from zer0pa_materials_workbench_workbench.audit import AuditLog, MaterialsKG, SourceManifest, BlockedSourceManifest, RightsClaim, assert_rights_for, Decision, ReasonerTuple` (or via `from zer0pa_materials_workbench_workbench.reasoner import ReasonerTuple`).
 2. Resolve the audit dir via `MaterialsConfig.from_env().runtime_paths()["audit_dir"]`.
 3. Open one shared `AuditLog` per process.
 4. For every adapter call, append a `runs.jsonl` row at start, an `events.jsonl` row at completion, and the layer-specific JSONL (`disagreement`, `falsifiers`, `parameters`).

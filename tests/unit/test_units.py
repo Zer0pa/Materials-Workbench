@@ -6,15 +6,14 @@ import math
 
 import pytest
 
-from zer0pa_materials.envelope import (
+from zer0pa_materials_workbench.envelope import (
     CANONICAL_UNITS,
-    DimensionalityError,
     UREG,
+    DimensionalityError,
+    format_canonical,
     parse_quantity,
     to_canonical,
-    format_canonical,
 )
-
 
 # ----------------------------------------------------------------------------
 # parse_quantity coverage

@@ -2,11 +2,9 @@
 
 from __future__ import annotations
 
-import math
-
 import pytest
 
-from zer0pa_materials.adapters.ionic.nernst_einstein import (
+from zer0pa_materials_workbench.adapters.ionic.nernst_einstein import (
     BOLTZMANN_J_PER_K,
     ELEMENTARY_CHARGE_C,
     HavenRatio,

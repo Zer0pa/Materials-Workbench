@@ -10,13 +10,12 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.adapters.l2.base import L2PredictRequest
-from zer0pa_materials.adapters.l2.deepmd_dpa import DeepmdDpaCalculatorAdapter
-from zer0pa_materials.adapters.l2.ensemble import L2EnsembleRunner
-from zer0pa_materials.adapters.l2.mace_mp import MaceMpCalculatorAdapter
-from zer0pa_materials.envelope.envelope import Envelope
-from zer0pa_materials.envelope.layer_outputs import L2MlipOutput
-
+from zer0pa_materials_workbench.adapters.l2.base import L2PredictRequest
+from zer0pa_materials_workbench.adapters.l2.deepmd_dpa import DeepmdDpaCalculatorAdapter
+from zer0pa_materials_workbench.adapters.l2.ensemble import L2EnsembleRunner
+from zer0pa_materials_workbench.adapters.l2.mace_mp import MaceMpCalculatorAdapter
+from zer0pa_materials_workbench.envelope.envelope import Envelope
+from zer0pa_materials_workbench.envelope.layer_outputs import L2MlipOutput
 
 SI_STRUCTURE = {
     "lattice_vectors": [[3.84, 0.0, 0.0], [0.0, 3.84, 0.0], [0.0, 0.0, 3.84]],

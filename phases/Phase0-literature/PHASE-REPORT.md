@@ -10,7 +10,7 @@ Phase 0 (literature/knowledge mining) implements the four adapters, falsifiers, 
 
 ## Files created
 
-### Source modules (under `src/zer0pa_materials/`)
+### Source modules (under `src/zer0pa_materials_workbench/`)
 
 | Path | Purpose |
 |---|---|
@@ -52,7 +52,7 @@ Phase 0 (literature/knowledge mining) implements the four adapters, falsifiers, 
 
 5. **`assert_kg_nodes_for` uses `KGNodeType.LiteratureSource` and `KGNodeType.PropertyObservation`.** The `MaterialsKG` enum members are PascalCase (`.LiteratureSource`, `.PropertyObservation`), not SCREAMING_SNAKE_CASE. Initial draft used `.LITERATURE_SOURCE` which would silently pass all nodes without filtering.
 
-6. **LangGraph adapter reads from `fixtures/extractions/` at runtime.** Originally used `Path(__file__).parents[4] / "fixtures" / "extractions"`; replaced (Wave A) with the central `zer0pa_materials.repo_root.fixtures_root() / "extractions"` so the adapter works on any machine and any clone path. Fixture keys: `LLZO`, `Li6PS5Cl`, `Li-Mg-Zr-Cl-seed`.
+6. **LangGraph adapter reads from `fixtures/extractions/` at runtime.** Originally used `Path(__file__).parents[4] / "fixtures" / "extractions"`; replaced (Wave A) with the central `zer0pa_materials_workbench.repo_root.fixtures_root() / "extractions"` so the adapter works on any machine and any clone path. Fixture keys: `LLZO`, `Li6PS5Cl`, `Li-Mg-Zr-Cl-seed`.
 
 ## Falsifier summary
 

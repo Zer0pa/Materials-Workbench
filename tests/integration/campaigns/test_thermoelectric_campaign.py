@@ -27,25 +27,19 @@ from typing import Any
 
 import pytest
 
-from zer0pa_materials.adapters.l1.base import L1JobParams
-from zer0pa_materials.adapters.l1.qe_aiida import QuantumEspressoAiiDASolver
-from zer0pa_materials.adapters.l1_5.base import L15JobParams
-from zer0pa_materials.adapters.l1_5.zt_assembler import (
-    ThermoelectricZtAssembler,
+from zer0pa_materials_workbench.adapters.l1.base import L1JobParams
+from zer0pa_materials_workbench.adapters.l1.qe_aiida import QuantumEspressoAiiDASolver
+from zer0pa_materials_workbench.adapters.l1_5.base import L15JobParams
+from zer0pa_materials_workbench.adapters.l1_5.zt_assembler import (
     ZT_THRESHOLD_HIGH,
+    ThermoelectricZtAssembler,
 )
-from zer0pa_materials.adapters.l2.base import L2PredictRequest
-from zer0pa_materials.adapters.l2.ensemble import L2EnsembleRunner
-from zer0pa_materials.audit.kg import MaterialsKG
-from zer0pa_materials.audit.log import AuditLog
-from zer0pa_materials.audit.rights import RightsClaim
-from zer0pa_materials.envelope.envelope import Envelope
-from zer0pa_materials.orchestration import Campaign, CampaignSpec
-from zer0pa_materials.orchestration.acceptance_gates import (
-    AcceptanceGate,
-    GateContext,
-)
-
+from zer0pa_materials_workbench.adapters.l2.base import L2PredictRequest
+from zer0pa_materials_workbench.adapters.l2.ensemble import L2EnsembleRunner
+from zer0pa_materials_workbench.audit.kg import MaterialsKG
+from zer0pa_materials_workbench.audit.log import AuditLog
+from zer0pa_materials_workbench.envelope.envelope import Envelope
+from zer0pa_materials_workbench.orchestration import Campaign, CampaignSpec
 
 # ---------------------------------------------------------------------------
 # Material configurations

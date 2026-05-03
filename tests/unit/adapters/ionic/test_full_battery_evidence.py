@@ -4,12 +4,12 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.adapters.ionic.base import (
+from zer0pa_materials_workbench.adapters.ionic.base import (
     IONIC_TRANSPORT_SERVICE_REF,
     IonicJobParams,
 )
-from zer0pa_materials.falsifiers.ionic_falsifiers import REQUIRED_EVIDENCE_KEYS
-from zer0pa_materials.services.ionic_transport_service import (
+from zer0pa_materials_workbench.falsifiers.ionic_falsifiers import REQUIRED_EVIDENCE_KEYS
+from zer0pa_materials_workbench.services.ionic_transport_service import (
     BatteryEvidenceBundle,
     run_full_battery_evidence,
 )

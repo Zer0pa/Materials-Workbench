@@ -4,9 +4,9 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.adapters.l7 import Atomate2WorkflowAdapter
-from zer0pa_materials.adapters.l7.atomate2_workflow import WORKFLOW_TEMPLATES
-from zer0pa_materials.adapters.l7.base import L7CampaignParams
+from zer0pa_materials_workbench.adapters.l7 import Atomate2WorkflowAdapter
+from zer0pa_materials_workbench.adapters.l7.atomate2_workflow import WORKFLOW_TEMPLATES
+from zer0pa_materials_workbench.adapters.l7.base import L7CampaignParams
 
 
 def _params() -> L7CampaignParams:

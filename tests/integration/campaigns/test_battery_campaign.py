@@ -26,34 +26,29 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-import pytest
-
-from zer0pa_materials.adapters.ionic.base import IonicJobParams
-from zer0pa_materials.adapters.l1.base import L1JobParams
-from zer0pa_materials.adapters.l1.qe_aiida import QuantumEspressoAiiDASolver
-from zer0pa_materials.adapters.l1_5.base import L15JobParams
-from zer0pa_materials.adapters.l1_5.phonopy_harmonic import PhonopyHarmonicAdapter
-from zer0pa_materials.adapters.l2.base import L2PredictRequest
-from zer0pa_materials.adapters.l2.ensemble import L2EnsembleRunner
-from zer0pa_materials.audit.kg import MaterialsKG
-from zer0pa_materials.audit.log import AuditLog
-from zer0pa_materials.audit.rights import RightsClaim
-from zer0pa_materials.boundary import RESEARCH_BOUNDARY
-from zer0pa_materials.envelope.envelope import Envelope
-from zer0pa_materials.orchestration import Campaign, CampaignSpec
-from zer0pa_materials.orchestration.acceptance_gates import (
+from zer0pa_materials_workbench.adapters.ionic.base import IonicJobParams
+from zer0pa_materials_workbench.adapters.l1.base import L1JobParams
+from zer0pa_materials_workbench.adapters.l1.qe_aiida import QuantumEspressoAiiDASolver
+from zer0pa_materials_workbench.adapters.l1_5.base import L15JobParams
+from zer0pa_materials_workbench.adapters.l1_5.phonopy_harmonic import PhonopyHarmonicAdapter
+from zer0pa_materials_workbench.adapters.l2.base import L2PredictRequest
+from zer0pa_materials_workbench.adapters.l2.ensemble import L2EnsembleRunner
+from zer0pa_materials_workbench.audit.kg import MaterialsKG
+from zer0pa_materials_workbench.audit.log import AuditLog
+from zer0pa_materials_workbench.audit.rights import RightsClaim
+from zer0pa_materials_workbench.envelope.envelope import Envelope
+from zer0pa_materials_workbench.orchestration import Campaign, CampaignSpec
+from zer0pa_materials_workbench.orchestration.acceptance_gates import (
     AcceptanceGate,
     GateContext,
 )
-from zer0pa_materials.orchestration.disagreement_aggregator import (
-    AggregateDisagreement,
+from zer0pa_materials_workbench.orchestration.disagreement_aggregator import (
     CrossLayerDisagreementAggregator,
 )
-from zer0pa_materials.services.ionic_transport_service import (
+from zer0pa_materials_workbench.services.ionic_transport_service import (
     promote_battery_candidate,
     run_full_battery_evidence,
 )
-
 
 # ---------------------------------------------------------------------------
 # Fixture data — mirrors the calibrated stubs in the adapters
@@ -310,10 +305,6 @@ class TestLLZOCubicCampaign:
         ionic_params = _make_ionic_params(LLZO_CUBIC_FIXTURE, campaign_id, cid)
         ionic_bundle = run_full_battery_evidence(ionic_params)
 
-        from zer0pa_materials.adapters.ionic.base import (
-            make_ionic_envelope,
-            IonicTransportOutput,
-        )
         # Build a composite ionic envelope from bundle.
         # The bundle represents the chain — we use the chain_complete status as proxy.
         # Gate evaluates ionic evidence via promote_battery_candidate.
@@ -399,7 +390,7 @@ class TestLLZOTetragonalCampaign:
 
     def test_conductivity_lower_than_cubic(self, tmp_path: Path) -> None:
         """Tetragonal MLIP-MD D is much lower than cubic."""
-        from zer0pa_materials.adapters.ionic.mlip_md import MlipMdDiffusionAdapter
+        from zer0pa_materials_workbench.adapters.ionic.mlip_md import MlipMdDiffusionAdapter
 
         cubic_params = _make_ionic_params(
             LLZO_CUBIC_FIXTURE,
@@ -423,7 +414,7 @@ class TestLLZOTetragonalCampaign:
 
     def test_electrochemical_window_wide_like_cubic(self, tmp_path: Path) -> None:
         """Tetragonal LLZO has same wide oxidation window as cubic."""
-        from zer0pa_materials.adapters.ionic.electrochemical_window import (
+        from zer0pa_materials_workbench.adapters.ionic.electrochemical_window import (
             ElectrochemicalWindowAdapter,
         )
 
@@ -475,7 +466,7 @@ class TestLi6PS5ClCampaign:
     """Li6PS5Cl fails the oxidation gate and must be rejected."""
 
     def test_electrochemical_window_fails_gate(self, tmp_path: Path) -> None:
-        from zer0pa_materials.adapters.ionic.electrochemical_window import (
+        from zer0pa_materials_workbench.adapters.ionic.electrochemical_window import (
             ElectrochemicalWindowAdapter,
         )
 
@@ -588,7 +579,7 @@ class TestLiMgZrClSeedCampaign:
         )
 
     def test_oxidation_window_marginal_but_passes(self, tmp_path: Path) -> None:
-        from zer0pa_materials.adapters.ionic.electrochemical_window import (
+        from zer0pa_materials_workbench.adapters.ionic.electrochemical_window import (
             ElectrochemicalWindowAdapter,
         )
 
@@ -606,7 +597,7 @@ class TestLiMgZrClSeedCampaign:
         )
 
     def test_interface_stability_requires_coating(self, tmp_path: Path) -> None:
-        from zer0pa_materials.adapters.ionic.interface_stability import (
+        from zer0pa_materials_workbench.adapters.ionic.interface_stability import (
             InterfaceStabilityAdapter,
         )
 

@@ -14,21 +14,20 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.adapters.l4.base import L4PredictRequest
-from zer0pa_materials.adapters.l4.contracts import (
+from zer0pa_materials_workbench.adapters.l4.base import L4PredictRequest
+from zer0pa_materials_workbench.adapters.l4.contracts import (
     PhaseFieldDomain,
     PhaseFieldMaterial,
     PhaseFieldMesh,
     PhaseFieldRunSpec,
 )
-from zer0pa_materials.adapters.l4.ensemble import L4SolverEnsemble
-from zer0pa_materials.adapters.l4.moose import MoosePhaseFieldAdapter
-from zer0pa_materials.adapters.l4.neural_operator import NeuralOperatorPhaseFieldAdapter
-from zer0pa_materials.adapters.l4.prisms_pf import PrismsPfAdapter
-from zer0pa_materials.envelope.envelope import Envelope
-from zer0pa_materials.envelope.layer_outputs import L4PhaseFieldOutput
-from zer0pa_materials.falsifiers.l4_falsifiers import plug_swap_schema_invariance
-
+from zer0pa_materials_workbench.adapters.l4.ensemble import L4SolverEnsemble
+from zer0pa_materials_workbench.adapters.l4.moose import MoosePhaseFieldAdapter
+from zer0pa_materials_workbench.adapters.l4.neural_operator import NeuralOperatorPhaseFieldAdapter
+from zer0pa_materials_workbench.adapters.l4.prisms_pf import PrismsPfAdapter
+from zer0pa_materials_workbench.envelope.envelope import Envelope
+from zer0pa_materials_workbench.envelope.layer_outputs import L4PhaseFieldOutput
+from zer0pa_materials_workbench.falsifiers.l4_falsifiers import plug_swap_schema_invariance
 
 SPEC = PhaseFieldRunSpec(
     equation="cahn_hilliard",

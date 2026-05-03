@@ -2,12 +2,11 @@
 
 import pytest
 
-from zer0pa_materials.adapters.l6.lematgen_eval import (
+from zer0pa_materials_workbench.adapters.l6.diffcsp import DiffCspGeneratorAdapter
+from zer0pa_materials_workbench.adapters.l6.lematgen_eval import (
     LeMatGenBenchEvaluatorAdapter,
-    LeMatGenBenchResult,
 )
-from zer0pa_materials.adapters.l6.mattergen import MatterGenGeneratorAdapter
-from zer0pa_materials.adapters.l6.diffcsp import DiffCspGeneratorAdapter
+from zer0pa_materials_workbench.adapters.l6.mattergen import MatterGenGeneratorAdapter
 
 
 @pytest.fixture
@@ -102,13 +101,13 @@ class TestLeMatGenBenchFixtureHashes:
     """Verify the fixture hash loader works."""
 
     def test_load_fixture_hashes_returns_set(self):
-        from zer0pa_materials.adapters.l6.lematgen_eval import _load_fixture_hashes
+        from zer0pa_materials_workbench.adapters.l6.lematgen_eval import _load_fixture_hashes
         hashes = _load_fixture_hashes()
         assert isinstance(hashes, set)
         assert len(hashes) >= 5, "Should load at least 5 positive fixture hashes."
 
     def test_llzo_cubic_hash_in_fixture_set(self):
-        from zer0pa_materials.adapters.l6.lematgen_eval import _load_fixture_hashes
+        from zer0pa_materials_workbench.adapters.l6.lematgen_eval import _load_fixture_hashes
         hashes = _load_fixture_hashes()
         llzo_hash = "sha256:d45cb2bfe5e76b86b365e1402e118ed32280049a62345c903558c6cfac04ef19"
         assert llzo_hash in hashes, "LLZO cubic hash must be in reference set."

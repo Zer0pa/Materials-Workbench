@@ -19,14 +19,12 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.boundary import RESEARCH_BOUNDARY
-from zer0pa_materials.envelope.hashing import HASH_REGEX
-from zer0pa_materials.runpod.mock_backends import (
-    build_runpod_mock_envelope,
-    MOCK_RESOURCE_METRICS,
+from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
+from zer0pa_materials_workbench.envelope.hashing import HASH_REGEX
+from zer0pa_materials_workbench.runpod.mock_backends import (
     RUNPOD_MOCK_LAYERS,
+    build_runpod_mock_envelope,
 )
-
 
 # ---------------------------------------------------------------------------
 # Shared seed inputs (same inputs used for local_stub stubs AND runpod_mock)

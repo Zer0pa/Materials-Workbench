@@ -15,9 +15,7 @@ from pathlib import Path
 
 import pytest
 
-from zer0pa_materials.boundary import RESEARCH_BOUNDARY
-from zer0pa_materials.envelope import Envelope, FalsifierItem
-from zer0pa_materials.falsifiers.packet_falsifiers import (
+from zer0pa_materials_workbench.falsifiers.packet_falsifiers import (
     packet_alabos_recipe_only_section,
     packet_boundary_carriage,
     packet_completeness,
@@ -26,10 +24,9 @@ from zer0pa_materials.falsifiers.packet_falsifiers import (
     packet_publishable_paper_target_set,
     packet_ro_crate_round_trip,
 )
-from zer0pa_materials.packets import assemble_battery_packet
-from zer0pa_materials.packets.evidence_packet import (
+from zer0pa_materials_workbench.packets import assemble_battery_packet
+from zer0pa_materials_workbench.packets.evidence_packet import (
     EvidencePacket,
-    PacketSection,
 )
 
 
@@ -169,7 +166,7 @@ def test_packet_alabos_recipe_only_section_fail_on_hardware_executable(
 
 def test_packet_alabos_recipe_only_section_vacuous_pass_for_thermoelectric() -> None:
     """Thermoelectric packets have no AlabOS section; falsifier vacuously passes."""
-    from zer0pa_materials.packets import assemble_thermoelectric_packet
+    from zer0pa_materials_workbench.packets import assemble_thermoelectric_packet
 
     p = assemble_thermoelectric_packet("Bi2Te3")
     item = packet_alabos_recipe_only_section(p)

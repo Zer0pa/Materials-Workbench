@@ -4,24 +4,23 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.adapters.ionic.aimd import AimdDiffusionAdapter
-from zer0pa_materials.adapters.ionic.arrhenius import (
+from zer0pa_materials_workbench.adapters.ionic.aimd import AimdDiffusionAdapter
+from zer0pa_materials_workbench.adapters.ionic.arrhenius import (
     ArrheniusFitAdapter,
     ArrheniusFitParams,
 )
-from zer0pa_materials.adapters.ionic.base import (
-    IONIC_TRANSPORT_SERVICE_REF,
+from zer0pa_materials_workbench.adapters.ionic.base import (
     IonicJobParams,
 )
-from zer0pa_materials.adapters.ionic.electrochemical_window import (
+from zer0pa_materials_workbench.adapters.ionic.electrochemical_window import (
     ElectrochemicalWindowAdapter,
 )
-from zer0pa_materials.adapters.ionic.interface_stability import (
+from zer0pa_materials_workbench.adapters.ionic.interface_stability import (
     InterfaceStabilityAdapter,
 )
-from zer0pa_materials.adapters.ionic.mlip_md import MlipMdDiffusionAdapter
-from zer0pa_materials.adapters.ionic.neb import NebMigrationBarrierAdapter
-from zer0pa_materials.falsifiers.ionic_falsifiers import (
+from zer0pa_materials_workbench.adapters.ionic.mlip_md import MlipMdDiffusionAdapter
+from zer0pa_materials_workbench.adapters.ionic.neb import NebMigrationBarrierAdapter
+from zer0pa_materials_workbench.falsifiers.ionic_falsifiers import (
     REQUIRED_EVIDENCE_KEYS,
     activation_energy_target_threshold,
     arrhenius_fit_quality,

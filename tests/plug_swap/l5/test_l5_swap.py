@@ -10,13 +10,12 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.adapters.l5.base import L5ContinuumRequest
-from zer0pa_materials.adapters.l5.fenicsx import FEniCSxContinuumAdapter
-from zer0pa_materials.adapters.l5.dealii import DealIIStructuralAdapter
-from zer0pa_materials.adapters.l5.openfoam import OpenFOAMProcessAdapter
-from zer0pa_materials.envelope.envelope import Envelope
-from zer0pa_materials.envelope.layer_outputs import L5ContinuumOutput
-
+from zer0pa_materials_workbench.adapters.l5.base import L5ContinuumRequest
+from zer0pa_materials_workbench.adapters.l5.dealii import DealIIStructuralAdapter
+from zer0pa_materials_workbench.adapters.l5.fenicsx import FEniCSxContinuumAdapter
+from zer0pa_materials_workbench.adapters.l5.openfoam import OpenFOAMProcessAdapter
+from zer0pa_materials_workbench.envelope.envelope import Envelope
+from zer0pa_materials_workbench.envelope.layer_outputs import L5ContinuumOutput
 
 _REQ_STUB = L5ContinuumRequest(
     run_id="run:swap/l5/stub/001",

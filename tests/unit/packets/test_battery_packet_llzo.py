@@ -10,14 +10,14 @@ Acceptable Use Policy and operator policy).
 
 from __future__ import annotations
 
-from zer0pa_materials.boundary import RESEARCH_BOUNDARY
-from zer0pa_materials.envelope import Envelope
-from zer0pa_materials.packets import (
+from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
+from zer0pa_materials_workbench.envelope import Envelope
+from zer0pa_materials_workbench.packets import (
     EvidencePacket,
     assemble_battery_packet,
     validate_evidence_packet,
 )
-from zer0pa_materials.packets.validators import BATTERY_REQUIRED_SECTIONS
+from zer0pa_materials_workbench.packets.validators import BATTERY_REQUIRED_SECTIONS
 
 
 def test_llzo_packet_assembles() -> None:

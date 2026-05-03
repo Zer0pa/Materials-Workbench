@@ -12,10 +12,9 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.adapters.l1_5.base import L15JobParams
-from zer0pa_materials.adapters.l1_5.zt_assembler import ThermoelectricZtAssembler
-from zer0pa_materials.envelope import L15PhononOutput, validate_layer_output
-
+from zer0pa_materials_workbench.adapters.l1_5.base import L15JobParams
+from zer0pa_materials_workbench.adapters.l1_5.zt_assembler import ThermoelectricZtAssembler
+from zer0pa_materials_workbench.envelope import L15PhononOutput, validate_layer_output
 
 _ZT_FIXTURES = [
     ("Bi2Te3", 300.0, "sha256:bi2te3_zt_swap_hash_300k_00001"),

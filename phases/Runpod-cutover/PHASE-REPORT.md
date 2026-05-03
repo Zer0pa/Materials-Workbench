@@ -27,11 +27,11 @@ falsifier code changes.
 
 | File | LOC | Description |
 |------|-----|-------------|
-| `src/zer0pa_materials/runpod/__init__.py` | 33 | Module public surface |
-| `src/zer0pa_materials/runpod/mock_backends.py` | 246 | Per-layer runpod_mock envelope factory |
-| `src/zer0pa_materials/runpod/cutover.py` | 736 | RunpodCutover orchestrator (7 steps) |
-| `src/zer0pa_materials/runpod/hard_failures.py` | 753 | 10 PRD-mandated hard-failure detectors |
-| `src/zer0pa_materials/cli/runpod.py` | 303 | CLI: precheck, sentinel, parity, hard-failures, cutover-runbook |
+| `src/zer0pa_materials_workbench/runpod/__init__.py` | 33 | Module public surface |
+| `src/zer0pa_materials_workbench/runpod/mock_backends.py` | 246 | Per-layer runpod_mock envelope factory |
+| `src/zer0pa_materials_workbench/runpod/cutover.py` | 736 | RunpodCutover orchestrator (7 steps) |
+| `src/zer0pa_materials_workbench/runpod/hard_failures.py` | 753 | 10 PRD-mandated hard-failure detectors |
+| `src/zer0pa_materials_workbench/cli/runpod.py` | 303 | CLI: precheck, sentinel, parity, hard-failures, cutover-runbook |
 
 **Total src LOC**: 2,071
 
@@ -151,8 +151,8 @@ Each detector has both pass and fail cases covered by `tests/parity/test_hard_fa
 - Phase report: `phases/Runpod-cutover/PHASE-REPORT.md`
 - Operator runbook: `docs/RUNPOD-CUTOVER.md`
 - Parity tests: `tests/parity/`
-- Runpod module: `src/zer0pa_materials/runpod/`
-- CLI: `src/zer0pa_materials/cli/runpod.py`
+- Runpod module: `src/zer0pa_materials_workbench/runpod/`
+- CLI: `src/zer0pa_materials_workbench/cli/runpod.py`
 
 ---
 
@@ -160,10 +160,10 @@ Each detector has both pass and fail cases covered by `tests/parity/test_hard_fa
 
 1. Provision Runpod A100 machine.
 2. Set `MATERIALS_MODE=runpod_rest` and all `*_BACKEND` flags in pod `.env`.
-3. Run `zer0pa-materials runpod precheck` on pod — all 7 conditions must pass.
-4. Run `zer0pa-materials runpod sentinel --backend runpod_rest` on pod.
-5. Run `zer0pa-materials runpod parity` — all parity tests must pass.
+3. Run `zer0pa-materials-workbench runpod precheck` on pod — all 7 conditions must pass.
+4. Run `zer0pa-materials-workbench runpod sentinel --backend runpod_rest` on pod.
+5. Run `zer0pa-materials-workbench runpod parity` — all parity tests must pass.
 6. Confirm no downstream code changed (`git diff`).
-7. Promote via `zer0pa-materials runpod` (operator decision).
+7. Promote via `zer0pa-materials-workbench runpod` (operator decision).
 
 See `docs/RUNPOD-CUTOVER.md` for the full runbook.

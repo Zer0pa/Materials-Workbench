@@ -178,7 +178,7 @@ $ .venv/bin/python -m pytest \
 218 passed in 4.04s
 
 $ .venv/bin/python -c "
-from zer0pa_materials.adapters.quantum.pennylane_vqe import PennyLaneVqeSolver
+from zer0pa_materials_workbench_workbench.adapters.quantum.pennylane_vqe import PennyLaneVqeSolver
 solver = PennyLaneVqeSolver()
 env = solver.solve_h2()
 o = env.output
@@ -187,7 +187,7 @@ print('H2 delta:', abs(o['ground_state_energy_Ha'] - o['classical_reference_Ha']
 H2 delta: 0.0003
 
 $ .venv/bin/python -c "
-from zer0pa_materials.adapters.quantum.pennylane_vqe import PennyLaneVqeSolver
+from zer0pa_materials_workbench_workbench.adapters.quantum.pennylane_vqe import PennyLaneVqeSolver
 solver = PennyLaneVqeSolver()
 env = solver.solve_lih()
 o = env.output

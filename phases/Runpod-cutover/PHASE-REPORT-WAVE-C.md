@@ -44,16 +44,16 @@ review:
 
 | File | LOC | Description |
 |------|----:|-------------|
-| `src/zer0pa_materials/runpod/rest_client.py` | 240 | Live `httpx` REST client with `tenacity` retry envelope, `RunpodCredentialsError` / `RunpodRestError`, and `RunpodRestClient.healthz(layer)`. |
-| `src/zer0pa_materials/runpod/dispatcher.py` | 244 | Central `RunpodDispatcher`: `is_rest_active(layer)`, `is_mock_active(layer)`, `credentials_ok()`, `dispatch(layer, endpoint, payload)` with the honest-block pattern. |
+| `src/zer0pa_materials_workbench/runpod/rest_client.py` | 240 | Live `httpx` REST client with `tenacity` retry envelope, `RunpodCredentialsError` / `RunpodRestError`, and `RunpodRestClient.healthz(layer)`. |
+| `src/zer0pa_materials_workbench/runpod/dispatcher.py` | 244 | Central `RunpodDispatcher`: `is_rest_active(layer)`, `is_mock_active(layer)`, `credentials_ok()`, `dispatch(layer, endpoint, payload)` with the honest-block pattern. |
 
 ### Source (src/) — MODIFIED
 
 | File | Notes |
 |------|-------|
-| `src/zer0pa_materials/runpod/__init__.py` | Re-exports `RunpodRestClient`, `RunpodDispatcher`, `DispatchResult`, `RunpodCredentialsError`, `RunpodRestError`. |
-| `src/zer0pa_materials/runpod/cutover.py` | Imports added (`subprocess`, `sys`, `repo_root`, `audit_root`, `phase_dir`, `RunpodRestClient`, `RunpodCredentialsError`).  `precheck()` rewritten: P1 calls `healthz`; P2 checks `phases/UMA-license/manifest.json`; P5–P8 spawn pytest subprocesses; new `fast: bool` flag; new `persist: bool` flag (default True) appends a JSONL row to `audit_root() / "precheck.jsonl"`.  Three module-level helpers added: `_run_pytest_subprocess`, `_check_uma_manifest`, `_append_precheck_jsonl`. |
-| `src/zer0pa_materials/adapters/l2/ensemble.py` | Optional `dispatcher: RunpodDispatcher \| None = None` constructor kwarg.  In `run()`, before the mandatory DPA-3 + MACE local ensemble, call `dispatcher.dispatch("L2", "ensemble_predict", ...)` when present.  Honest-block: if `RunpodCredentialsError` is raised, propagate (never silently fall back).  `blocked_manifests()` now surfaces dispatcher-recorded blocked manifests too.  Default `dispatcher=None` preserves all pre-Wave-C call sites unchanged. |
+| `src/zer0pa_materials_workbench/runpod/__init__.py` | Re-exports `RunpodRestClient`, `RunpodDispatcher`, `DispatchResult`, `RunpodCredentialsError`, `RunpodRestError`. |
+| `src/zer0pa_materials_workbench/runpod/cutover.py` | Imports added (`subprocess`, `sys`, `repo_root`, `audit_root`, `phase_dir`, `RunpodRestClient`, `RunpodCredentialsError`).  `precheck()` rewritten: P1 calls `healthz`; P2 checks `phases/UMA-license/manifest.json`; P5–P8 spawn pytest subprocesses; new `fast: bool` flag; new `persist: bool` flag (default True) appends a JSONL row to `audit_root() / "precheck.jsonl"`.  Three module-level helpers added: `_run_pytest_subprocess`, `_check_uma_manifest`, `_append_precheck_jsonl`. |
+| `src/zer0pa_materials_workbench/adapters/l2/ensemble.py` | Optional `dispatcher: RunpodDispatcher \| None = None` constructor kwarg.  In `run()`, before the mandatory DPA-3 + MACE local ensemble, call `dispatcher.dispatch("L2", "ensemble_predict", ...)` when present.  Honest-block: if `RunpodCredentialsError` is raised, propagate (never silently fall back).  `blocked_manifests()` now surfaces dispatcher-recorded blocked manifests too.  Default `dispatcher=None` preserves all pre-Wave-C call sites unchanged. |
 
 ### Tests (tests/parity/) — NEW
 

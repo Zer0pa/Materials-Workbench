@@ -13,24 +13,19 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.adapters.l1_5.base import L15JobParams, make_l15_envelope
-from zer0pa_materials.adapters.l1_5.zt_assembler import ThermoelectricZtAssembler
-from zer0pa_materials.boundary import RESEARCH_BOUNDARY
-from zer0pa_materials.envelope import (
-    AuditBlock,
+from zer0pa_materials_workbench.adapters.l1_5.base import L15JobParams, make_l15_envelope
+from zer0pa_materials_workbench.adapters.l1_5.zt_assembler import ThermoelectricZtAssembler
+from zer0pa_materials_workbench.envelope import (
     Envelope,
-    FalsifierItem,
     L15PhononOutput,
-    RightsBlock,
-    ToolAdapter,
 )
-from zer0pa_materials.falsifiers.l1_5_falsifiers import (
+from zer0pa_materials_workbench.falsifiers.l1_5_falsifiers import (
     dynamical_stability,
     mlip_dft_force_rmse,
+    phonon_does_not_substitute_for_ionic,
     phonopy_hiphive_frequency_rmse,
     q_mesh_convergence,
     zt_rank_stability,
-    phonon_does_not_substitute_for_ionic,
 )
 
 
@@ -289,11 +284,11 @@ class TestPhononDoesNotSubstituteForIonic:
 
     def test_all_te_adapters_pass_ionic_boundary(self) -> None:
         """All L1.5 adapters must pass the phonon-not-ionic falsifier."""
-        from zer0pa_materials.adapters.l1_5.phonopy_harmonic import PhonopyHarmonicAdapter
-        from zer0pa_materials.adapters.l1_5.phono3py_bte import Phono3pyAnharmonicBTEAdapter
-        from zer0pa_materials.adapters.l1_5.hiphive_fit import HiPhiveForceConstantFitAdapter
-        from zer0pa_materials.adapters.l1_5.boltztrap2 import BoltzTraP2RigidBandTransportAdapter
-        from zer0pa_materials.adapters.l1_5.amset import AmsetScatteringTransportAdapter
+        from zer0pa_materials_workbench.adapters.l1_5.amset import AmsetScatteringTransportAdapter
+        from zer0pa_materials_workbench.adapters.l1_5.boltztrap2 import BoltzTraP2RigidBandTransportAdapter
+        from zer0pa_materials_workbench.adapters.l1_5.hiphive_fit import HiPhiveForceConstantFitAdapter
+        from zer0pa_materials_workbench.adapters.l1_5.phono3py_bte import Phono3pyAnharmonicBTEAdapter
+        from zer0pa_materials_workbench.adapters.l1_5.phonopy_harmonic import PhonopyHarmonicAdapter
 
         params = L15JobParams(
             structure_hash="sha256:bi2te3_ionic_boundary_all_adapters",

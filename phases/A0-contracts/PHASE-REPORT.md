@@ -10,7 +10,7 @@ A0-contracts builds the foundational contract layer that all 9 downstream layer 
 
 ## Files created
 
-### Source modules (under `src/zer0pa_materials/`)
+### Source modules (under `src/zer0pa_materials_workbench/`)
 
 | Path | Purpose | Lines |
 |---|---|---|
@@ -104,14 +104,14 @@ All falsifier names follow the convention `<layer>.<gate>` for stable cross-run 
 
 ## What downstream waves can now assume
 
-1. **Envelope contract is stable and validated.** Adapters import `Envelope`, `ToolAdapter`, `AuditBlock`, `RightsBlock` from `zer0pa_materials.envelope` and emit instances. `model_validate_json` round-trips bit-stably. `canonical_bytes()` is deterministic for hashing.
+1. **Envelope contract is stable and validated.** Adapters import `Envelope`, `ToolAdapter`, `AuditBlock`, `RightsBlock` from `zer0pa_materials_workbench.envelope` and emit instances. `model_validate_json` round-trips bit-stably. `canonical_bytes()` is deterministic for hashing.
 2. **Layer-output registry is queryable.** `LAYER_OUTPUT_REGISTRY[layer]` returns the Pydantic class for that layer slot; `validate_layer_output(layer, dict)` validates a payload against it.
 3. **`FalsifierItem` is the row primitive.** Audit writers and the falsification wave consume rows produced by `LayerOutputBase.falsifier_items()`.
 4. **`MaterialsConfig` is the only env-loader.** No service or adapter needs to read `os.environ` directly. `MaterialsConfig.from_env()` is the entry. `validate_for_runpod_cutover()` is the cutover gate.
 5. **`ArtifactManifest` and the JSONL append helpers are ready** for `audit/artifacts.jsonl` use.
 6. **Hashing primitives are deterministic.** `sha256_of` for arbitrary JSON; `structure_hash` for crystals; `cif_hash_from_text` for tiny CIFs; `canonical_json_bytes` for the audit hash chain.
-7. **`pint` registry is canonical.** `parse_quantity`, `to_canonical`, `format_canonical` from `zer0pa_materials.envelope.units`. Adapters convert their tool's native units into canonical units before emitting an envelope.
-8. **CLI surface is stable.** `zer0pa-materials envelope-schema [--layer <name>]`, `check-config`, `version`, `run-falsification-wave` (placeholder until Wave 9).
+7. **`pint` registry is canonical.** `parse_quantity`, `to_canonical`, `format_canonical` from `zer0pa_materials_workbench.envelope.units`. Adapters convert their tool's native units into canonical units before emitting an envelope.
+8. **CLI surface is stable.** `zer0pa-materials-workbench envelope-schema [--layer <name>]`, `check-config`, `version`, `run-falsification-wave` (placeholder until Wave 9).
 9. **JSON Schema artifacts are committed.** `runtime/schemas/envelope.v1.schema.json` and `runtime/schemas/<layer>.output.v1.schema.json` (×11 layer files) — Runpod parity tests and downstream contract tests validate against these files.
 
 ## Divergence from PRD spec
@@ -134,10 +134,10 @@ None blocking Wave 2. All A0 acceptance gates pass.
 $ .venv/bin/python -m pytest tests/unit -v
 ============================= 157 passed in 1.13s ==============================
 
-$ .venv/bin/zer0pa-materials version
+$ .venv/bin/zer0pa-materials-workbench version
 0.1.0
 
-$ .venv/bin/zer0pa-materials check-config
+$ .venv/bin/zer0pa-materials-workbench check-config
 Config loaded.
   MATERIALS_MODE = local_cpu
   ALABOS_MODE    = recipe_only

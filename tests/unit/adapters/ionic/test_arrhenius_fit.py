@@ -6,13 +6,13 @@ import math
 
 import pytest
 
-from zer0pa_materials.adapters.ionic.arrhenius import (
-    KB_eV_per_K,
+from zer0pa_materials_workbench.adapters.ionic.arrhenius import (
     ArrheniusFitAdapter,
     ArrheniusFitParams,
+    KB_eV_per_K,
     fit_arrhenius,
 )
-from zer0pa_materials.adapters.ionic.base import (
+from zer0pa_materials_workbench.adapters.ionic.base import (
     IONIC_TRANSPORT_SERVICE_REF,
     IonicJobParams,
 )

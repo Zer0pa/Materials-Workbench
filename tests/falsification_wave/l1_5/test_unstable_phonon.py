@@ -21,20 +21,16 @@ from pathlib import Path
 
 import pytest
 
-from zer0pa_materials.adapters.l1_5.base import L15JobParams, make_l15_envelope
-from zer0pa_materials.boundary import RESEARCH_BOUNDARY
-from zer0pa_materials.envelope import (
-    AuditBlock,
+from zer0pa_materials_workbench.adapters.l1_5.base import L15JobParams, make_l15_envelope
+from zer0pa_materials_workbench.envelope import (
     Envelope,
     L15PhononOutput,
-    RightsBlock,
-    ToolAdapter,
 )
-from zer0pa_materials.falsifiers.l1_5_falsifiers import (
+from zer0pa_materials_workbench.falsifiers.l1_5_falsifiers import (
     dynamical_stability,
     mlip_dft_force_rmse,
-    q_mesh_convergence,
     phonon_does_not_substitute_for_ionic,
+    q_mesh_convergence,
 )
 
 # Path to the negative fixture

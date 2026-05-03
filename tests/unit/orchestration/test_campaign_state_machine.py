@@ -6,10 +6,9 @@ from pathlib import Path
 
 import pytest
 
-from zer0pa_materials.audit.kg import KGNodeType, MaterialsKG
-from zer0pa_materials.audit.log import AuditLog
-from zer0pa_materials.orchestration import Campaign, CampaignSpec
-from zer0pa_materials.orchestration.candidate_state import CandidateRecord
+from zer0pa_materials_workbench.audit.kg import KGNodeType, MaterialsKG
+from zer0pa_materials_workbench.audit.log import AuditLog
+from zer0pa_materials_workbench.orchestration import Campaign, CampaignSpec
 
 
 @pytest.fixture
@@ -123,8 +122,8 @@ def test_resume_from_audit_missing_campaign_raises(fresh_kg_and_audit):
 
 def test_attach_envelope_records_layer_audit_ref(fresh_kg_and_audit):
     """Attaching an envelope writes an events.jsonl row and updates the candidate."""
-    from zer0pa_materials.adapters.l7 import PrefectCampaignAdapter
-    from zer0pa_materials.adapters.l7.base import L7CampaignParams
+    from zer0pa_materials_workbench.adapters.l7 import PrefectCampaignAdapter
+    from zer0pa_materials_workbench.adapters.l7.base import L7CampaignParams
 
     audit, kg = fresh_kg_and_audit
     camp = Campaign.create(_spec(), audit, kg)

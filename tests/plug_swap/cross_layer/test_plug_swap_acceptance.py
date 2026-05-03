@@ -20,13 +20,12 @@ Usage::
 
 from __future__ import annotations
 
-import time
 from pathlib import Path
 
 import pytest
 
-from zer0pa_materials.plugswap import GLOBAL_REGISTRY, PlugSwapHarness
-from zer0pa_materials.plugswap.timing import (
+from zer0pa_materials_workbench.plugswap import GLOBAL_REGISTRY, PlugSwapHarness
+from zer0pa_materials_workbench.plugswap.timing import (
     SWAP_WALLCLOCK_BUDGET_SECONDS,
     measure_swap_wallclock,
 )
@@ -99,7 +98,7 @@ def test_plug_swap_acceptance_report(plug_swap_harness: PlugSwapHarness) -> None
         f"> **Boundary**: {_BOUNDARY}",
         "",
         f"> **Budget**: register + verify leg < {SWAP_WALLCLOCK_BUDGET_SECONDS}s per layer.",
-        f"> Assumption: adapter authoring time (human-bounded, 1–8 h) is not timed.",
+        "> Assumption: adapter authoring time (human-bounded, 1–8 h) is not timed.",
         "",
         header,
         sep,

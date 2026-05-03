@@ -9,14 +9,13 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.adapters.l1.pyscf import PyScfMolecularSolver
-from zer0pa_materials.adapters.l1.qe_aiida import QuantumEspressoAiiDASolver
-from zer0pa_materials.adapters.l1.cp2k_aiida import Cp2kAiiDASolver
-from zer0pa_materials.adapters.l1.abinit_aiida import AbinitAiiDASolver
-from zer0pa_materials.adapters.l1.base import L1JobParams
-from zer0pa_materials.envelope import L1DftOutput, Envelope, cif_hash_from_text
-
-from zer0pa_materials import read_fixture
+from zer0pa_materials_workbench import read_fixture
+from zer0pa_materials_workbench.adapters.l1.abinit_aiida import AbinitAiiDASolver
+from zer0pa_materials_workbench.adapters.l1.base import L1JobParams
+from zer0pa_materials_workbench.adapters.l1.cp2k_aiida import Cp2kAiiDASolver
+from zer0pa_materials_workbench.adapters.l1.pyscf import PyScfMolecularSolver
+from zer0pa_materials_workbench.adapters.l1.qe_aiida import QuantumEspressoAiiDASolver
+from zer0pa_materials_workbench.envelope import Envelope, L1DftOutput, cif_hash_from_text
 
 H2_CIF = read_fixture("structures", "H2", "structure.cif")
 H2_HASH = cif_hash_from_text(H2_CIF)
@@ -79,7 +78,7 @@ def test_all_adapters_have_audit_hashes(adapter, h2_params: L1JobParams) -> None
 
 
 def test_all_adapters_have_boundary(adapter, h2_params: L1JobParams) -> None:
-    from zer0pa_materials.boundary import RESEARCH_BOUNDARY
+    from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
     envelope = adapter.submit_job(H2_CIF, h2_params)
     assert envelope.research_boundary == RESEARCH_BOUNDARY
 

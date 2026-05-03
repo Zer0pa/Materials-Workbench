@@ -12,16 +12,14 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.adapters.l1_5.base import L15JobParams, L15_SERVICE_REF
-from zer0pa_materials.adapters.l1_5.phonopy_harmonic import (
-    DynamicalStability,
+from zer0pa_materials_workbench.adapters.l1_5.base import L15_SERVICE_REF, L15JobParams
+from zer0pa_materials_workbench.adapters.l1_5.phonopy_harmonic import (
     PhonopyHarmonicAdapter,
     apply_acoustic_sum_rule,
     classify_stability,
     synthetic_phonon_spectrum,
 )
-from zer0pa_materials.envelope import Envelope, L15PhononOutput
-
+from zer0pa_materials_workbench.envelope import Envelope, L15PhononOutput
 
 SI_HASH = "sha256:si_fixture_canonical_hash_0000000001"
 NACL_HASH = "sha256:nacl_fixture_canonical_hash_000000001"

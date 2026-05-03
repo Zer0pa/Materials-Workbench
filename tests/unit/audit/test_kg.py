@@ -4,13 +4,12 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.audit.kg import (
+from zer0pa_materials_workbench.audit.kg import (
     KGEdgeType,
     KGNodeType,
     KGTypeError,
     MaterialsKG,
 )
-
 
 # ----------------------------------------------------------------------------
 # Node insertion

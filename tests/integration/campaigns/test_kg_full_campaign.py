@@ -16,19 +16,17 @@ After a campaign:
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
 
 import pytest
 
-from zer0pa_materials.audit.episodic import reconstruct_from_repo, snapshot_state
-from zer0pa_materials.audit.kg import (
+from zer0pa_materials_workbench.audit.episodic import reconstruct_from_repo, snapshot_state
+from zer0pa_materials_workbench.audit.kg import (
     KGEdgeType,
     KGNodeType,
     MaterialsKG,
 )
-from zer0pa_materials.audit.log import AuditLog
-from zer0pa_materials.orchestration import Campaign, CampaignSpec
-
+from zer0pa_materials_workbench.audit.log import AuditLog
+from zer0pa_materials_workbench.orchestration import Campaign, CampaignSpec
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -270,7 +268,7 @@ class TestRDFExport:
         except ImportError:
             pytest.skip("rdflib not installed — skipping RDF round-trip test")
 
-        from zer0pa_materials.audit.rdf_export import export_kg_to_turtle
+        from zer0pa_materials_workbench.audit.rdf_export import export_kg_to_turtle
 
         kg = MaterialsKG(tmp_path / "rdf_safe_kg.sqlite")
         _seed_rdf_safe_kg(kg)
@@ -286,7 +284,7 @@ class TestRDFExport:
         except ImportError:
             pytest.skip("rdflib not installed — skipping RDF round-trip test")
 
-        from zer0pa_materials.audit.rdf_export import export_kg_graph
+        from zer0pa_materials_workbench.audit.rdf_export import export_kg_graph
 
         kg = MaterialsKG(tmp_path / "rdf_safe_kg.sqlite")
         _seed_rdf_safe_kg(kg)
@@ -298,11 +296,11 @@ class TestRDFExport:
     def test_rdf_round_trip_node_count(self, tmp_path: Path) -> None:
         """Nodes exported to RDF must be parseable back with correct count."""
         try:
-            from rdflib import Graph, RDFS
+            from rdflib import RDFS, Graph
         except ImportError:
             pytest.skip("rdflib not installed")
 
-        from zer0pa_materials.audit.rdf_export import export_kg_to_turtle
+        from zer0pa_materials_workbench.audit.rdf_export import export_kg_to_turtle
 
         kg = MaterialsKG(tmp_path / "rdf_safe_kg.sqlite")
         node_count = _seed_rdf_safe_kg(kg)
@@ -340,7 +338,7 @@ class TestKGReconstructFromRepo:
         audit, kg = _make_audit_kg_at_defaults(tmp_path)
         _seed_rich_kg(kg, audit)
 
-        from zer0pa_materials.audit.log import AUDIT_CATEGORIES
+        from zer0pa_materials_workbench.audit.log import AUDIT_CATEGORIES
 
         state = reconstruct_from_repo(tmp_path)
         snap = state.snapshot

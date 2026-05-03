@@ -15,13 +15,12 @@ from pathlib import Path
 
 import pytest
 
-from zer0pa_materials.adapters.l3 import (
+from zer0pa_materials_workbench.adapters.l3 import (
+    PYCALPHAD_AVAILABLE,
     L3CalphadRequest,
     PyCalphadEquilibriumAdapter,
-    PYCALPHAD_AVAILABLE,
 )
-from zer0pa_materials.envelope import Envelope, L3CalphadOutput
-
+from zer0pa_materials_workbench.envelope import Envelope, L3CalphadOutput
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
 CU_MG_TDB = REPO_ROOT / "fixtures" / "tdb" / "Cu-Mg-toy.tdb"

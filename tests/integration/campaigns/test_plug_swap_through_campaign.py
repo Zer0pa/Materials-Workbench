@@ -21,31 +21,26 @@ the per-layer plug-swap tests (Wave 5b).
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
 
-import pytest
-
-from zer0pa_materials.adapters.l1.base import L1JobParams
-from zer0pa_materials.adapters.l1.pyscf import PyScfMolecularSolver
-from zer0pa_materials.adapters.l1.qe_aiida import QuantumEspressoAiiDASolver
-from zer0pa_materials.adapters.l1_5.base import L15JobParams
-from zer0pa_materials.adapters.l1_5.phonopy_harmonic import PhonopyHarmonicAdapter
-from zer0pa_materials.adapters.l1_5.phono3py_bte import Phono3pyAnharmonicBTEAdapter
-from zer0pa_materials.adapters.l2.base import L2PredictRequest
-from zer0pa_materials.adapters.l2.deepmd_dpa import DeepmdDpaCalculatorAdapter
-from zer0pa_materials.adapters.l2.mace_mp import MaceMpCalculatorAdapter
-from zer0pa_materials.adapters.l2.ensemble import L2EnsembleRunner
-from zer0pa_materials.adapters.ionic.base import IonicJobParams
-from zer0pa_materials.adapters.ionic.neb import NebMigrationBarrierAdapter
-from zer0pa_materials.adapters.ionic.mlip_md import MlipMdDiffusionAdapter
-from zer0pa_materials.adapters.l7 import PrefectCampaignAdapter, LangGraphReasonerAdapter
-from zer0pa_materials.adapters.l7.base import L7CampaignParams
-from zer0pa_materials.audit.kg import MaterialsKG
-from zer0pa_materials.audit.log import AuditLog
-from zer0pa_materials.boundary import RESEARCH_BOUNDARY
-from zer0pa_materials.envelope.envelope import Envelope
-from zer0pa_materials.orchestration import Campaign, CampaignSpec
-
+from zer0pa_materials_workbench.adapters.ionic.base import IonicJobParams
+from zer0pa_materials_workbench.adapters.ionic.mlip_md import MlipMdDiffusionAdapter
+from zer0pa_materials_workbench.adapters.ionic.neb import NebMigrationBarrierAdapter
+from zer0pa_materials_workbench.adapters.l1.base import L1JobParams
+from zer0pa_materials_workbench.adapters.l1.pyscf import PyScfMolecularSolver
+from zer0pa_materials_workbench.adapters.l1.qe_aiida import QuantumEspressoAiiDASolver
+from zer0pa_materials_workbench.adapters.l1_5.base import L15JobParams
+from zer0pa_materials_workbench.adapters.l1_5.phono3py_bte import Phono3pyAnharmonicBTEAdapter
+from zer0pa_materials_workbench.adapters.l1_5.phonopy_harmonic import PhonopyHarmonicAdapter
+from zer0pa_materials_workbench.adapters.l2.base import L2PredictRequest
+from zer0pa_materials_workbench.adapters.l2.deepmd_dpa import DeepmdDpaCalculatorAdapter
+from zer0pa_materials_workbench.adapters.l2.ensemble import L2EnsembleRunner
+from zer0pa_materials_workbench.adapters.l2.mace_mp import MaceMpCalculatorAdapter
+from zer0pa_materials_workbench.adapters.l7 import LangGraphReasonerAdapter, PrefectCampaignAdapter
+from zer0pa_materials_workbench.adapters.l7.base import L7CampaignParams
+from zer0pa_materials_workbench.audit.kg import MaterialsKG
+from zer0pa_materials_workbench.audit.log import AuditLog
+from zer0pa_materials_workbench.envelope.envelope import Envelope
+from zer0pa_materials_workbench.orchestration import Campaign, CampaignSpec
 
 # ---------------------------------------------------------------------------
 # Helpers

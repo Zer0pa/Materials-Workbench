@@ -6,15 +6,15 @@ import math
 
 import pytest
 
-from zer0pa_materials.adapters.ionic.aimd import (
+from zer0pa_materials_workbench.adapters.ionic.aimd import (
     AIMD_BLOCKED_MANIFEST,
     AimdDiffusionAdapter,
 )
-from zer0pa_materials.adapters.ionic.base import (
+from zer0pa_materials_workbench.adapters.ionic.base import (
     IONIC_TRANSPORT_SERVICE_REF,
     IonicJobParams,
 )
-from zer0pa_materials.adapters.ionic.mlip_md import MlipMdDiffusionAdapter
+from zer0pa_materials_workbench.adapters.ionic.mlip_md import MlipMdDiffusionAdapter
 
 
 @pytest.fixture

@@ -23,10 +23,9 @@ state.
 
 from __future__ import annotations
 
-from zer0pa_materials.falsifiers.phase0_falsifiers import (
+from zer0pa_materials_workbench.falsifiers.phase0_falsifiers import (
     verify_source_manifest_linkage,
 )
-
 
 # ---------------------------------------------------------------------------
 # In-memory audit-log fixture
@@ -189,15 +188,15 @@ class TestEmptyRefList:
 class TestAuditLogIntegration:
     """End-to-end: forged ref tested against a live AuditLog instance.
 
-    Uses :class:`zer0pa_materials.audit.log.AuditLog` and the
-    :class:`zer0pa_materials.audit.sources.SourceManifest` payload to
+    Uses :class:`zer0pa_materials_workbench.audit.log.AuditLog` and the
+    :class:`zer0pa_materials_workbench.audit.sources.SourceManifest` payload to
     write a real chained row. This proves the helper interoperates with
     production code, not just the test harness.
     """
 
     def test_with_real_audit_log(self, tmp_path):
-        from zer0pa_materials.audit.log import AuditLog
-        from zer0pa_materials.audit.sources import SourceManifest
+        from zer0pa_materials_workbench.audit.log import AuditLog
+        from zer0pa_materials_workbench.audit.sources import SourceManifest
 
         log = AuditLog(tmp_path / "audit_runtime")
         # Write the matching source manifest row.

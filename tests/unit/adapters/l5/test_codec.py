@@ -8,23 +8,20 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.adapters.l5.codec import (
-    ContinuumHandoffCodec,
-    emit_vtk_artifact,
-    parse_vtk_artifact,
-    roundtrip_vtk,
-    emit_exodus_artifact,
-    parse_exodus_artifact,
-    roundtrip_exodus,
-    emit_fmi_artifact,
-    parse_fmi_artifact,
-    roundtrip_fmi,
+from zer0pa_materials_workbench.adapters.l5.codec import (
     VTK_UNITS_SCHEMA,
-    EXODUS_UNITS_SCHEMA,
-    FMI_UNITS_SCHEMA,
+    ContinuumHandoffCodec,
+    emit_exodus_artifact,
+    emit_fmi_artifact,
+    emit_vtk_artifact,
+    parse_exodus_artifact,
+    parse_fmi_artifact,
+    parse_vtk_artifact,
+    roundtrip_exodus,
+    roundtrip_fmi,
+    roundtrip_vtk,
 )
-from zer0pa_materials.boundary import RESEARCH_BOUNDARY
-
+from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
 
 # ---------------------------------------------------------------------------
 # VTK artifact tests

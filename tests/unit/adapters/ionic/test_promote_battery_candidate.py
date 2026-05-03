@@ -9,8 +9,8 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.adapters.ionic.base import IonicJobParams
-from zer0pa_materials.services.ionic_transport_service import (
+from zer0pa_materials_workbench.adapters.ionic.base import IonicJobParams
+from zer0pa_materials_workbench.services.ionic_transport_service import (
     BatteryEvidenceBundle,
     PromotionDecision,
     promote_battery_candidate,
@@ -150,7 +150,7 @@ def test_promotion_blocked_when_chain_incomplete(
     bundle_dict = bundle.model_dump(mode="json")
     bundle_dict["neb"]["output"]["migration_barrier_eV"] = None
     # Recompute the chain_complete falsifier on the modified bundle.
-    from zer0pa_materials.falsifiers.ionic_falsifiers import (
+    from zer0pa_materials_workbench.falsifiers.ionic_falsifiers import (
         full_battery_evidence_chain_complete,
     )
     chain = full_battery_evidence_chain_complete(

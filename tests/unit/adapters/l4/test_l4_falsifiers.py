@@ -11,22 +11,20 @@ PRD §L4 falsifiers tested here:
 
 from __future__ import annotations
 
-import pytest
-
-from zer0pa_materials.adapters.l4.base import L4PredictRequest
-from zer0pa_materials.adapters.l4.contracts import (
+from zer0pa_materials_workbench.adapters.l4.base import L4PredictRequest
+from zer0pa_materials_workbench.adapters.l4.contracts import (
     KmcRunSpec,
     PhaseFieldDomain,
     PhaseFieldMaterial,
     PhaseFieldMesh,
     PhaseFieldRunSpec,
 )
-from zer0pa_materials.adapters.l4.microsim import MicrosimGrandPotentialAdapter
-from zer0pa_materials.adapters.l4.moose import MoosePhaseFieldAdapter
-from zer0pa_materials.adapters.l4.neural_operator import NeuralOperatorPhaseFieldAdapter
-from zer0pa_materials.adapters.l4.prisms_pf import PrismsPfAdapter
-from zer0pa_materials.adapters.l4.spparks import SpparksKmcAdapter
-from zer0pa_materials.falsifiers.l4_falsifiers import (
+from zer0pa_materials_workbench.adapters.l4.microsim import MicrosimGrandPotentialAdapter
+from zer0pa_materials_workbench.adapters.l4.moose import MoosePhaseFieldAdapter
+from zer0pa_materials_workbench.adapters.l4.neural_operator import NeuralOperatorPhaseFieldAdapter
+from zer0pa_materials_workbench.adapters.l4.prisms_pf import PrismsPfAdapter
+from zer0pa_materials_workbench.adapters.l4.spparks import SpparksKmcAdapter
+from zer0pa_materials_workbench.falsifiers.l4_falsifiers import (
     allen_cahn_bounds_violation,
     cahn_hilliard_mass_drift,
     microsim_subprocess_isolation,
@@ -34,7 +32,6 @@ from zer0pa_materials.falsifiers.l4_falsifiers import (
     plug_swap_schema_invariance,
     spparks_potts_energy_monotonic,
 )
-
 
 REQ = L4PredictRequest(
     run_id="run:test/falsifiers/001",

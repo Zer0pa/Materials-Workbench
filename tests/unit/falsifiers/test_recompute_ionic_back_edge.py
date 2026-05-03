@@ -23,11 +23,10 @@ nothing matches.
 
 from __future__ import annotations
 
-from zer0pa_materials.falsifiers.ionic_falsifiers import (
+from zer0pa_materials_workbench.falsifiers.ionic_falsifiers import (
     requires_ionic_transport_service,
     verify_ionic_service_back_edge,
 )
-
 
 # ---------------------------------------------------------------------------
 # Fixtures: envelopes claiming ionic conductivity

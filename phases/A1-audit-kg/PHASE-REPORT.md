@@ -10,7 +10,7 @@ A1 is the audit-and-knowledge-graph foundation: every layer subagent and the fal
 
 ## Files created
 
-### Source modules (`src/zer0pa_materials/`)
+### Source modules (`src/zer0pa_materials_workbench/`)
 
 | Path | Purpose | Lines |
 |---|---|---|
@@ -76,7 +76,7 @@ Plus the existing 157 A0 tests still pass — full unit suite is 588 passed (the
 
 ## What downstream waves can rely on
 
-1. **`AuditLog` — eleven categories, hash-chained, atomic-append.** Every layer subagent imports `from zer0pa_materials.audit import AuditLog` and writes via `log.append_event(category, payload)`. Concurrent writers serialise on a per-file `fcntl` lock; the chain holds under threading (proven).
+1. **`AuditLog` — eleven categories, hash-chained, atomic-append.** Every layer subagent imports `from zer0pa_materials_workbench_workbench.audit import AuditLog` and writes via `log.append_event(category, payload)`. Concurrent writers serialise on a per-file `fcntl` lock; the chain holds under threading (proven).
 
 2. **`SourceManifest` / `BlockedSourceManifest`.** Every strategic lookup (Phase 0 literature mining, model card retrieval, license verification, OPTIMADE database queries) emits one of these into `sources.jsonl`. Blocked stubs do NOT silently fail — they record a structured manifest with `blocker_reason` + `retry_strategy`.
 
@@ -90,13 +90,13 @@ Plus the existing 157 A0 tests still pass — full unit suite is 588 passed (the
 
 7. **`ReasonerTuple` + `enforce_reuse_scope_export`.** L7 emits one `ReasonerTuple` per candidate evaluation. Default `reuse_scope = "tenant_only"`; the gate fires when a tenant-only tuple is requested for a wider-scope corpus.
 
-8. **`reconstruct_from_repo(repo_root)` — the brain-functionality entry.** A fresh agent on a new shell calls `reconstruct_from_repo(repo_root())` (using the central `zer0pa_materials.repo_root.repo_root()` helper, NOT a hardcoded absolute path) and gets a `CampaignState` with `next_actions` derived from the audit chains. Chain integrity errors come first; then open falsifiers; then pending decisions; then holding tuples; then "all clean — proceed".
+8. **`reconstruct_from_repo(repo_root)` — the brain-functionality entry.** A fresh agent on a new shell calls `reconstruct_from_repo(repo_root())` (using the central `zer0pa_materials_workbench.repo_root.repo_root()` helper, NOT a hardcoded absolute path) and gets a `CampaignState` with `next_actions` derived from the audit chains. Chain integrity errors come first; then open falsifiers; then pending decisions; then holding tuples; then "all clean — proceed".
 
 9. **CLI surface stable.** Subagents and the orchestrator can run:
-   - `zer0pa-materials audit add-source ...`
-   - `zer0pa-materials audit add-blocked-source ...`
-   - `zer0pa-materials audit validate-chain <category>`
-   - `zer0pa-materials audit reconstruct [repo_root]`
+   - `zer0pa-materials-workbench audit add-source ...`
+   - `zer0pa-materials-workbench audit add-blocked-source ...`
+   - `zer0pa-materials-workbench audit validate-chain <category>`
+   - `zer0pa-materials-workbench audit reconstruct [repo_root]`
 
 10. **EMMO term subset embedded; no network fetch needed.** `ontology/emmo.py` carries the canonical EMMO IRIs for the ten classes the PRD lists (Material, Composition, Phase, Property, Process, Model, Simulation, Measurement, Reasoning, Provenance). The mapping from KG node type to EMMO IRI is in `KG_NODE_TO_EMMO`. Every node type has at least one ontology IRI.
 
@@ -130,12 +130,12 @@ $ .venv/bin/python -m pytest tests/unit -q
 ============= 588 passed, 2 failed, 2 skipped in 5.48s ============
 # (the 2 failed + 2 skipped are in tests/unit/fixtures/, A2 wave, out of A1 scope)
 
-$ .venv/bin/zer0pa-materials --help
+$ .venv/bin/zer0pa-materials-workbench --help
 # Shows: version, envelope-schema, check-config, run-falsification-wave, audit
-$ .venv/bin/zer0pa-materials audit --help
+$ .venv/bin/zer0pa-materials-workbench audit --help
 # Shows: add-source, add-blocked-source, validate-chain, reconstruct
 
-$ .venv/bin/zer0pa-materials audit add-source \
+$ .venv/bin/zer0pa-materials-workbench audit add-source \
     --source-manifest-id "src:doi:10.1038/s41586-020-2649-2" \
     --source-type paper --locator "10.1038/s41586-020-2649-2" \
     --license-spdx "CC-BY-4.0" --summary "MatBench reference paper" \
@@ -143,7 +143,7 @@ $ .venv/bin/zer0pa-materials audit add-source \
     --audit-dir /tmp/a1-cli-smoke
 appended sources row event_hash=sha256:266d3ff7cb...
 
-$ .venv/bin/zer0pa-materials audit validate-chain sources --audit-dir /tmp/a1-cli-smoke
+$ .venv/bin/zer0pa-materials-workbench audit validate-chain sources --audit-dir /tmp/a1-cli-smoke
 chain OK category=sources rows=1
 ```
 

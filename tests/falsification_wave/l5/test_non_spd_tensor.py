@@ -17,16 +17,16 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from zer0pa_materials.falsifiers.l5_falsifiers import (
-    tensor_spd_check,
+from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
+from zer0pa_materials_workbench.falsifiers.l5_falsifiers import (
     analytic_heat_slab_error,
+    artifact_units_sidecar_present,
+    cfd_heat_balance_error,
+    cfd_mass_balance_error,
     elastic_patch_residual,
     openfoam_poiseuille_profile_error,
-    cfd_mass_balance_error,
-    cfd_heat_balance_error,
-    artifact_units_sidecar_present,
+    tensor_spd_check,
 )
-from zer0pa_materials.boundary import RESEARCH_BOUNDARY
 
 # ---------------------------------------------------------------------------
 # Fixture loading

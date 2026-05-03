@@ -5,10 +5,9 @@ from __future__ import annotations
 import pytest
 from fastapi.testclient import TestClient
 
-from zer0pa_materials.services.l1_service import app
-from zer0pa_materials.envelope import cif_hash_from_text
-
-from zer0pa_materials import read_fixture
+from zer0pa_materials_workbench import read_fixture
+from zer0pa_materials_workbench.envelope import cif_hash_from_text
+from zer0pa_materials_workbench.services.l1_service import app
 
 H2_CIF = read_fixture("structures", "H2", "structure.cif")
 H2_HASH = cif_hash_from_text(H2_CIF)
@@ -72,7 +71,7 @@ def test_submit_job_envelope_has_layer(client: TestClient) -> None:
 
 
 def test_submit_job_envelope_has_boundary(client: TestClient) -> None:
-    from zer0pa_materials.boundary import RESEARCH_BOUNDARY
+    from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
     payload = {
         "structure_cif": H2_CIF,
         "structure_hash": H2_HASH,

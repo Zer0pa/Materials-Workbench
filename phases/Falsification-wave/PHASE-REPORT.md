@@ -21,9 +21,9 @@ The wave is **adversarial**. A "passing" run does NOT mean every gate is happy �
 
 | File | LOC | Purpose |
 |---|---|---|
-| `src/zer0pa_materials/falsifiers/wave_runner.py` | ~750 | The orchestrator. `FalsificationWaveRunner.run_all` iterates the 16 cases, dispatches each to its layer's falsifier(s), records every triggered `FalsifierItem` as a row in `falsifiers.jsonl` via the hash-chained audit log, records a `Decision` row noting the campaign halt, and validates the chain after every case. Carries `DEFAULT_CASES` (the 16-case immutable tuple), `WAVE_CASE_ORDER`, `COFIRES` (documented allowed-extra triggers), and the case-specific synthesizers for the three cases without dedicated fixtures (`missing_source_manifest`, `dft_convergence_failure`, `phasefield_conservation_violation`). |
-| `src/zer0pa_materials/falsifiers/wave_report.py` | ~205 | `generate_falsification_wave_report(result)` returns a markdown string with the verbatim boundary block, the inverted-semantics callout, an aggregate count table, a per-case verdict table, an "Issues found" section that surfaces missed/spurious/chain-break cases as visible bugs, and an explicit list of documented co-fires. |
-| `src/zer0pa_materials/cli/falsification.py` | ~210 | `falsification` Typer subapp with `run`, `validate-chain`, and `list-cases` commands. The lead agent will wire `falsification_app` into `cli/main.py` after this wave. The CLI exits non-zero when any case is missed/spurious/chain-broken so CI catches regressions. |
+| `src/zer0pa_materials_workbench/falsifiers/wave_runner.py` | ~750 | The orchestrator. `FalsificationWaveRunner.run_all` iterates the 16 cases, dispatches each to its layer's falsifier(s), records every triggered `FalsifierItem` as a row in `falsifiers.jsonl` via the hash-chained audit log, records a `Decision` row noting the campaign halt, and validates the chain after every case. Carries `DEFAULT_CASES` (the 16-case immutable tuple), `WAVE_CASE_ORDER`, `COFIRES` (documented allowed-extra triggers), and the case-specific synthesizers for the three cases without dedicated fixtures (`missing_source_manifest`, `dft_convergence_failure`, `phasefield_conservation_violation`). |
+| `src/zer0pa_materials_workbench/falsifiers/wave_report.py` | ~205 | `generate_falsification_wave_report(result)` returns a markdown string with the verbatim boundary block, the inverted-semantics callout, an aggregate count table, a per-case verdict table, an "Issues found" section that surfaces missed/spurious/chain-break cases as visible bugs, and an explicit list of documented co-fires. |
+| `src/zer0pa_materials_workbench/cli/falsification.py` | ~210 | `falsification` Typer subapp with `run`, `validate-chain`, and `list-cases` commands. The lead agent will wire `falsification_app` into `cli/main.py` after this wave. The CLI exits non-zero when any case is missed/spurious/chain-broken so CI catches regressions. |
 | `tests/integration/test_full_falsification_wave.py` | ~290 | 41 tests covering: case completeness (count = 16, fixtures exist, target falsifier names are unique), end-to-end wave run, audit persistence (every triggered FalsifierItem becomes a `falsifiers.jsonl` row with the boundary, every case writes a `decisions.jsonl` row, both chains validate), KG side effects (one Falsifier node per case, 16 total), campaign-state non-corruption (case order is deterministic, repeat runs yield identical verdicts), report rendering (boundary present, aggregate table present, inverted-semantics callout present, every case appears with its target), and per-case sanity (16 parameterised tests, one per case). |
 | `phases/Falsification-wave/PHASE-REPORT.md` | this file | The phase report. |
 | `phases/Falsification-wave/FALSIFICATION-WAVE-REPORT.md` | ~85 | The artifact for `EXECUTION-REPORT.md` to cite — output of `generate_falsification_wave_report` after running the wave on the live fixtures. |
@@ -102,7 +102,7 @@ The `falsification` Typer subapp ships with three commands:
 - `falsification validate-chain [--audit-dir PATH]` — re-validates `falsifiers.jsonl` and `decisions.jsonl` after the fact (useful for CI after a separate run, or for validating an audit dir copied from another machine).
 - `falsification list-cases` — pretty-prints the 16-case order with case name, layer, target falsifier, and source.
 
-The lead agent wires `falsification_app` into `cli/main.py` after this wave. Standalone invocation works today via `python -m zer0pa_materials.cli.falsification ...`.
+The lead agent wires `falsification_app` into `cli/main.py` after this wave. Standalone invocation works today via `python -m zer0pa_materials_workbench.cli.falsification ...`.
 
 ## Hash chain proof
 
@@ -133,7 +133,7 @@ The lead agent's next step is the final hard-gate verification + EXECUTION-REPOR
 
 1. Read `phases/Falsification-wave/FALSIFICATION-WAVE-REPORT.md` — that is the artifact to cite in the execution report.
 2. Wire `falsification_app` into `cli/main.py` (single-line `app.add_typer(falsification_app, name="falsification")`).
-3. Run `.venv/bin/python -m pytest tests -q | tail -5` and `.venv/bin/python -m zer0pa_materials.cli.falsification validate-chain --audit-dir audit/wave6` to confirm green-flags.
+3. Run `.venv/bin/python -m pytest tests -q | tail -5` and `.venv/bin/python -m zer0pa_materials_workbench.cli.falsification validate-chain --audit-dir audit/wave6` to confirm green-flags.
 4. Compose the EXECUTION-REPORT.md per PRD §Final Output Required and commit.
 
 There are no parked items from this wave.

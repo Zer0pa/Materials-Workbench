@@ -12,7 +12,7 @@ Discipline
 The Wave F5 audit caught the smoking gun: the orchestration layer
 (``AcceptanceGate``, ``promote_battery_candidate``, ``wave_runner``,
 ``validate_evidence_packet``) called the OLD shape-only gates while Wave D
-had hardened gates sitting unwired in ``zer0pa_materials.falsifiers``.
+had hardened gates sitting unwired in ``zer0pa_materials_workbench.falsifiers``.
 
 This test builds a synthetic battery campaign on LLZO cubic with FORGED
 envelopes — each envelope carries a claim that PASSES the OLD shape-only
@@ -46,26 +46,24 @@ from typing import Any
 
 import pytest
 
-from zer0pa_materials.audit.rights import RightsClaim
-from zer0pa_materials.boundary import RESEARCH_BOUNDARY
-from zer0pa_materials.envelope import (
+from zer0pa_materials_workbench.audit.rights import RightsClaim
+from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
+from zer0pa_materials_workbench.envelope import (
     AuditBlock,
     Envelope,
     FalsifierBlock,
-    FalsifierItem,
     RightsBlock,
     ToolAdapter,
     sha256_of,
 )
-from zer0pa_materials.envelope.hashing import structure_hash
-from zer0pa_materials.falsifiers.raw_evidence import (
+from zer0pa_materials_workbench.envelope.hashing import structure_hash
+from zer0pa_materials_workbench.falsifiers.raw_evidence import (
     llzo_cubic_reference_structure,
 )
-from zer0pa_materials.orchestration.acceptance_gates import (
+from zer0pa_materials_workbench.orchestration.acceptance_gates import (
     AcceptanceGate,
     GateContext,
 )
-
 
 # ---------------------------------------------------------------------------
 # Forged envelope builders
@@ -247,7 +245,7 @@ def _forged_l3_envelope() -> Envelope:
     extra block, so we encode the adversarial signal via the adapter
     name (``PhaseForgePlusAdapter``). The L3 sovereign-block recompute
     helper recognises this path too — see
-    :func:`zer0pa_materials.falsifiers.l3_falsifiers._envelope_used_phaseforgeplus`.
+    :func:`zer0pa_materials_workbench.falsifiers.l3_falsifiers._envelope_used_phaseforgeplus`.
     """
     output = {
         "phase_set": ["alpha", "beta"],
@@ -466,8 +464,8 @@ class TestPromoteBatteryCandidateBlocksForgedChain:
         empty_audit_log: list[dict[str, Any]],
         llzo_reference_set: set[str],
     ) -> None:
-        from zer0pa_materials.adapters.ionic.base import IonicJobParams
-        from zer0pa_materials.services.ionic_transport_service import (
+        from zer0pa_materials_workbench.adapters.ionic.base import IonicJobParams
+        from zer0pa_materials_workbench.services.ionic_transport_service import (
             promote_battery_candidate,
             run_full_battery_evidence,
         )
@@ -529,8 +527,8 @@ class TestPromoteBatteryCandidateBlocksForgedChain:
         """Even without the extra L2/L6/etc envelopes, the NEB barrier
         recompute alone is enough to reject the forged chain via the
         ionic-bundle path."""
-        from zer0pa_materials.adapters.ionic.base import IonicJobParams
-        from zer0pa_materials.services.ionic_transport_service import (
+        from zer0pa_materials_workbench.adapters.ionic.base import IonicJobParams
+        from zer0pa_materials_workbench.services.ionic_transport_service import (
             promote_battery_candidate,
             run_full_battery_evidence,
         )
@@ -581,13 +579,13 @@ class TestValidatePacketBlocksForgedChain:
         ones; the validator's per-envelope recompute walker MUST surface
         at least one ``fail`` per smoking-gun gate.
         """
-        from zer0pa_materials.packets.evidence_packet import (
+        from zer0pa_materials_workbench.packets.evidence_packet import (
             EvidencePacket,
             PacketBundle,
             PacketPublishableTarget,
             PacketSection,
         )
-        from zer0pa_materials.packets.validators import validate_evidence_packet
+        from zer0pa_materials_workbench.packets.validators import validate_evidence_packet
 
         # Wrap each forged envelope as a section.
         sections: dict[str, PacketSection] = {}
@@ -668,9 +666,9 @@ class TestWaveRunnerSurfacesRecomputeViolations:
     """
 
     def test_recompute_sweep_catches_forged_chain(self, tmp_path: Path) -> None:
-        from zer0pa_materials.audit.kg import MaterialsKG
-        from zer0pa_materials.audit.log import AuditLog
-        from zer0pa_materials.falsifiers.wave_runner import (
+        from zer0pa_materials_workbench.audit.kg import MaterialsKG
+        from zer0pa_materials_workbench.audit.log import AuditLog
+        from zer0pa_materials_workbench.falsifiers.wave_runner import (
             FalsificationWaveRunner,
         )
 
@@ -709,7 +707,7 @@ class TestOldShapeGatesWouldHaveAccepted:
         directly. The forged L2 envelope claims 5 meV/atom (under the 25
         threshold) and routing_decision='promote', so the old gate
         accepts it as ``status="pass"``."""
-        from zer0pa_materials.falsifiers.l2_falsifiers import (
+        from zer0pa_materials_workbench.falsifiers.l2_falsifiers import (
             dpa_mace_disagreement_routing,
         )
 
@@ -725,7 +723,7 @@ class TestOldShapeGatesWouldHaveAccepted:
     def test_new_l2_recompute_gate_rejects_forged_l2(self) -> None:
         """The new ``dpa_mace_disagreement_routing_recomputed`` recomputes
         from the per-model predictions and catches the forgery."""
-        from zer0pa_materials.falsifiers.l2_falsifiers import (
+        from zer0pa_materials_workbench.falsifiers.l2_falsifiers import (
             dpa_mace_disagreement_routing_recomputed,
         )
 

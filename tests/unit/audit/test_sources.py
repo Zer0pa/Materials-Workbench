@@ -6,8 +6,8 @@ import datetime as _dt
 
 import pytest
 
-from zer0pa_materials.audit.log import AuditLog
-from zer0pa_materials.audit.sources import (
+from zer0pa_materials_workbench.audit.log import AuditLog
+from zer0pa_materials_workbench.audit.sources import (
     BlockedSourceManifest,
     SourceManifest,
 )

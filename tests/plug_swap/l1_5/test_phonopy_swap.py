@@ -11,15 +11,14 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.adapters.l1_5.base import L15JobParams
-from zer0pa_materials.adapters.l1_5.phono3py_bte import Phono3pyAnharmonicBTEAdapter
-from zer0pa_materials.adapters.l1_5.phonopy_harmonic import PhonopyHarmonicAdapter
-from zer0pa_materials.envelope import (
+from zer0pa_materials_workbench.adapters.l1_5.base import L15JobParams
+from zer0pa_materials_workbench.adapters.l1_5.phono3py_bte import Phono3pyAnharmonicBTEAdapter
+from zer0pa_materials_workbench.adapters.l1_5.phonopy_harmonic import PhonopyHarmonicAdapter
+from zer0pa_materials_workbench.envelope import (
     Envelope,
     L15PhononOutput,
     validate_layer_output,
 )
-
 
 _TE_FIXTURES = [
     (
@@ -117,10 +116,10 @@ def test_phonopy_adapter_name_is_stable() -> None:
 
 def test_all_l15_adapters_share_layer() -> None:
     """All L1.5 adapters must emit layer='L1.5' envelopes."""
-    from zer0pa_materials.adapters.l1_5.hiphive_fit import HiPhiveForceConstantFitAdapter
-    from zer0pa_materials.adapters.l1_5.boltztrap2 import BoltzTraP2RigidBandTransportAdapter
-    from zer0pa_materials.adapters.l1_5.amset import AmsetScatteringTransportAdapter
-    from zer0pa_materials.adapters.l1_5.zt_assembler import ThermoelectricZtAssembler
+    from zer0pa_materials_workbench.adapters.l1_5.amset import AmsetScatteringTransportAdapter
+    from zer0pa_materials_workbench.adapters.l1_5.boltztrap2 import BoltzTraP2RigidBandTransportAdapter
+    from zer0pa_materials_workbench.adapters.l1_5.hiphive_fit import HiPhiveForceConstantFitAdapter
+    from zer0pa_materials_workbench.adapters.l1_5.zt_assembler import ThermoelectricZtAssembler
 
     params = L15JobParams(
         structure_hash="sha256:bi2te3_plug_swap_all_adapters_0001",

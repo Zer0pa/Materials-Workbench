@@ -1,4 +1,4 @@
-# Reviewer Guide — Zer0pa Materials
+# Reviewer Guide — Zer0pa Materials Workbench
 
 Five-minute orientation for a fresh reviewer cloning the repo on another machine.
 
@@ -10,7 +10,7 @@ Research infrastructure for in silico materials science discovery. Outputs are r
 
 ```bash
 # 1. Clone
-git clone https://github.com/Zer0pa/Materials.git
+git clone https://github.com/Zer0pa/Materials-Workbench.git
 cd Materials
 
 # 2. Create venv (Python 3.10+; we used 3.13.12)
@@ -27,10 +27,10 @@ python3.13 -m venv .venv
 # expected: 3547 passed (post-Wave-F latest), 2 skipped (pycalphad-not-installed), 0 failed
 
 # 5. Try the CLI
-.venv/bin/zer0pa-materials --help
+.venv/bin/zer0pa-materials-workbench --help
 
 # 6. Run the falsification wave end-to-end (optional; takes ~10s)
-.venv/bin/zer0pa-materials falsification run --audit-dir /tmp/wave-review
+.venv/bin/zer0pa-materials-workbench falsification run --audit-dir /tmp/wave-review
 ```
 
 If anything in steps 1–4 fails, that is a build-environment bug we want to know about before proceeding.
@@ -69,7 +69,7 @@ Materials/
 │   ├── L7-orchestration/, MVP-packet/, Plug-swap-framework/, Runpod-cutover/,
 │   ├── Cross-layer-integration/, Falsification-wave/, Deep-Research/,
 │   └── Pause-state-handoff/         # mid-execution pause/resume handoff (historical)
-├── src/zer0pa_materials/
+├── src/zer0pa_materials_workbench/
 │   ├── boundary.py                 # research-only boundary enforcement
 │   ├── envelope/                   # universal layer envelope, schemas, units, hashing, config
 │   ├── audit/                      # 11-category JSONL hash chain + 28-node KG + EMMO bindings
@@ -110,15 +110,15 @@ Materials/
 | Reviewer interest | Start here |
 |---|---|
 | Did the build actually run? | [`tests/integration/test_full_falsification_wave.py`](tests/integration/test_full_falsification_wave.py) and the audit ledger at [`audit/wave6/falsifiers.jsonl`](audit/wave6/falsifiers.jsonl) |
-| Architecture as a whole | [`PRD.md`](PRD.md) §Architecture Invariant + [`src/zer0pa_materials/envelope/envelope.py`](src/zer0pa_materials/envelope/envelope.py) |
+| Architecture as a whole | [`PRD.md`](PRD.md) §Architecture Invariant + [`src/zer0pa_materials_workbench/envelope/envelope.py`](src/zer0pa_materials_workbench/envelope/envelope.py) |
 | Universal envelope schema | [`runtime/schemas/envelope.v1.schema.json`](runtime/schemas/envelope.v1.schema.json) |
-| Battery MVP claims | [`phases/Ionic-transport/PHASE-REPORT.md`](phases/Ionic-transport/PHASE-REPORT.md) and [`src/zer0pa_materials/falsifiers/ionic_falsifiers.py`](src/zer0pa_materials/falsifiers/ionic_falsifiers.py) |
-| DPA-3 + MACE ensemble + UMA license gate | [`src/zer0pa_materials/adapters/l2/`](src/zer0pa_materials/adapters/l2/) and [`phases/L2-mlip/PHASE-REPORT.md`](phases/L2-mlip/PHASE-REPORT.md) |
-| Audit hash chain + KG | [`src/zer0pa_materials/audit/`](src/zer0pa_materials/audit/) and [`tests/unit/audit/`](tests/unit/audit/) |
-| EMMO ontology bindings | [`src/zer0pa_materials/ontology/emmo.py`](src/zer0pa_materials/ontology/emmo.py) and [`phases/Deep-Research/emmo-iri-verification.md`](phases/Deep-Research/emmo-iri-verification.md) |
-| Plug-replaceability invariant | [`src/zer0pa_materials/plugswap/`](src/zer0pa_materials/plugswap/) and [`phases/Plug-swap-framework/acceptance-report.md`](phases/Plug-swap-framework/acceptance-report.md) |
-| Runpod cutover | [`docs/RUNPOD-CUTOVER.md`](docs/RUNPOD-CUTOVER.md) and [`src/zer0pa_materials/runpod/`](src/zer0pa_materials/runpod/) |
-| MVP evidence packet | [`src/zer0pa_materials/packets/`](src/zer0pa_materials/packets/) and [`tests/integration/packets/`](tests/integration/packets/) |
+| Battery MVP claims | [`phases/Ionic-transport/PHASE-REPORT.md`](phases/Ionic-transport/PHASE-REPORT.md) and [`src/zer0pa_materials_workbench/falsifiers/ionic_falsifiers.py`](src/zer0pa_materials_workbench/falsifiers/ionic_falsifiers.py) |
+| DPA-3 + MACE ensemble + UMA license gate | [`src/zer0pa_materials_workbench/adapters/l2/`](src/zer0pa_materials_workbench/adapters/l2/) and [`phases/L2-mlip/PHASE-REPORT.md`](phases/L2-mlip/PHASE-REPORT.md) |
+| Audit hash chain + KG | [`src/zer0pa_materials_workbench/audit/`](src/zer0pa_materials_workbench/audit/) and [`tests/unit/audit/`](tests/unit/audit/) |
+| EMMO ontology bindings | [`src/zer0pa_materials_workbench/ontology/emmo.py`](src/zer0pa_materials_workbench/ontology/emmo.py) and [`phases/Deep-Research/emmo-iri-verification.md`](phases/Deep-Research/emmo-iri-verification.md) |
+| Plug-replaceability invariant | [`src/zer0pa_materials_workbench/plugswap/`](src/zer0pa_materials_workbench/plugswap/) and [`phases/Plug-swap-framework/acceptance-report.md`](phases/Plug-swap-framework/acceptance-report.md) |
+| Runpod cutover | [`docs/RUNPOD-CUTOVER.md`](docs/RUNPOD-CUTOVER.md) and [`src/zer0pa_materials_workbench/runpod/`](src/zer0pa_materials_workbench/runpod/) |
+| MVP evidence packet | [`src/zer0pa_materials_workbench/packets/`](src/zer0pa_materials_workbench/packets/) and [`tests/integration/packets/`](tests/integration/packets/) |
 | Falsification ledger | [`phases/Falsification-wave/FALSIFICATION-WAVE-REPORT.md`](phases/Falsification-wave/FALSIFICATION-WAVE-REPORT.md) |
 | What's parked for Runpod and why | [`EXECUTION-REPORT.md`](EXECUTION-REPORT.md) §Parked for Runpod |
 | Open blockers requiring user input | [`EXECUTION-REPORT.md`](EXECUTION-REPORT.md) §Open blockers |
@@ -126,40 +126,40 @@ Materials/
 ## CLI surface
 
 ```
-zer0pa-materials version
-zer0pa-materials envelope-schema [--layer <name>]
-zer0pa-materials check-config
-zer0pa-materials run-falsification-wave    # placeholder; use 'falsification run' for the real wave
+zer0pa-materials-workbench version
+zer0pa-materials-workbench envelope-schema [--layer <name>]
+zer0pa-materials-workbench check-config
+zer0pa-materials-workbench run-falsification-wave    # placeholder; use 'falsification run' for the real wave
 
-zer0pa-materials audit add-source ...
-zer0pa-materials audit add-blocked-source ...
-zer0pa-materials audit validate-chain <category>
-zer0pa-materials audit reconstruct [<repo-root>]
+zer0pa-materials-workbench audit add-source ...
+zer0pa-materials-workbench audit add-blocked-source ...
+zer0pa-materials-workbench audit validate-chain <category>
+zer0pa-materials-workbench audit reconstruct [<repo-root>]
 
 # Layer-specific commands (each layer has --help):
-zer0pa-materials phase0     ...    # Phase 0 literature + OPTIMADE
-zer0pa-materials l6         ...    # L6 generative
-zer0pa-materials l1         ...    # L1 DFT
-zer0pa-materials quantum    ...    # quantum slot (L1 VQE / L4 QAOA / L7 amplitude amplification dispatcher)
-zer0pa-materials l2         ...    # L2 MLIP ensemble
-zer0pa-materials ionic      ...    # IonicTransportService — battery evidence engine
-zer0pa-materials l15        ...    # L1.5 phonon + thermoelectric (PRD writes "L1.5", typer uses "l15")
-zer0pa-materials l3         ...    # L3 CALPHAD sovereign pipeline
-zer0pa-materials l4         ...    # L4 phase field + kMC + neural-operator
-zer0pa-materials l5         ...    # L5 FEM/CFD continuum
-zer0pa-materials l7         ...    # L7 orchestration / active-learning loop
+zer0pa-materials-workbench phase0     ...    # Phase 0 literature + OPTIMADE
+zer0pa-materials-workbench l6         ...    # L6 generative
+zer0pa-materials-workbench l1         ...    # L1 DFT
+zer0pa-materials-workbench quantum    ...    # quantum slot (L1 VQE / L4 QAOA / L7 amplitude amplification dispatcher)
+zer0pa-materials-workbench l2         ...    # L2 MLIP ensemble
+zer0pa-materials-workbench ionic      ...    # IonicTransportService — battery evidence engine
+zer0pa-materials-workbench l15        ...    # L1.5 phonon + thermoelectric (PRD writes "L1.5", typer uses "l15")
+zer0pa-materials-workbench l3         ...    # L3 CALPHAD sovereign pipeline
+zer0pa-materials-workbench l4         ...    # L4 phase field + kMC + neural-operator
+zer0pa-materials-workbench l5         ...    # L5 FEM/CFD continuum
+zer0pa-materials-workbench 07         ...    # L7 orchestration / active-learning loop
 
 # Cross-cutting
-zer0pa-materials packets    ...    # MVP evidence packet generator
-zer0pa-materials falsification ... # full 16-case adversarial wave
-zer0pa-materials runpod     ...    # cutover precheck / sentinel / parity / promote / runbook
+zer0pa-materials-workbench packets    ...    # MVP evidence packet generator
+zer0pa-materials-workbench falsification ... # full 16-case adversarial wave
+zer0pa-materials-workbench runpod     ...    # cutover precheck / sentinel / parity / promote / runbook
 ```
 
 ## The three hardest things to verify by reviewing alone
 
 1. **Brain-functionality (PRD §Acceptance Gates)** — a fresh agent must reconstruct project state from the repo without chat history. Verified by [`tests/integration/campaigns/test_brain_functionality.py`](tests/integration/campaigns/test_brain_functionality.py) which spawns a separate Python process (`subprocess.run`) and calls `reconstruct_from_repo` on the bare repo. Run it: `pytest tests/integration/campaigns/test_brain_functionality.py -v`.
 2. **Plug-replaceability (PRD §Architecture Invariant)** — "swap any layer's tool in <1 day with no downstream breakage." The `PlugSwapHarness` framework runs adapter A then adapter B against the same golden-seed request; passes only if downstream code unchanged + schemas validate + audit provenance + disagreement/falsifier state preserved. Acceptance report at [`phases/Plug-swap-framework/acceptance-report.md`](phases/Plug-swap-framework/acceptance-report.md) — every layer < 5 s, longest is L3 at ~0.05 s.
-3. **Falsification wave** — every PRD-mandated deliberate failure must trigger its target gate and only that gate. Run it: `zer0pa-materials falsification run --audit-dir /tmp/wave-review --report-path /tmp/wave-review/REPORT.md` then read the markdown report. Expected: 16/16 fired correctly, 0 missed, 0 spurious.
+3. **Falsification wave** — every PRD-mandated deliberate failure must trigger its target gate and only that gate. Run it: `zer0pa-materials-workbench falsification run --audit-dir /tmp/wave-review --report-path /tmp/wave-review/REPORT.md` then read the markdown report. Expected: 16/16 fired correctly, 0 missed, 0 spurious.
 
 ## Things a reviewer might reasonably question
 
@@ -179,6 +179,6 @@ Every artifact emitted by every layer carries the verbatim research-only boundar
 
 ## Contact
 
-- GitHub: https://github.com/Zer0pa/Materials
+- GitHub: https://github.com/Zer0pa/Materials-Workbench
 - Operator email: architects@zer0pa.ai
 - Authority: Zer0pa-Architect-Prime (gh-cli authenticated)

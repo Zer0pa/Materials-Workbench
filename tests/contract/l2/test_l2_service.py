@@ -10,8 +10,7 @@ httpx = pytest.importorskip("httpx", reason="httpx required for contract tests")
 
 from fastapi.testclient import TestClient
 
-from zer0pa_materials.boundary import RESEARCH_BOUNDARY
-
+from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
 
 SI_STRUCTURE = {
     "lattice_vectors": [[3.84, 0.0, 0.0], [0.0, 3.84, 0.0], [0.0, 0.0, 3.84]],
@@ -30,7 +29,7 @@ PREDICT_PAYLOAD = {
 
 @pytest.fixture(scope="module")
 def client():
-    from zer0pa_materials.services.l2_service import _make_app
+    from zer0pa_materials_workbench.services.l2_service import _make_app
     app = _make_app()
     with TestClient(app) as c:
         yield c

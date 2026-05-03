@@ -29,11 +29,10 @@ import hashlib
 import json
 from pathlib import Path
 
-from zer0pa_materials.falsifiers.l5_falsifiers import (
+from zer0pa_materials_workbench.falsifiers.l5_falsifiers import (
     artifact_units_sidecar_present,
     verify_l5_artifact_sidecar,
 )
-
 
 # ---------------------------------------------------------------------------
 # Fixture helpers

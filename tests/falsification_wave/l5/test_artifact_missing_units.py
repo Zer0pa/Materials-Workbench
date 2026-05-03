@@ -11,17 +11,16 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.falsifiers.l5_falsifiers import (
-    artifact_units_sidecar_present,
+from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
+from zer0pa_materials_workbench.falsifiers.l5_falsifiers import (
     analytic_heat_slab_error,
+    artifact_units_sidecar_present,
+    cfd_heat_balance_error,
+    cfd_mass_balance_error,
     elastic_patch_residual,
     openfoam_poiseuille_profile_error,
-    cfd_mass_balance_error,
-    cfd_heat_balance_error,
     tensor_spd_check,
 )
-from zer0pa_materials.boundary import RESEARCH_BOUNDARY
-
 
 # ---------------------------------------------------------------------------
 # Synthetic envelopes
@@ -244,7 +243,6 @@ class TestOnlyArtifactGateFires:
 
     def test_spd_check_passes_for_valid_tensor(self):
         """SPD gate must pass for a well-formed isotropic tensor."""
-        import numpy as np
         lam = 200.0 * 0.3 / (1.3 * 0.4)
         mu = 200.0 / (2.0 * 1.3)
         C11 = lam + 2 * mu

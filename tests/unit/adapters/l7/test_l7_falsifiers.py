@@ -2,20 +2,14 @@
 
 from __future__ import annotations
 
-from typing import Any
-
-import pytest
-
-from zer0pa_materials.adapters.l7 import (
-    AlabOSProtocolCompilerStub,
+from zer0pa_materials_workbench.adapters.l7 import (
     BoTorchAcquisitionAdapter,
     LangGraphReasonerAdapter,
     ParslFanoutAdapter,
     PrefectCampaignAdapter,
 )
-from zer0pa_materials.adapters.l7.base import L7CampaignParams
-from zer0pa_materials.envelope import Envelope
-from zer0pa_materials.falsifiers.l7_falsifiers import (
+from zer0pa_materials_workbench.adapters.l7.base import L7CampaignParams
+from zer0pa_materials_workbench.falsifiers.l7_falsifiers import (
     aiida_atomate2_provenance_complete,
     alabos_recipe_only_enforcement,
     botorch_acquisition_function_allowed,
@@ -65,7 +59,7 @@ def test_parsl_fanout_attribution_fail_when_no_parent():
 
 
 def test_aiida_atomate2_provenance_complete_pass():
-    from zer0pa_materials.adapters.l7 import AiiDAProvenanceAdapter
+    from zer0pa_materials_workbench.adapters.l7 import AiiDAProvenanceAdapter
 
     env = AiiDAProvenanceAdapter().execute(_params())
     item = aiida_atomate2_provenance_complete(env)

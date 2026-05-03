@@ -16,9 +16,9 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.boundary import RESEARCH_BOUNDARY
-from zer0pa_materials.envelope.hashing import HASH_REGEX, sha256_of
-from zer0pa_materials.envelope.envelope import Envelope
+from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
+from zer0pa_materials_workbench.envelope.envelope import Envelope
+from zer0pa_materials_workbench.envelope.hashing import HASH_REGEX, sha256_of
 
 # L7 is not in RUNPOD_MOCK_LAYERS (it is orchestration, not GPU-bound).
 # We test the campaign output schema directly.

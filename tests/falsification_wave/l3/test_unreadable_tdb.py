@@ -13,16 +13,13 @@ from pathlib import Path
 
 import pytest
 
-from zer0pa_materials.falsifiers.l3_falsifiers import (
+from zer0pa_materials_workbench.falsifiers.l3_falsifiers import (
     espei_posterior_diagnostics,
     phase_boundary_drift,
-    phase_fraction_js_divergence,
-    phase_set_jaccard_distance,
     phaseforgeplus_license_gate,
     tdb_parses_in_pycalphad,
     tdb_quarantine_breach,
 )
-
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 FIXTURE_DIR = REPO_ROOT / "fixtures" / "negatives" / "unreadable_tdb"

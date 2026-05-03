@@ -11,13 +11,13 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.adapters.l1_5.base import L15JobParams
-from zer0pa_materials.adapters.l1_5.phono3py_bte import (
+from zer0pa_materials_workbench.adapters.l1_5.base import L15JobParams
+from zer0pa_materials_workbench.adapters.l1_5.phono3py_bte import (
     Phono3pyAnharmonicBTEAdapter,
     compute_qmesh_convergence,
     synthetic_kappa_L,
 )
-from zer0pa_materials.envelope import Envelope, L15PhononOutput
+from zer0pa_materials_workbench.envelope import Envelope, L15PhononOutput
 
 
 class TestSyntheticKappaL:

@@ -1,4 +1,4 @@
-# Zer0pa Materials Overnight Execution PRD
+# Zer0pa Materials Workbench Overnight Execution PRD
 
 ## Boundary
 
@@ -25,7 +25,7 @@ The overnight executor must read the repository in the order specified in `HANDO
 - `source-briefs/01-full-technology-landscape.md`
 - `source-briefs/02-corrections-and-architecture.md`
 
-The GitHub repository is canonical: `https://github.com/Zer0pa/Materials`.
+The GitHub repository is canonical: `https://github.com/Zer0pa/Materials-Workbench`.
 
 ## Scope
 
@@ -486,7 +486,7 @@ Runpod migration may begin only when `local_stub`, `local_cpu`, and `runpod_mock
 
 Cutover procedure:
 
-1. Provision Runpod machine and clone `https://github.com/Zer0pa/Materials`.
+1. Provision Runpod machine and clone `https://github.com/Zer0pa/Materials-Workbench`.
 2. Install GPU/Docker dependencies only on the Runpod machine.
 3. Set backend URLs and config flags.
 4. Run sentinel campaign with LLZO, Li6PS5Cl, Li-Mg-Zr-Cl seed, and thermoelectric sidecar.

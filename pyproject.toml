@@ -3,9 +3,9 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "zer0pa-materials"
+name = "zer0pa-materials-workbench"
 version = "0.1.0"
-description = "Zer0pa Materials — research infrastructure for in silico materials science discovery"
+description = "Zer0pa Materials Workbench — research infrastructure for in silico materials science discovery"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "Proprietary — Zer0pa research artifact" }
@@ -84,7 +84,7 @@ runpod = [
 ]
 
 [project.scripts]
-zer0pa-materials = "zer0pa_materials.cli:app"
+zer0pa-materials-workbench = "zer0pa_materials_workbench.cli:app"
 
 [tool.setuptools.packages.find]
 where = ["src"]

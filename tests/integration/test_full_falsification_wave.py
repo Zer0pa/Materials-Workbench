@@ -23,25 +23,21 @@ The wave is adversarial. The asserts below verify:
 
 from __future__ import annotations
 
-import json
 from pathlib import Path
 
 import pytest
 
-from zer0pa_materials.audit.kg import MaterialsKG
-from zer0pa_materials.audit.log import AuditLog
-from zer0pa_materials.boundary import RESEARCH_BOUNDARY
-from zer0pa_materials.falsifiers.wave_report import generate_falsification_wave_report
-from zer0pa_materials.falsifiers.wave_runner import (
+from zer0pa_materials_workbench.audit.kg import MaterialsKG
+from zer0pa_materials_workbench.audit.log import AuditLog
+from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
+from zer0pa_materials_workbench.falsifiers.wave_report import generate_falsification_wave_report
+from zer0pa_materials_workbench.falsifiers.wave_runner import (
     COFIRES,
     DEFAULT_CASES,
-    FalsificationCase,
-    FalsificationCaseResult,
+    WAVE_CASE_ORDER,
     FalsificationWaveResult,
     FalsificationWaveRunner,
-    WAVE_CASE_ORDER,
 )
-
 
 # ---------------------------------------------------------------------------
 # Fixture paths

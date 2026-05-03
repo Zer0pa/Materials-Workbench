@@ -30,8 +30,8 @@ from pathlib import Path
 
 import pytest
 
-from zer0pa_materials.boundary import RESEARCH_BOUNDARY
-from zer0pa_materials.falsifiers.uma_manifest import (
+from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
+from zer0pa_materials_workbench.falsifiers.uma_manifest import (
     DEFAULT_MANIFEST_VERSION,
     RESTRICTED_JURISDICTIONS,
     UmaAupLicenseManifest,
@@ -40,8 +40,7 @@ from zer0pa_materials.falsifiers.uma_manifest import (
     enable_uma_with_manifest,
     verify_uma_manifest,
 )
-from zer0pa_materials.repo_root import phase_dir
-
+from zer0pa_materials_workbench.repo_root import phase_dir
 
 # ---------------------------------------------------------------------------
 # Builders

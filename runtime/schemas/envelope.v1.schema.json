@@ -387,7 +387,7 @@
       "type": "object"
     },
     "research_boundary": {
-      "description": "Verbatim copy of zer0pa_materials.boundary.RESEARCH_BOUNDARY.",
+      "description": "Verbatim copy of zer0pa_materials_workbench.boundary.RESEARCH_BOUNDARY.",
       "title": "Research Boundary",
       "type": "string"
     },

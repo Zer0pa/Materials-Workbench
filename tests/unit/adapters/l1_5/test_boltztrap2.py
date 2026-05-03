@@ -12,13 +12,12 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.adapters.l1_5.base import L15JobParams
-from zer0pa_materials.adapters.l1_5.boltztrap2 import (
+from zer0pa_materials_workbench.adapters.l1_5.base import L15JobParams
+from zer0pa_materials_workbench.adapters.l1_5.boltztrap2 import (
     BoltzTraP2RigidBandTransportAdapter,
     compute_power_factor,
-    TE_LITERATURE_TRANSPORT,
 )
-from zer0pa_materials.envelope import Envelope, L15PhononOutput
+from zer0pa_materials_workbench.envelope import L15PhononOutput
 
 
 class TestComputePowerFactor:

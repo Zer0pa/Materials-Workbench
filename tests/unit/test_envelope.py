@@ -2,28 +2,24 @@
 
 from __future__ import annotations
 
-import copy
-
 import pytest
 from pydantic import ValidationError
 
-from zer0pa_materials.boundary import RESEARCH_BOUNDARY, BoundaryError
-from zer0pa_materials.envelope import (
+from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY, BoundaryError
+from zer0pa_materials_workbench.envelope import (
+    ENVELOPE_KEY_ORDER,
     AuditBlock,
     BackEdge,
     ConfidenceBlock,
     DisagreementBlock,
     DisagreementMetric,
-    ENVELOPE_KEY_ORDER,
     Envelope,
     FalsifierBlock,
     FalsifierItem,
-    L1QuantumVqeOutput,
     RightsBlock,
     ToolAdapter,
     sha256_of,
 )
-
 
 # ----------------------------------------------------------------------------
 # Helpers
@@ -146,7 +142,7 @@ def test_envelope_allows_therapeutic_candidate_phrase():
 def test_envelope_directly_raises_boundary_error_when_called_via_dict_walker():
     """The module-level ``assert_boundary`` raises BoundaryError directly; only
     the pydantic validator wraps it as a ValidationError."""
-    from zer0pa_materials.boundary import assert_boundary
+    from zer0pa_materials_workbench.boundary import assert_boundary
     with pytest.raises(BoundaryError):
         assert_boundary(
             {

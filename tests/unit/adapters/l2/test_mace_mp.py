@@ -4,11 +4,10 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.adapters.l2.base import L2PredictRequest
-from zer0pa_materials.adapters.l2.mace_mp import MaceMpCalculatorAdapter
-from zer0pa_materials.boundary import RESEARCH_BOUNDARY
-from zer0pa_materials.envelope.envelope import Envelope
-
+from zer0pa_materials_workbench.adapters.l2.base import L2PredictRequest
+from zer0pa_materials_workbench.adapters.l2.mace_mp import MaceMpCalculatorAdapter
+from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
+from zer0pa_materials_workbench.envelope.envelope import Envelope
 
 SI_STRUCTURE = {
     "lattice_vectors": [[3.84, 0.0, 0.0], [0.0, 3.84, 0.0], [0.0, 0.0, 3.84]],
@@ -69,7 +68,7 @@ class TestMaceMpPredictShape:
 class TestMaceMpDifferentFromDpa:
     def test_mace_energy_differs_from_dpa(self):
         """MACE and DPA stubs use different seed offsets → different energies."""
-        from zer0pa_materials.adapters.l2.deepmd_dpa import DeepmdDpaCalculatorAdapter
+        from zer0pa_materials_workbench.adapters.l2.deepmd_dpa import DeepmdDpaCalculatorAdapter
 
         mace = MaceMpCalculatorAdapter()
         dpa = DeepmdDpaCalculatorAdapter()

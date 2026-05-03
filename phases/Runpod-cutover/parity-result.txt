@@ -1,0 +1,32 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.11.15, pytest-9.0.3, pluggy-1.6.0
+rootdir: /Users/zer0palab/Materials Pipeline
+configfile: pyproject.toml
+plugins: cov-7.1.0, asyncio-1.3.0, hypothesis-6.152.4, anyio-4.13.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 588 items
+
+tests/parity/test_cross_layer_parity.py ................................ [  5%]
+........................................................................ [ 17%]
+........................................................................ [ 29%]
+........................                                                 [ 34%]
+tests/parity/test_hard_failures.py ..................................... [ 40%]
+.....                                                                    [ 41%]
+tests/parity/test_ionic_parity.py ................................       [ 46%]
+tests/parity/test_l1_5_parity.py .....................                   [ 50%]
+tests/parity/test_l1_parity.py ......................................... [ 57%]
+...                                                                      [ 57%]
+tests/parity/test_l2_parity.py ................................          [ 63%]
+tests/parity/test_l3_parity.py ................................          [ 68%]
+tests/parity/test_l4_parity.py ................................          [ 73%]
+tests/parity/test_l5_parity.py ................................          [ 79%]
+tests/parity/test_l6_parity.py ..................................        [ 85%]
+tests/parity/test_l7_parity.py .......                                   [ 86%]
+tests/parity/test_mock_in_rest_report.py ....                            [ 87%]
+tests/parity/test_phase0_parity.py .............                         [ 89%]
+tests/parity/test_precheck_executes.py ..........                        [ 90%]
+tests/parity/test_quantum_parity.py ..............                       [ 93%]
+tests/parity/test_runpod_dispatcher.py ..................                [ 96%]
+tests/parity/test_runpod_rest_invariants.py .....................        [100%]
+
+======================= 588 passed in 163.31s (0:02:43) ========================

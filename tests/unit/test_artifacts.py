@@ -7,7 +7,7 @@ import datetime as _dt
 import pytest
 from pydantic import ValidationError
 
-from zer0pa_materials.envelope import (
+from zer0pa_materials_workbench.envelope import (
     ArtifactManifest,
     append_artifact_manifest_jsonl,
     iter_artifact_manifest_jsonl,

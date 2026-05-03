@@ -2,10 +2,10 @@
 
 import pytest
 
-from zer0pa_materials.adapters.phase0.optimade import OptimadeFederatedQueryAdapter
-from zer0pa_materials.audit.sources import SourceManifest
-from zer0pa_materials.boundary import RESEARCH_BOUNDARY
-from zer0pa_materials.envelope.envelope import Envelope
+from zer0pa_materials_workbench.adapters.phase0.optimade import OptimadeFederatedQueryAdapter
+from zer0pa_materials_workbench.audit.sources import SourceManifest
+from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
+from zer0pa_materials_workbench.envelope.envelope import Envelope
 
 
 @pytest.fixture
@@ -102,7 +102,7 @@ class TestOptimadeAdapterEnvelopeContract:
 
     def test_envelope_round_trips_json(self, adapter):
         env = adapter.query({"elements": ["Li"]})
-        from zer0pa_materials.envelope.envelope import Envelope
+        from zer0pa_materials_workbench.envelope.envelope import Envelope
         env2 = Envelope.model_validate(env.model_dump(mode="json"))
         assert env2.layer == env.layer
 

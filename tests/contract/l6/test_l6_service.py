@@ -3,8 +3,8 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from zer0pa_materials.boundary import RESEARCH_BOUNDARY
-from zer0pa_materials.services.l6_service import app
+from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
+from zer0pa_materials_workbench.services.l6_service import app
 
 
 @pytest.fixture

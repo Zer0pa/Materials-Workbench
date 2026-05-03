@@ -14,8 +14,8 @@ from pathlib import Path
 
 import pytest
 
-from zer0pa_materials.adapters.l6.mattergen import MatterGenGeneratorAdapter
-from zer0pa_materials.falsifiers.l6_falsifiers import (
+from zer0pa_materials_workbench.adapters.l6.mattergen import MatterGenGeneratorAdapter
+from zer0pa_materials_workbench.falsifiers.l6_falsifiers import (
     DuplicateStructureError,
     InvalidCifError,
     ReferenceMatchError,
@@ -101,13 +101,13 @@ class TestNoveltyStatusGateWithDuplicate:
     """When the candidate is a known duplicate, novelty_status must be 'duplicate' not 'novel'."""
 
     def test_duplicate_status_is_fail_in_gate(self, llzo_duplicate_envelope):
-        from zer0pa_materials.falsifiers.l6_falsifiers import novelty_status_gate
+        from zer0pa_materials_workbench.falsifiers.l6_falsifiers import novelty_status_gate
         llzo_duplicate_envelope.output["novelty_status"] = "duplicate"
         item = novelty_status_gate(llzo_duplicate_envelope)
         assert item.status == "fail"
 
     def test_pending_status_in_gate_before_check(self, llzo_duplicate_envelope):
-        from zer0pa_materials.falsifiers.l6_falsifiers import novelty_status_gate
+        from zer0pa_materials_workbench.falsifiers.l6_falsifiers import novelty_status_gate
         # Default from generator is "pending".
         llzo_duplicate_envelope.output["novelty_status"] = "pending"
         item = novelty_status_gate(llzo_duplicate_envelope)

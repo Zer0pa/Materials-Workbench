@@ -3,6 +3,7 @@
 Run from repo root:
 
     .venv/bin/python phases/A2-fixtures/compute_hashes.py
+    (or: zer0pa-materials-workbench ...)
 
 The hashes are then baked into the corresponding manifest.json files. The
 test_structure_hashes test recomputes the hash and asserts equality with
@@ -18,12 +19,10 @@ ROOT = Path(__file__).resolve().parents[2]
 SRC = ROOT / "src"
 sys.path.insert(0, str(SRC))
 
-from zer0pa_materials.envelope.hashing import (  # noqa: E402
-    cif_hash_from_text,
+from zer0pa_materials_workbench.envelope.hashing import (  # noqa: E402
     parse_minimal_cif,
     structure_hash,
 )
-
 
 FIXTURE_PATHS = [
     "fixtures/structures/H2/structure.cif",
@@ -48,7 +47,7 @@ def main() -> int:
         try:
             structure = parse_minimal_cif(text)
             h = structure_hash(structure)
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             print(f"  {rel}: ERROR ({type(exc).__name__}: {exc})")
             continue
         n_atoms = len(structure["species"])

@@ -24,10 +24,8 @@ Assumption documented here (PRD §Architecture Invariant):
 
 from __future__ import annotations
 
-import pytest
-
-from zer0pa_materials.plugswap import GLOBAL_REGISTRY
-from zer0pa_materials.plugswap.timing import (
+from zer0pa_materials_workbench.plugswap import GLOBAL_REGISTRY
+from zer0pa_materials_workbench.plugswap.timing import (
     SWAP_WALLCLOCK_BUDGET_SECONDS,
     measure_swap_wallclock,
 )

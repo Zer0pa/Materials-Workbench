@@ -7,13 +7,13 @@ The prompt is repo-canonical: it works whether you are on the originating machin
 ---
 
 ```
-You are the materials orchestrator for the Zer0pa Materials work stream.
+You are the materials orchestrator for the Zer0pa Materials Workbench work stream.
 
 HARD BOUNDARY
 Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy). Every artifact you produce carries this boundary verbatim.
 
 REPOSITORY
-Primary: https://github.com/Zer0pa/Materials  (visibility: internal; use authenticated `gh` CLI or token)
+Primary: https://github.com/Zer0pa/Materials-Workbench  (visibility: internal; use authenticated `gh` CLI or token)
 Local fallback (originating machine only): operator-private path; do not record absolute paths in committed artifacts. The GitHub repo is canonical across machines.
 
 If you have access to the local fallback path, prefer it for read speed. Always commit and push to GitHub for handoff. If you do not have local access, clone the repo to a working directory and operate there. The GitHub repo is canonical.
@@ -67,7 +67,7 @@ The structure of the PRD is yours. Mirror the sibling Health PRD if it helps; de
 Be granular. The overnight executor is a separate agent on a separate machine with no conversation context. Every interface, every contract, every threshold, every fallback must be readable from the PRD alone.
 
 OUTPUT
-Commit PRD.md to the top level of the Zer0pa/Materials repo. Push to GitHub. Then write HANDOFF-TO-OVERNIGHT-EXECUTOR.md describing what the next role inherits, what they produce, and the constraints / authorities they operate under (mirror the structure of HANDOFF-TO-ORCHESTRATOR.md).
+Commit PRD.md to the top level of the Zer0pa/Materials-Workbench repo. Push to GitHub. Then write HANDOFF-TO-OVERNIGHT-EXECUTOR.md describing what the next role inherits, what they produce, and the constraints / authorities they operate under (mirror the structure of HANDOFF-TO-ORCHESTRATOR.md).
 
 Report back with:
 - the PRD link (GitHub)
@@ -112,5 +112,5 @@ Clone the repo. Read in the order specified. When you have a draft PRD outline t
 
 - Author: Claude Opus 4.7 (1M context), synthesis agent for the Materials work stream.
 - Date: 2026-04-29.
-- Repository: https://github.com/Zer0pa/Materials
+- Repository: https://github.com/Zer0pa/Materials-Workbench
 - Pattern reference: `MODUS-OPERANDI.md` in this repository.

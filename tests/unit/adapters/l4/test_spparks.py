@@ -4,11 +4,11 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.adapters.l4.base import L4PredictRequest
-from zer0pa_materials.adapters.l4.contracts import KmcRunSpec, PhaseFieldRunSpec
-from zer0pa_materials.adapters.l4.spparks import SpparksKmcAdapter
-from zer0pa_materials.boundary import RESEARCH_BOUNDARY
-from zer0pa_materials.envelope.envelope import Envelope
+from zer0pa_materials_workbench.adapters.l4.base import L4PredictRequest
+from zer0pa_materials_workbench.adapters.l4.contracts import KmcRunSpec, PhaseFieldRunSpec
+from zer0pa_materials_workbench.adapters.l4.spparks import SpparksKmcAdapter
+from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
+from zer0pa_materials_workbench.envelope.envelope import Envelope
 
 
 @pytest.fixture
@@ -112,7 +112,7 @@ class TestThermalKickIntroducesNonMonotonicity:
 
 class TestRefusesPhaseFieldSpec:
     def test_phase_field_spec_raises(self, adapter, request_obj):
-        from zer0pa_materials.adapters.l4.contracts import (
+        from zer0pa_materials_workbench.adapters.l4.contracts import (
             PhaseFieldDomain,
             PhaseFieldMaterial,
             PhaseFieldMesh,

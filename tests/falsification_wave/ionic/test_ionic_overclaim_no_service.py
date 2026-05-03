@@ -17,11 +17,10 @@ from pathlib import Path
 
 import pytest
 
-from zer0pa_materials.adapters.ionic.base import IONIC_TRANSPORT_SERVICE_REF
-from zer0pa_materials.falsifiers.ionic_falsifiers import (
+from zer0pa_materials_workbench.adapters.ionic.base import IONIC_TRANSPORT_SERVICE_REF
+from zer0pa_materials_workbench.falsifiers.ionic_falsifiers import (
     requires_ionic_transport_service,
 )
-
 
 _NEG_DIR = Path(__file__).resolve().parents[3] / "fixtures" / "negatives" / "ionic_overclaim_no_service"
 
@@ -87,10 +86,10 @@ def test_only_overclaim_falsifier_fires_on_negative(negative_candidate: dict) ->
     fixture is a flat candidate JSON with no ionic transport envelope
     fields.
     """
-    from zer0pa_materials.falsifiers.ionic_falsifiers import (
-        room_temperature_conductivity_credible_interval_meets_threshold,
-        oxidative_stability_threshold,
+    from zer0pa_materials_workbench.falsifiers.ionic_falsifiers import (
         defect_disorder_assumptions_documented,
+        oxidative_stability_threshold,
+        room_temperature_conductivity_credible_interval_meets_threshold,
     )
     rt = room_temperature_conductivity_credible_interval_meets_threshold(
         negative_candidate

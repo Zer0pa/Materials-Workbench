@@ -9,7 +9,7 @@ from __future__ import annotations
 import pytest
 from fastapi.testclient import TestClient
 
-from zer0pa_materials.services.ionic_transport_service import (
+from zer0pa_materials_workbench.services.ionic_transport_service import (
     IONIC_SERVICE_NAME,
     IONIC_SERVICE_VERSION,
     create_ionic_app,

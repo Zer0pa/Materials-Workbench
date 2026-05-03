@@ -2,11 +2,9 @@
 
 from __future__ import annotations
 
-import pytest
-
-from zer0pa_materials.adapters.l7 import PrefectCampaignAdapter
-from zer0pa_materials.adapters.l7.base import L7CampaignParams
-from zer0pa_materials.boundary import RESEARCH_BOUNDARY
+from zer0pa_materials_workbench.adapters.l7 import PrefectCampaignAdapter
+from zer0pa_materials_workbench.adapters.l7.base import L7CampaignParams
+from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
 
 
 def _params() -> L7CampaignParams:

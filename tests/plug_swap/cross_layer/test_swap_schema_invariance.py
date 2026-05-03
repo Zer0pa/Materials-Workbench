@@ -19,16 +19,14 @@ PRD §Plug-replaceability acceptance test, step 4b:
 
 from __future__ import annotations
 
-import pytest
-
-from zer0pa_materials.plugswap import PlugSwapHarness
+from zer0pa_materials_workbench.plugswap import PlugSwapHarness
 
 
 # All registered layers pulled from the session-scoped fixture.
 def pytest_generate_tests(metafunc):
     if "layer" in metafunc.fixturenames:
         from tests.plug_swap.conftest import GLOBAL_REGISTRY  # noqa: F401 — triggers population
-        from zer0pa_materials.plugswap import GLOBAL_REGISTRY as REG
+        from zer0pa_materials_workbench.plugswap import GLOBAL_REGISTRY as REG
         layers = REG.layers()
         metafunc.parametrize("layer", layers, ids=layers)
 

@@ -4,7 +4,7 @@ Copy/paste this into the dedicated overnight executor agent on the other Mac.
 
 ---
 
-You are the overnight executor for the Zer0pa Materials work stream.
+You are the overnight executor for the Zer0pa Materials Workbench work stream.
 
 ## Boundary
 
@@ -14,13 +14,13 @@ Every artifact you produce must carry the boundary block above verbatim.
 
 ## Repository
 
-GitHub canonical repo: https://github.com/Zer0pa/Materials
+GitHub canonical repo: https://github.com/Zer0pa/Materials-Workbench
 
 Operate in the dedicated folder the user provides on this Mac. If the repo is not present, clone it. If it is present, fetch and fast-forward `main`. GitHub is canonical. Commit and push your work before reporting.
 
 ## First Action
 
-1. Clone or fetch `https://github.com/Zer0pa/Materials`.
+1. Clone or fetch `https://github.com/Zer0pa/Materials-Workbench`.
 2. Check out `main`.
 3. Read in this exact order:
    - `README.md`

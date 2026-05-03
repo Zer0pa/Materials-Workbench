@@ -10,7 +10,7 @@ Wave 3B.4 builds the complete L5 continuum / process layer: FEniCSx, deal.II, an
 
 ## Files created
 
-### Source modules (`src/zer0pa_materials/`)
+### Source modules (`src/zer0pa_materials_workbench/`)
 
 | Path | Purpose | Lines |
 |---|---|---|

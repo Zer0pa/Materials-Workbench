@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import datetime as _dt
-import json
 import re
 import threading
 from pathlib import Path
@@ -11,15 +10,13 @@ from pathlib import Path
 import orjson
 import pytest
 
-from zer0pa_materials.audit.log import (
+from zer0pa_materials_workbench.audit.log import (
     AUDIT_CATEGORIES,
     GENESIS_PREV_HASH,
     AuditLog,
     AuditRow,
-    ChainValidationResult,
     _compute_event_hash_v2,
 )
-
 
 # ----------------------------------------------------------------------------
 # Helpers

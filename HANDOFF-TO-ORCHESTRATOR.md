@@ -1,6 +1,6 @@
 # Handoff to the Materials Orchestrator — Materials Work Stream
 
-You are the materials orchestrator for the Zer0pa Materials work stream. This document briefs you on what you inherit, what is expected of you, and what you produce. It does not pre-bake the structure of your PRD — that is your job. The substrate is on the table; shape it with your fresh eyes.
+You are the materials orchestrator for the Zer0pa Materials Workbench work stream. This document briefs you on what you inherit, what is expected of you, and what you produce. It does not pre-bake the structure of your PRD — that is your job. The substrate is on the table; shape it with your fresh eyes.
 
 ## Boundary
 
@@ -30,7 +30,7 @@ Research infrastructure for in silico materials science discovery. Outputs are r
 
 ## Operator override — keep workstreams independent
 
-The synthesis agent proposed a shared `Zer0pa/zer0pa-substrate` repo for variational engine + audit log + KG schema + active-inference loop, with `Zer0pa/Health` and `Zer0pa/Materials` as domain configurations on top.
+The synthesis agent proposed a shared `Zer0pa/zer0pa-substrate` repo for variational engine + audit log + KG schema + active-inference loop, with `Zer0pa/Health` and `Zer0pa/Materials-Workbench` as domain configurations on top.
 
 **The operator has rejected this proposal.** The binding policy is the *Parallel-exploration principle* in `MODUS-OPERANDI.md`:
 
@@ -82,7 +82,7 @@ Be granular. The overnight executor is a separate agent on a separate machine wi
 - HF token at `~/.cache/huggingface/token` on the originating machine. Cross-machine, the user provides.
 - No Docker on the originating Mac. Overnight executor on Runpod may use Docker.
 - No bulk local datasets — manifests + metadata + small slices only. The Materials Project / OPTIMADE / Materials-Project API access is sufficient for everything CPU-side.
-- GitHub canonical. All sub-agent work commits back to `Zer0pa/Materials` before PRD finalisation.
+- GitHub canonical. All sub-agent work commits back to `Zer0pa/Materials-Workbench` before PRD finalisation.
 - No regulatory or clinical claims. No human-subject inference.
 - ITAR / weapons applications excluded by Meta UMA Acceptable Use Policy and operator policy.
 - **No cross-workstream substrate sharing.** See § Operator override.
@@ -99,7 +99,7 @@ Be granular. The overnight executor is a separate agent on a separate machine wi
 
 ## Where the PRD lands and what comes next
 
-Commit `PRD.md` to the top level of `Zer0pa/Materials`. Push to GitHub. After the PRD is final, write `HANDOFF-TO-OVERNIGHT-EXECUTOR.md` describing what the next role inherits, what they produce, and the constraints / authorities they operate under. Mirror the structure of this document.
+Commit `PRD.md` to the top level of `Zer0pa/Materials-Workbench`. Push to GitHub. After the PRD is final, write `HANDOFF-TO-OVERNIGHT-EXECUTOR.md` describing what the next role inherits, what they produce, and the constraints / authorities they operate under. Mirror the structure of this document.
 
 The user will then trigger the overnight execution on a separate Runpod-bound machine using a startup prompt analogous to `ORCHESTRATOR-STARTUP-PROMPT.md`.
 

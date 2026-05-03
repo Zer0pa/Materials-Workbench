@@ -8,18 +8,14 @@ from __future__ import annotations
 
 import datetime as _dt
 import json
-from pathlib import Path
 
-import pytest
-
-from zer0pa_materials.audit.episodic import (
+from zer0pa_materials_workbench.audit.episodic import (
     CampaignState,
-    StateSnapshot,
     reconstruct_from_repo,
     snapshot_state,
 )
-from zer0pa_materials.audit.kg import KGNodeType, MaterialsKG
-from zer0pa_materials.audit.log import AuditLog
+from zer0pa_materials_workbench.audit.kg import KGNodeType, MaterialsKG
+from zer0pa_materials_workbench.audit.log import AuditLog
 
 
 def _now_iso() -> str:

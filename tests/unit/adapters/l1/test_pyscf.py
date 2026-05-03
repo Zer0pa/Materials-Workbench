@@ -7,26 +7,25 @@ marker tracks which path ran so CI logs are interpretable.
 from __future__ import annotations
 
 import importlib.util
-import math
+
 import pytest
 
-from zer0pa_materials.adapters.l1.pyscf import (
-    PyScfMolecularSolver,
-    _H2_FCI_Ha,
+from zer0pa_materials_workbench.adapters.l1.base import L1JobParams
+from zer0pa_materials_workbench.adapters.l1.pyscf import (
     _H2_BOND_A,
-    _LIH_CASCI_Ha,
     _LIH_BOND_A,
     PYSCF_BLOCKED_MANIFEST,
+    PyScfMolecularSolver,
+    _H2_FCI_Ha,
 )
-from zer0pa_materials.adapters.l1.base import L1JobParams
-from zer0pa_materials.envelope import L1DftOutput, Envelope
+from zer0pa_materials_workbench.envelope import Envelope, L1DftOutput
 
 PYSCF_AVAILABLE = importlib.util.find_spec("pyscf") is not None
 pytestmark_pyscf = pytest.mark.skipif(
     False, reason="Always runs; pyscf_available flag indicates real vs stub"
 )
 
-from zer0pa_materials import read_fixture
+from zer0pa_materials_workbench import read_fixture
 
 H2_CIF = read_fixture("structures", "H2", "structure.cif")
 LIH_CIF = read_fixture("structures", "LiH", "structure.cif")
@@ -39,7 +38,7 @@ def solver() -> PyScfMolecularSolver:
 
 @pytest.fixture
 def h2_params() -> L1JobParams:
-    from zer0pa_materials.envelope import cif_hash_from_text
+    from zer0pa_materials_workbench.envelope import cif_hash_from_text
     return L1JobParams(
         structure_cif=H2_CIF,
         structure_hash=cif_hash_from_text(H2_CIF),
@@ -51,7 +50,7 @@ def h2_params() -> L1JobParams:
 
 @pytest.fixture
 def lih_params() -> L1JobParams:
-    from zer0pa_materials.envelope import cif_hash_from_text
+    from zer0pa_materials_workbench.envelope import cif_hash_from_text
     return L1JobParams(
         structure_cif=LIH_CIF,
         structure_hash=cif_hash_from_text(LIH_CIF),
@@ -162,7 +161,7 @@ def test_lih_energy_reasonable(solver: PyScfMolecularSolver, lih_params: L1JobPa
 # ---------------------------------------------------------------------------
 
 def test_envelope_has_boundary(solver: PyScfMolecularSolver, h2_params: L1JobParams) -> None:
-    from zer0pa_materials.boundary import RESEARCH_BOUNDARY
+    from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
     envelope = solver.submit_job(H2_CIF, h2_params)
     assert envelope.research_boundary == RESEARCH_BOUNDARY
 

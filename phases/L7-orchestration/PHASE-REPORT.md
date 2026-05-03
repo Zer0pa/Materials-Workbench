@@ -16,31 +16,31 @@ Research infrastructure for in silico materials science discovery. Outputs are r
 
 | File | LOC | Purpose |
 |---|---|---|
-| `src/zer0pa_materials/orchestration/__init__.py` | 69 | Public surface |
-| `src/zer0pa_materials/orchestration/campaign.py` | 687 | Central Campaign + CampaignState + CampaignSpec; transitions write Decision rows + KG nodes; `resume_from_audit` rebuilds state from JSONL alone |
-| `src/zer0pa_materials/orchestration/candidate_state.py` | 186 | Per-candidate state machine `proposed → screened → validated → evidence_complete → {promoted | rejected | queued_higher_fidelity}` |
-| `src/zer0pa_materials/orchestration/acceptance_gates.py` | 480 | 7-gate composition: boundary, audit-provenance, disagreement, rights, duplicate-rejection, layer-falsifiers, ionic-evidence |
-| `src/zer0pa_materials/orchestration/disagreement_aggregator.py` | 177 | Universal-disagreement primitive (weighted L2 norm of normalised per-layer metrics) |
-| `src/zer0pa_materials/orchestration/self_bootstrapping.py` | 166 | Dirichlet-Categorical posterior over `proposed_action`; per-(tenant, scope) isolation |
-| `src/zer0pa_materials/adapters/l7/__init__.py` | 54 | Public surface |
-| `src/zer0pa_materials/adapters/l7/base.py` | 183 | `L7Adapter` ABC + `make_l7_envelope` |
-| `src/zer0pa_materials/adapters/l7/prefect_campaign.py` | 122 | Prefect lifecycle (stub or real); 5 lifecycle keys baked in |
-| `src/zer0pa_materials/adapters/l7/parsl_fanout.py` | 113 | Fan-out N candidates with `back_edges` pointing at parent |
-| `src/zer0pa_materials/adapters/l7/aiida_provenance.py` | 150 | networkx-style provenance graph with USED/GENERATED/WAS_DERIVED_FROM |
-| `src/zer0pa_materials/adapters/l7/atomate2_workflow.py` | 138 | 6 templated workflows (relax+static, phonon, elastic, dielectric, lobster, lobster_descriptors) |
-| `src/zer0pa_materials/adapters/l7/langgraph_reasoner.py` | 168 | 5-node state graph; **does not write to audit log** (hard architectural boundary) |
-| `src/zer0pa_materials/adapters/l7/botorch_acquisition.py` | 307 | qMFKG + qLogEI; `qExpectedImprovement` raises `ForbiddenAcquisitionError` unless `allow_legacy_qei=True` |
-| `src/zer0pa_materials/adapters/l7/alabos_protocol.py` | 181 | Recipe-only compiler; raises `AlabosExecutableInRecipeOnlyError` on `hardware_executable=True` under recipe_only |
-| `src/zer0pa_materials/services/l7_service.py` | 511 | FastAPI service: 8 endpoints (healthz, create, dispatch, acquire, promote, resume, state, alabos compile); BLOCKED_SOURCES list |
-| `src/zer0pa_materials/falsifiers/l7_falsifiers.py` | 467 | 10 L7 falsifiers (langgraph_is_not_audit, prefect_lifecycle, parsl_fanout, aiida/atomate2 provenance, botorch_acq_allowed, botorch_mf_routing, alabos_recipe_only, candidate_promotion_provenance, cross_layer_disagreement_attribution, tenant_only_tuple_leak) |
-| `src/zer0pa_materials/cli/l7.py` | 283 | Typer subapp: 9 commands (create-campaign, dispatch, acquire, promote, resume, state, alabos-compile, blocked, healthz) |
+| `src/zer0pa_materials_workbench/orchestration/__init__.py` | 69 | Public surface |
+| `src/zer0pa_materials_workbench/orchestration/campaign.py` | 687 | Central Campaign + CampaignState + CampaignSpec; transitions write Decision rows + KG nodes; `resume_from_audit` rebuilds state from JSONL alone |
+| `src/zer0pa_materials_workbench/orchestration/candidate_state.py` | 186 | Per-candidate state machine `proposed → screened → validated → evidence_complete → {promoted | rejected | queued_higher_fidelity}` |
+| `src/zer0pa_materials_workbench/orchestration/acceptance_gates.py` | 480 | 7-gate composition: boundary, audit-provenance, disagreement, rights, duplicate-rejection, layer-falsifiers, ionic-evidence |
+| `src/zer0pa_materials_workbench/orchestration/disagreement_aggregator.py` | 177 | Universal-disagreement primitive (weighted L2 norm of normalised per-layer metrics) |
+| `src/zer0pa_materials_workbench/orchestration/self_bootstrapping.py` | 166 | Dirichlet-Categorical posterior over `proposed_action`; per-(tenant, scope) isolation |
+| `src/zer0pa_materials_workbench/adapters/l7/__init__.py` | 54 | Public surface |
+| `src/zer0pa_materials_workbench/adapters/l7/base.py` | 183 | `L7Adapter` ABC + `make_l7_envelope` |
+| `src/zer0pa_materials_workbench/adapters/l7/prefect_campaign.py` | 122 | Prefect lifecycle (stub or real); 5 lifecycle keys baked in |
+| `src/zer0pa_materials_workbench/adapters/l7/parsl_fanout.py` | 113 | Fan-out N candidates with `back_edges` pointing at parent |
+| `src/zer0pa_materials_workbench/adapters/l7/aiida_provenance.py` | 150 | networkx-style provenance graph with USED/GENERATED/WAS_DERIVED_FROM |
+| `src/zer0pa_materials_workbench/adapters/l7/atomate2_workflow.py` | 138 | 6 templated workflows (relax+static, phonon, elastic, dielectric, lobster, lobster_descriptors) |
+| `src/zer0pa_materials_workbench/adapters/l7/langgraph_reasoner.py` | 168 | 5-node state graph; **does not write to audit log** (hard architectural boundary) |
+| `src/zer0pa_materials_workbench/adapters/l7/botorch_acquisition.py` | 307 | qMFKG + qLogEI; `qExpectedImprovement` raises `ForbiddenAcquisitionError` unless `allow_legacy_qei=True` |
+| `src/zer0pa_materials_workbench/adapters/l7/alabos_protocol.py` | 181 | Recipe-only compiler; raises `AlabosExecutableInRecipeOnlyError` on `hardware_executable=True` under recipe_only |
+| `src/zer0pa_materials_workbench/services/l7_service.py` | 511 | FastAPI service: 8 endpoints (healthz, create, dispatch, acquire, promote, resume, state, alabos compile); BLOCKED_SOURCES list |
+| `src/zer0pa_materials_workbench/falsifiers/l7_falsifiers.py` | 467 | 10 L7 falsifiers (langgraph_is_not_audit, prefect_lifecycle, parsl_fanout, aiida/atomate2 provenance, botorch_acq_allowed, botorch_mf_routing, alabos_recipe_only, candidate_promotion_provenance, cross_layer_disagreement_attribution, tenant_only_tuple_leak) |
+| `src/zer0pa_materials_workbench/cli/l7.py` | 283 | Typer subapp: 9 commands (create-campaign, dispatch, acquire, promote, resume, state, alabos-compile, blocked, healthz) |
 
 **Counts (yours exclusively):**
-- `src/zer0pa_materials/orchestration/` — 6 files, **1,765 LOC**
-- `src/zer0pa_materials/adapters/l7/` — 9 files, **1,416 LOC**
-- `src/zer0pa_materials/services/l7_service.py` — **511 LOC**
-- `src/zer0pa_materials/falsifiers/l7_falsifiers.py` — **467 LOC**
-- `src/zer0pa_materials/cli/l7.py` — **283 LOC**
+- `src/zer0pa_materials_workbench/orchestration/` — 6 files, **1,765 LOC**
+- `src/zer0pa_materials_workbench/adapters/l7/` — 9 files, **1,416 LOC**
+- `src/zer0pa_materials_workbench/services/l7_service.py` — **511 LOC**
+- `src/zer0pa_materials_workbench/falsifiers/l7_falsifiers.py` — **467 LOC**
+- `src/zer0pa_materials_workbench/cli/l7.py` — **283 LOC**
 
 **Total source: 17 files, 4,442 LOC.**
 
@@ -139,14 +139,14 @@ This is the load-bearing design choice: a candidate cannot reach `promoted` by e
 `l7_app` is wired into `cli/main.py` via `app.add_typer(l7_app, name="l7")`. The lead agent does not need to do additional wiring — the L7 CLI is now first-class:
 
 ```
-zer0pa-materials l7 healthz
-zer0pa-materials l7 blocked
-zer0pa-materials l7 create-campaign campaign:demo/llzo --tenant demo --objective "..."
-zer0pa-materials l7 dispatch campaign:demo/llzo --candidates candidate:demo/c1,candidate:demo/c2
-zer0pa-materials l7 acquire campaign:demo/llzo --candidates candidate:demo/c1
-zer0pa-materials l7 state campaign:demo/llzo
-zer0pa-materials l7 resume campaign:demo/llzo
-zer0pa-materials l7 alabos-compile candidate:demo/c1
+zer0pa-materials-workbench l7 healthz
+zer0pa-materials-workbench l7 blocked
+zer0pa-materials-workbench l7 create-campaign campaign:demo/llzo --tenant demo --objective "..."
+zer0pa-materials-workbench l7 dispatch campaign:demo/llzo --candidates candidate:demo/c1,candidate:demo/c2
+zer0pa-materials-workbench l7 acquire campaign:demo/llzo --candidates candidate:demo/c1
+zer0pa-materials-workbench l7 state campaign:demo/llzo
+zer0pa-materials-workbench l7 resume campaign:demo/llzo
+zer0pa-materials-workbench l7 alabos-compile candidate:demo/c1
 ```
 
 ## Pre-existing failures / blockers

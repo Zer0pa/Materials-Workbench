@@ -18,9 +18,9 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.adapters.ionic.base import IonicJobParams
-from zer0pa_materials.adapters.ionic.neb import NebMigrationBarrierAdapter
-from zer0pa_materials.envelope import (
+from zer0pa_materials_workbench.adapters.ionic.base import IonicJobParams
+from zer0pa_materials_workbench.adapters.ionic.neb import NebMigrationBarrierAdapter
+from zer0pa_materials_workbench.envelope import (
     Envelope,
     IonicTransportOutput,
     validate_layer_output,

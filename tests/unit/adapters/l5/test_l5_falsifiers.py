@@ -6,25 +6,23 @@ All other gates: verifies pass/fail/blocked transitions.
 
 from __future__ import annotations
 
-import pytest
 import numpy as np
 
-from zer0pa_materials.falsifiers.l5_falsifiers import (
-    tensor_spd_check,
+from zer0pa_materials_workbench.adapters.l5.base import L5ContinuumRequest
+from zer0pa_materials_workbench.adapters.l5.dealii import DealIIStructuralAdapter
+from zer0pa_materials_workbench.adapters.l5.fenicsx import FEniCSxContinuumAdapter
+from zer0pa_materials_workbench.adapters.l5.openfoam import OpenFOAMProcessAdapter
+from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
+from zer0pa_materials_workbench.falsifiers.l5_falsifiers import (
     analytic_heat_slab_error,
+    artifact_units_sidecar_present,
+    cfd_heat_balance_error,
+    cfd_mass_balance_error,
     elastic_patch_residual,
     fenicsx_dealii_strain_energy_disagreement,
     openfoam_poiseuille_profile_error,
-    cfd_mass_balance_error,
-    cfd_heat_balance_error,
-    artifact_units_sidecar_present,
+    tensor_spd_check,
 )
-from zer0pa_materials.adapters.l5.base import L5ContinuumRequest
-from zer0pa_materials.adapters.l5.fenicsx import FEniCSxContinuumAdapter
-from zer0pa_materials.adapters.l5.dealii import DealIIStructuralAdapter
-from zer0pa_materials.adapters.l5.openfoam import OpenFOAMProcessAdapter
-from zer0pa_materials.boundary import RESEARCH_BOUNDARY
-
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -385,7 +383,7 @@ class TestFalsifierIntegration:
         assert item.status == "pass"
 
     def test_fenicsx_tensors_are_spd(self):
-        from zer0pa_materials.adapters.l5.fenicsx import _synthetic_stiffness_tensor_3x3
+        from zer0pa_materials_workbench.adapters.l5.fenicsx import _synthetic_stiffness_tensor_3x3
         C = _synthetic_stiffness_tensor_3x3()
         item = tensor_spd_check(C, name="stiffness")
         assert item.status == "pass"

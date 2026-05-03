@@ -4,14 +4,15 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.adapters.l1.qe_aiida import QuantumEspressoAiiDASolver
-from zer0pa_materials.adapters.l1.cp2k_aiida import Cp2kAiiDASolver
-from zer0pa_materials.adapters.l1.abinit_aiida import AbinitAiiDASolver
-from zer0pa_materials.adapters.l1.base import L1JobParams
-from zer0pa_materials.envelope import L1DftOutput, cif_hash_from_text
-from zer0pa_materials.falsifiers.l1_falsifiers import cross_code_disagreement, _SCREENING_THRESHOLD_MEV
-
-from zer0pa_materials import read_fixture
+from zer0pa_materials_workbench import read_fixture
+from zer0pa_materials_workbench.adapters.l1.abinit_aiida import AbinitAiiDASolver
+from zer0pa_materials_workbench.adapters.l1.base import L1JobParams
+from zer0pa_materials_workbench.adapters.l1.cp2k_aiida import Cp2kAiiDASolver
+from zer0pa_materials_workbench.adapters.l1.qe_aiida import QuantumEspressoAiiDASolver
+from zer0pa_materials_workbench.envelope import L1DftOutput, cif_hash_from_text
+from zer0pa_materials_workbench.falsifiers.l1_falsifiers import (
+    cross_code_disagreement,
+)
 
 SI_CIF = read_fixture("structures", "Si", "structure.cif")
 
@@ -43,7 +44,7 @@ def abinit_envelope(si_params: L1JobParams):
 
 def test_cross_code_returns_falsifier_and_metric(qe_envelope, cp2k_envelope) -> None:
     item, metric = cross_code_disagreement([qe_envelope, cp2k_envelope])
-    from zer0pa_materials.envelope import FalsifierItem, DisagreementMetric
+    from zer0pa_materials_workbench.envelope import DisagreementMetric, FalsifierItem
     assert isinstance(item, FalsifierItem)
     assert isinstance(metric, DisagreementMetric)
 
@@ -105,8 +106,7 @@ def test_stub_adapters_disagree_in_energy(qe_envelope, cp2k_envelope) -> None:
 def test_disagreement_falsifier_pass_for_small_delta() -> None:
     """When energies agree to within 50 meV, status is pass."""
     # Construct two envelopes with identical energies
-    from zer0pa_materials.adapters.l1.qe_aiida import QuantumEspressoAiiDASolver
-    from zer0pa_materials.envelope import Envelope
+    from zer0pa_materials_workbench.adapters.l1.qe_aiida import QuantumEspressoAiiDASolver
     params = L1JobParams(
         structure_cif=SI_CIF,
         structure_hash=cif_hash_from_text(SI_CIF),

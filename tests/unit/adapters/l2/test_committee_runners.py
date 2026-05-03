@@ -4,11 +4,10 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.adapters.l2.base import L2PredictRequest
-from zer0pa_materials.adapters.l2.dpa_committee import DpaCommitteeRunner
-from zer0pa_materials.adapters.l2.mace_committee import MaceMultiheadCommitteeRunner
-from zer0pa_materials.boundary import RESEARCH_BOUNDARY
-
+from zer0pa_materials_workbench.adapters.l2.base import L2PredictRequest
+from zer0pa_materials_workbench.adapters.l2.dpa_committee import DpaCommitteeRunner
+from zer0pa_materials_workbench.adapters.l2.mace_committee import MaceMultiheadCommitteeRunner
+from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
 
 SI_STRUCTURE = {
     "lattice_vectors": [[3.84, 0.0, 0.0], [0.0, 3.84, 0.0], [0.0, 0.0, 3.84]],

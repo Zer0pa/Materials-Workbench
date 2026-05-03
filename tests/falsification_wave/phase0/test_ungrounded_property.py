@@ -11,8 +11,8 @@ from pathlib import Path
 
 import pytest
 
-from zer0pa_materials.envelope.layer_outputs import Phase0ExtractedProperty, Phase0PropertyGrounding
-from zer0pa_materials.falsifiers.phase0_falsifiers import (
+from zer0pa_materials_workbench.envelope.layer_outputs import Phase0ExtractedProperty, Phase0PropertyGrounding
+from zer0pa_materials_workbench.falsifiers.phase0_falsifiers import (
     UngroundedPropertyError,
     UnparseableUnitError,
     UnresolvedContradictionError,

@@ -6,8 +6,8 @@ import re
 
 import pytest
 
-from zer0pa_materials.audit.kg import KGEdgeType, KGNodeType
-from zer0pa_materials.ontology.emmo import (
+from zer0pa_materials_workbench.audit.kg import KGEdgeType, KGNodeType
+from zer0pa_materials_workbench.ontology.emmo import (
     EMMO_BASE_IRI,
     EMMO_TERMS,
     KG_EDGE_TO_EMMO,
@@ -21,7 +21,6 @@ from zer0pa_materials.ontology.emmo import (
     iri_for_kg_edge,
     iri_for_kg_node,
 )
-
 
 # ----------------------------------------------------------------------------
 # Namespace / version

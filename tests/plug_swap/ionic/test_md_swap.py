@@ -16,15 +16,13 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.adapters.ionic.aimd import AimdDiffusionAdapter
-from zer0pa_materials.adapters.ionic.base import IonicJobParams
-from zer0pa_materials.adapters.ionic.mlip_md import MlipMdDiffusionAdapter
-from zer0pa_materials.envelope import (
-    Envelope,
+from zer0pa_materials_workbench.adapters.ionic.aimd import AimdDiffusionAdapter
+from zer0pa_materials_workbench.adapters.ionic.base import IonicJobParams
+from zer0pa_materials_workbench.adapters.ionic.mlip_md import MlipMdDiffusionAdapter
+from zer0pa_materials_workbench.envelope import (
     IonicTransportOutput,
     validate_layer_output,
 )
-
 
 _FIXTURES = [
     (

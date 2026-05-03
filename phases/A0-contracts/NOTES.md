@@ -41,9 +41,9 @@ Research infrastructure for in silico materials science discovery. Outputs are r
 
 When Wave 2 spawns, downstream subagents should:
 
-1. `from zer0pa_materials.envelope import Envelope, ToolAdapter, AuditBlock, RightsBlock` — never construct envelope dicts by hand.
+1. `from zer0pa_materials_workbench_workbench.envelope import Envelope, ToolAdapter, AuditBlock, RightsBlock` — never construct envelope dicts by hand.
 2. Import the layer-specific output class for their layer (e.g., L2 imports `L2MlipOutput`).
 3. Import `MaterialsConfig` for any backend-flag dispatch.
-4. Import `sha256_of`, `structure_hash`, `cif_hash_from_text` from `zer0pa_materials.envelope` for hashing.
+4. Import `sha256_of`, `structure_hash`, `cif_hash_from_text` from `zer0pa_materials_workbench.envelope` for hashing.
 5. Convert tool-native units to canonical units via `to_canonical(value, target_unit)` before emitting envelope output.
 6. Validate JSON-shape outputs against `runtime/schemas/<layer>.output.v1.schema.json` in contract tests.

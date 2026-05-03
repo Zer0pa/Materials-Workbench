@@ -19,8 +19,8 @@ from __future__ import annotations
 
 import pytest
 
-from zer0pa_materials.envelope.envelope import Envelope
-from zer0pa_materials.plugswap import GLOBAL_REGISTRY, PlugSwapHarness
+from zer0pa_materials_workbench.envelope.envelope import Envelope
+from zer0pa_materials_workbench.plugswap import GLOBAL_REGISTRY, PlugSwapHarness
 
 
 def pytest_generate_tests(metafunc):

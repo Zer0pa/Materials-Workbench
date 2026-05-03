@@ -6,13 +6,13 @@ import importlib.util
 
 import pytest
 
-from zer0pa_materials.adapters.quantum.pennylane_vqe import (
+from zer0pa_materials_workbench.adapters.quantum.pennylane_vqe import (
     PennyLaneVqeSolver,
     _LIH_CASCI_Ha,
     _LIH_VQE_STUB_Ha,
 )
-from zer0pa_materials.envelope import L1QuantumVqeOutput, Envelope
-from zer0pa_materials.falsifiers.quantum_falsifiers import vqe_lih_active_space_match
+from zer0pa_materials_workbench.envelope import Envelope, L1QuantumVqeOutput
+from zer0pa_materials_workbench.falsifiers.quantum_falsifiers import vqe_lih_active_space_match
 
 PENNYLANE_AVAILABLE = importlib.util.find_spec("pennylane") is not None
 

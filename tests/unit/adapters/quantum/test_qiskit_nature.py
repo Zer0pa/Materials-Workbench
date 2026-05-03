@@ -6,15 +6,15 @@ import importlib.util
 
 import pytest
 
-from zer0pa_materials.adapters.quantum.qiskit_nature_vqe import (
-    QiskitNatureVqeSolver,
+from zer0pa_materials_workbench.adapters.l1.pyscf import _H2_FCI_Ha, _LIH_CASCI_Ha
+from zer0pa_materials_workbench.adapters.quantum.qiskit_nature_vqe import (
     QISKIT_NATURE_BLOCKED_MANIFEST,
+    QiskitNatureVqeSolver,
     _H2_QISKIT_STUB_Ha,
     _LIH_QISKIT_STUB_Ha,
 )
-from zer0pa_materials.adapters.l1.pyscf import _H2_FCI_Ha, _LIH_CASCI_Ha
-from zer0pa_materials.envelope import L1QuantumVqeOutput, Envelope
-from zer0pa_materials.falsifiers.quantum_falsifiers import (
+from zer0pa_materials_workbench.envelope import Envelope, L1QuantumVqeOutput
+from zer0pa_materials_workbench.falsifiers.quantum_falsifiers import (
     vqe_h2_classical_match,
     vqe_lih_active_space_match,
 )

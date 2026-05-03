@@ -10,7 +10,7 @@ L6 (generative crystal structure discovery) implements four generator adapters, 
 
 ## Files created
 
-### Source modules (under `src/zer0pa_materials/`)
+### Source modules (under `src/zer0pa_materials_workbench/`)
 
 | Path | Purpose |
 |---|---|
@@ -51,7 +51,7 @@ L6 (generative crystal structure discovery) implements four generator adapters, 
 
 ## Key architectural decisions
 
-1. **`structure_hash` key discipline.** `zer0pa_materials.envelope.hashing.structure_hash()` expects `lattice_vectors` and `fractional_coords` (not `lattice`/`frac_coords`). All three generator adapters and the falsifier `min_interatomic_distance` were corrected to use these canonical keys. `min_interatomic_distance` additionally accepts `lattice`/`frac_coords` as fallback aliases for test convenience.
+1. **`structure_hash` key discipline.** `zer0pa_materials_workbench.envelope.hashing.structure_hash()` expects `lattice_vectors` and `fractional_coords` (not `lattice`/`frac_coords`). All three generator adapters and the falsifier `min_interatomic_distance` were corrected to use these canonical keys. `min_interatomic_distance` additionally accepts `lattice`/`frac_coords` as fallback aliases for test convenience.
 
 2. **`novelty_status` never `"novel"` at generation time.** All four generators set `output["novelty_status"] = "pending"`. The `novelty_status_gate` falsifier raises `PrematureNoveltyError` if `novelty_status == "novel"` and no L1 back-edge exists on the envelope.
 
