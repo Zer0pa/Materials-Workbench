@@ -163,14 +163,11 @@ $ rg -rn "zer0pa-materials(?!-workbench)|zer0pa_materials(?!_workbench)|ZER0PA_M
 
 ```
 $ gh repo rename Materials-Workbench --repo Zer0pa/Materials --yes
-# OR: gh api -X PATCH repos/Zer0pa/Materials -f name=Materials-Workbench
 ✓ Renamed repository Zer0pa/Materials-Workbench
 
 $ gh repo view Zer0pa/Materials-Workbench --json nameWithOwner,url,visibility,defaultBranchRef
-{...}
+{"defaultBranchRef":{"name":"main"},"nameWithOwner":"Zer0pa/Materials-Workbench","url":"https://github.com/Zer0pa/Materials-Workbench","visibility":"INTERNAL"}
 ```
-
-*(Receipts filled in after push — see handoff response)*
 
 ---
 
@@ -180,11 +177,11 @@ $ gh repo view Zer0pa/Materials-Workbench --json nameWithOwner,url,visibility,de
 |------|-------|
 | Pre-rename HEAD | `ead4c391236e1f0bb62f531b881f7a6c6b7183e8` |
 | Rename branch | `rename/materials-workbench` |
-| Local HEAD after commit | *(recorded after commit)* |
-| `origin/main` after push | *(recorded after push)* |
-| README blob SHA (local) | *(recorded after commit)* |
-| README blob SHA (GitHub API) | *(recorded after push)* |
-| pyproject.toml blob SHA (GitHub API) | *(recorded after push)* |
+| Local HEAD after commit | `f7d2da0e41b09e776c6e63e4c87fa738b8a6d470` |
+| `origin/main` after push | `f7d2da0e41b09e776c6e63e4c87fa738b8a6d470` |
+| README blob SHA (local) | `2b4513271d83f676086493bce99d49b28e6d63b2` |
+| README blob SHA (GitHub API) | `2b4513271d83f676086493bce99d49b28e6d63b2` |
+| pyproject.toml blob SHA (GitHub API) | `ff266ab042a4425cb83527ec00bb537d555fd4bc` |
 
 ---
 
