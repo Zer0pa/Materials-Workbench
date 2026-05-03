@@ -1,0 +1,27 @@
+{
+  "title": "Zer0pa Materials Workbench",
+  "description": "CPU-side control plane for an in silico materials discovery pipeline targeting battery and thermoelectric candidates, with GPU acceleration pending.",
+  "upload_type": "software",
+  "access_right": "open",
+  "license": "other-open",
+  "creators": [
+    {
+      "name": "Zer0pa Research"
+    }
+  ],
+  "keywords": [
+    "materials-science",
+    "in-silico",
+    "battery",
+    "thermoelectric",
+    "pipeline",
+    "falsification"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/Zer0pa/Materials-Workbench",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ]
+}
