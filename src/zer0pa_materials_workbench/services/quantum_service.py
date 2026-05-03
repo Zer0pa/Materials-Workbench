@@ -22,7 +22,7 @@ from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
 __all__ = ["VqeJobRequest", "VqeJobStatus", "app"]
 
 app = FastAPI(
-    title="Zer0pa Materials — Quantum VQE Stub Service",
+    title="Zer0pa Materials Workbench — Quantum VQE Stub Service",
     description=(
         "Stub REST layer for quantum VQE jobs. "
         "Classical simulator only; real hardware parked."

@@ -1,6 +1,6 @@
 """MVP Evidence Packet CLI subcommands (Wave 5a).
 
-Registered as ``zer0pa-materials packets <subcommand>``.
+Registered as ``zer0pa-materials-workbench packets <subcommand>``.
 
 Subcommands:
     packets healthz

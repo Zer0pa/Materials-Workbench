@@ -268,7 +268,7 @@ class EvidencePacket(BaseModel):
     # ---- creation metadata -------------------------------------------------
 
     created_at: str = Field(default_factory=_utc_now_iso)
-    creator: str = Field(default="Zer0pa Materials MVP Packet Generator (Wave 5a)")
+    creator: str = Field(default="Zer0pa Materials Workbench MVP Packet Generator (Wave 5a)")
 
     # ---- validators --------------------------------------------------------
 

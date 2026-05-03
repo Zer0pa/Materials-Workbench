@@ -1,6 +1,6 @@
 """Phase 0 CLI subcommands.
 
-Registered as ``zer0pa-materials phase0 <subcommand>``.
+Registered as ``zer0pa-materials-workbench phase0 <subcommand>``.
 
 Subcommands:
     phase0 extract <fixture>       Run LangGraph extraction stub on a fixture.

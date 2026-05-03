@@ -23,7 +23,7 @@ from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
 from zer0pa_materials_workbench.envelope.config import MaterialsConfig
 
 app = FastAPI(
-    title="Zer0pa Materials — Phase 0 Service",
+    title="Zer0pa Materials Workbench — Phase 0 Service",
     description=(
         "REST stub for Phase 0 literature mining and OPTIMADE structure queries. "
         "Research infrastructure for in silico materials science discovery. "

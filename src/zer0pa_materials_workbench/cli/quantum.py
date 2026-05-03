@@ -1,4 +1,4 @@
-"""Quantum VQE CLI commands (``zer0pa-materials quantum ...``).
+"""Quantum VQE CLI commands (``zer0pa-materials-workbench quantum ...``).
 
 Commands
 --------
@@ -7,8 +7,8 @@ run-vqe-lih   — run VQE on LiH (PennyLane or stub)
 healthz       — print quantum adapter status
 
 Usage:
-    zer0pa-materials quantum run-vqe-h2
-    zer0pa-materials quantum run-vqe-lih
+    zer0pa-materials-workbench quantum run-vqe-h2
+    zer0pa-materials-workbench quantum run-vqe-lih
 """
 
 from __future__ import annotations

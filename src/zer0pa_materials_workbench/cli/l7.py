@@ -1,6 +1,6 @@
 """L7 orchestration CLI subcommands.
 
-Registered as ``zer0pa-materials l7 <subcommand>``.
+Registered as ``zer0pa-materials-workbench l7 <subcommand>``.
 
 Subcommands:
     l7 create-campaign <campaign-id> --tenant ... --objective ...

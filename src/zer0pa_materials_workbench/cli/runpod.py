@@ -272,7 +272,7 @@ def cutover_runbook() -> None:
     else:
         console.print(
             "[yellow]docs/RUNPOD-CUTOVER.md not found. "
-            "Generate it with: zer0pa-materials runpod cutover-runbook --generate[/yellow]"
+            "Generate it with: zer0pa-materials-workbench runpod cutover-runbook --generate[/yellow]"
         )
         raise typer.Exit(code=1)
 

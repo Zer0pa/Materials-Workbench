@@ -31,13 +31,13 @@ def _make_uma_envelope(include_gate: bool = False, gate_complete: bool = True) -
     if include_gate:
         if gate_complete:
             env["_uma_gate"] = {
-                "hf_org": "zer0pa-materials",
+                "hf_org": "zer0pa-materials-workbench",
                 "hf_token_hint": "hf_...9999",
                 "aup_accepted_at": "2026-04-30T12:00:00+00:00",
             }
         else:
             env["_uma_gate"] = {
-                "hf_org": "zer0pa-materials",
+                "hf_org": "zer0pa-materials-workbench",
                 "aup_accepted_at": None,
             }
     return env

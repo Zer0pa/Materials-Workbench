@@ -1,4 +1,4 @@
-"""SQLite-backed property graph for the Zer0pa Materials KG (PRD §Audit Trail And KG).
+"""SQLite-backed property graph for the Zer0pa Materials Workbench KG (PRD §Audit Trail And KG).
 
 The PRD's open question for the executor allows SQLite/property-graph with
 RDF export (see PRD §Open Questions For Overnight Executor #2). We adopt
@@ -253,7 +253,7 @@ _DDL = [
 
 
 class MaterialsKG:
-    """SQLite-backed property graph for the Zer0pa Materials KG.
+    """SQLite-backed property graph for the Zer0pa Materials Workbench KG.
 
     Open with a path to the SQLite file. ``__init__`` runs the DDL idempotently;
     re-opening an existing DB is a no-op for schema. All operations are

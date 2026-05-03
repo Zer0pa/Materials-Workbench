@@ -65,7 +65,7 @@ class TestUmaDefaultBlocked:
 class TestUmaEnableGate:
     def test_enable_with_valid_args(self, adapter):
         adapter.enable_uma(
-            hf_org="zer0pa-materials",
+            hf_org="zer0pa-materials-workbench",
             hf_token="hf_testtoken123",
             aup_accepted_at=VALID_AUP_TS,
         )
@@ -74,7 +74,7 @@ class TestUmaEnableGate:
     def test_enable_with_datetime_object(self, adapter):
         dt = _dt.datetime(2026, 4, 30, 12, 0, 0, tzinfo=_dt.timezone.utc)
         adapter.enable_uma(
-            hf_org="zer0pa-materials",
+            hf_org="zer0pa-materials-workbench",
             hf_token="hf_testtoken123",
             aup_accepted_at=dt,
         )
@@ -126,7 +126,7 @@ class TestUmaAfterEnable:
     @pytest.fixture
     def enabled_adapter(self, adapter):
         adapter.enable_uma(
-            hf_org="zer0pa-materials",
+            hf_org="zer0pa-materials-workbench",
             hf_token="hf_testtoken123",
             aup_accepted_at=VALID_AUP_TS,
         )
@@ -152,7 +152,7 @@ class TestUmaAfterEnable:
     def test_predict_uma_gate_block_in_envelope(self, enabled_adapter, req):
         result = enabled_adapter.predict(SI_STRUCTURE, req)
         gate = result.get("_uma_gate", {})
-        assert gate.get("hf_org") == "zer0pa-materials"
+        assert gate.get("hf_org") == "zer0pa-materials-workbench"
         assert gate.get("aup_accepted_at") == VALID_AUP_TS
 
     def test_blocked_manifests_still_emitted_after_enable(self, enabled_adapter):

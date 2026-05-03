@@ -1,4 +1,4 @@
-"""Ontology bindings for the Zer0pa Materials KG.
+"""Ontology bindings for the Zer0pa Materials Workbench KG.
 
 Public surface:
 

@@ -67,7 +67,7 @@ def write_ro_crate_metadata(
     name: str,
     description: str,
     entries: list[RoCrateEntry],
-    creator: str = "Zer0pa Materials Overnight Executor",
+    creator: str = "Zer0pa Materials Workbench Overnight Executor",
     license_spdx: str = "Proprietary",
     research_boundary: str | None = None,
 ) -> Path:

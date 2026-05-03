@@ -1,4 +1,4 @@
-"""``zer0pa-materials`` Typer-based CLI.
+"""``zer0pa-materials-workbench`` Typer-based CLI.
 
 Commands at A0/A1:
 
@@ -17,7 +17,7 @@ Commands at A0/A1:
 
 The CLI is intentionally thin. It exists so:
 
-1. CI can call ``zer0pa-materials envelope-schema > runtime/schemas/envelope.v1.schema.json``
+1. CI can call ``zer0pa-materials-workbench envelope-schema > runtime/schemas/envelope.v1.schema.json``
    to regenerate the contract artifact in one place.
 2. Operators can sanity-check a ``.env`` before triggering an overnight run.
 3. Subagents can append source manifests / blocked sources from the shell.
@@ -64,8 +64,8 @@ from zer0pa_materials_workbench.envelope import (
 )
 
 app = typer.Typer(
-    name="zer0pa-materials",
-    help="Zer0pa Materials — research infrastructure for in silico materials science discovery.",
+    name="zer0pa-materials-workbench",
+    help="Zer0pa Materials Workbench — research infrastructure for in silico materials science discovery.",
     no_args_is_help=True,
     add_completion=False,
 )

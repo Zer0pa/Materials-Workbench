@@ -5,7 +5,7 @@ procedure.  It does NOT flip any backend — it gates, documents, and records
 every step with Decision rows in the audit log.
 
 Cutover procedure (PRD §Runpod Migration):
-    1. Provision Runpod machine and clone https://github.com/Zer0pa/Materials.
+    1. Provision Runpod machine and clone https://github.com/Zer0pa/Materials-Workbench.
     2. Install GPU/Docker dependencies only on the Runpod machine.
     3. Set backend URLs and config flags.
     4. Run sentinel campaign (LLZO, Li6PS5Cl, Li-Mg-Zr-Cl, Bi2Te3).
@@ -461,14 +461,14 @@ class RunpodCutover:
             "1. Log in to Runpod.io and create a pod with the requested GPU spec.",
             f"   GPU type: {s.get('gpu_type', 'A100-80GB')}",
             f"   Disk: {s.get('disk_gb', 200)} GB",
-            "2. SSH into the pod and clone: git clone https://github.com/Zer0pa/Materials .",
+            "2. SSH into the pod and clone: git clone https://github.com/Zer0pa/Materials-Workbench .",
             "3. Install GPU dependencies: pip install -e '.[gpu]' (NOT on local machine).",
             "4. Copy .env.runpod to .env and set backend flags (see docs/RUNPOD-CUTOVER.md).",
             "5. Set MATERIALS_MODE=runpod_rest in the pod environment.",
-            "6. Run: zer0pa-materials runpod precheck",
-            "7. Run: zer0pa-materials runpod sentinel",
-            "8. Run: zer0pa-materials runpod parity",
-            "9. If parity passes: zer0pa-materials runpod cutover-runbook",
+            "6. Run: zer0pa-materials-workbench runpod precheck",
+            "7. Run: zer0pa-materials-workbench runpod sentinel",
+            "8. Run: zer0pa-materials-workbench runpod parity",
+            "9. If parity passes: zer0pa-materials-workbench runpod cutover-runbook",
         ]
         result = {
             "action": "provision_runpod_machine",
@@ -900,7 +900,7 @@ class RunpodCutover:
                 "1. SSH into the Runpod pod.",
                 "2. In .env: set MATERIALS_MODE=runpod_mock (or local_cpu).",
                 "3. Restore all *_BACKEND flags to their pre-cutover values.",
-                "4. Re-run: zer0pa-materials runpod precheck",
+                "4. Re-run: zer0pa-materials-workbench runpod precheck",
                 "5. Notify the lead agent with the checkpoint_id.",
             ],
             "boundary": RESEARCH_BOUNDARY,

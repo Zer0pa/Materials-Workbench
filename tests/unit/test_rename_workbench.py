@@ -132,9 +132,9 @@ def test_old_pyproject_needle_does_not_identify_repo(tmp_path: Path) -> None:
     fake_pyproject = tmp_path / "pyproject.toml"
     fake_pyproject.write_text('[project]\nname = "zer0pa-materials"\n', encoding="utf-8")
 
-    from zer0pa_materials_workbench.repo_root import _is_zer0pa_materials_root
+    from zer0pa_materials_workbench.repo_root import _is_materials_workbench_root
 
-    assert not _is_zer0pa_materials_root(tmp_path), (
+    assert not _is_materials_workbench_root(tmp_path), (
         "Old distribution name 'zer0pa-materials' was accepted as the repo root — "
         "the pyproject needle was not updated."
     )
@@ -148,9 +148,10 @@ _FORBIDDEN_PATTERNS = [
     "zer0pa" + "_materials.",     # old import prefix (split to avoid self-match)
     "import zer0pa" + "_materials\n",
     "from zer0pa" + "_materials ",
-    "zer0pa" + "-materials --",   # old CLI command in docs/strings
+    "zer0pa" + "-materials",      # old CLI/dist command in docs/strings
     "ZER0PA" + "_MATERIALS_REPO_ROOT",  # old env var
-    "Zer0pa" + "/Materials.git",  # old GitHub URL
+    "Zer0pa" + "/Materials",      # old GitHub repo path/URL
+    "Zer0pa " + "Materials",      # old project display identity
 ]
 
 _SCAN_ROOTS = [
@@ -194,8 +195,8 @@ def test_forbidden_identity_absent_in_source_and_tests(pattern: str) -> None:
                 import re
 
                 escaped = re.escape(pattern.rstrip("\n"))
-                # Negative lookahead: not followed by _workbench or -workbench
-                negative = re.compile(escaped + r"(?!_workbench|[-]workbench)")
+                # Negative lookahead: allow the approved Workbench suffixes.
+                negative = re.compile(escaped + r"(?!(?:_workbench|[-]workbench|[-]Workbench| Workbench))")
                 if negative.search(text):
                     hits.append(rel)
     assert not hits, (

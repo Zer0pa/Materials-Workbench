@@ -1,6 +1,6 @@
 """L6 generative discovery CLI subcommands.
 
-Registered as ``zer0pa-materials l6 <subcommand>``.
+Registered as ``zer0pa-materials-workbench l6 <subcommand>``.
 
 Subcommands:
     l6 generate <chemical-system>   Run L6 stub generators and print Envelopes.

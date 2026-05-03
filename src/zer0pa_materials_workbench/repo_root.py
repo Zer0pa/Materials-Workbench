@@ -34,7 +34,7 @@ class RepoRootNotFoundError(RuntimeError):
     """Raised when no zer0pa-materials-workbench repo root can be located."""
 
 
-def _is_zer0pa_materials_root(candidate: Path) -> bool:
+def _is_materials_workbench_root(candidate: Path) -> bool:
     pyproject = candidate / "pyproject.toml"
     if not pyproject.is_file():
         return False
@@ -47,7 +47,7 @@ def _is_zer0pa_materials_root(candidate: Path) -> bool:
 def _walk_up(start: Path) -> Path | None:
     cur = start.resolve()
     for parent in (cur, *cur.parents):
-        if _is_zer0pa_materials_root(parent):
+        if _is_materials_workbench_root(parent):
             return parent
     return None
 
@@ -61,7 +61,7 @@ def repo_root() -> Path:
     env = os.environ.get("ZER0PA_MATERIALS_WORKBENCH_REPO_ROOT")
     if env:
         candidate = Path(env).expanduser().resolve()
-        if _is_zer0pa_materials_root(candidate):
+        if _is_materials_workbench_root(candidate):
             return candidate
         raise RepoRootNotFoundError(
             f"ZER0PA_MATERIALS_WORKBENCH_REPO_ROOT={env!r} does not look like a "

@@ -284,7 +284,7 @@ class RunpodRestClient:
             "Accept": "application/json",
             "Content-Type": "application/json",
             # Tag every outgoing request so server logs can correlate to
-            # the Zer0pa Materials boundary.  Servers that don't recognise
+            # the Zer0pa Materials Workbench boundary.  Servers that don't recognise
             # the header simply ignore it.
             "X-Zer0pa-Boundary": "research-only",
         }

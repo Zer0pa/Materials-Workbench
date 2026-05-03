@@ -319,7 +319,7 @@ class PyCalphadEquilibriumAdapter(L3CalphadAdapter):
             blocker_detail=(
                 "pycalphad is not installed in the current venv. "
                 "License: MIT (open path A). Install via: "
-                "pip install 'zer0pa-materials[materials-extras]' "
+                "pip install 'zer0pa-materials-workbench[materials-extras]' "
                 "or directly: pip install pycalphad."
             ),
             retry_strategy=(

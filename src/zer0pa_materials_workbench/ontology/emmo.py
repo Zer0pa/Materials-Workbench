@@ -1,4 +1,4 @@
-"""EMMO-aligned ontology bindings for the Zer0pa Materials KG (PRD §Audit Trail And KG).
+"""EMMO-aligned ontology bindings for the Zer0pa Materials Workbench KG (PRD §Audit Trail And KG).
 
 The PRD requires:
 

@@ -149,9 +149,7 @@ $ rg -rn "zer0pa-materials(?!-workbench)|zer0pa_materials(?!_workbench)|ZER0PA_M
 | `audit/wave6/falsifiers.jsonl` | `zer0pa_materials.boundary` in error payload strings | Immutable hash-chain evidence | `event_hash` covers payload; modifying text invalidates `sha256:` chain |
 | `audit/runtime/precheck.jsonl` | `zer0pa_materials.boundary` in stderr traces (entries dated 2026-05-03) | Immutable historical evidence | Timestamped precheck records from in-progress rename; not a hash chain but immutable audit records |
 | `tests/unit/test_rename_workbench.py` | `zer0pa_materials`, `zer0pa-materials`, `ZER0PA_MATERIALS_REPO_ROOT` | Test assertions intentionally referencing old identity | Test Gate 1 checks old package is absent; Gates 2/3 test that old CLI/env var are gone |
-| `tests/unit/adapters/l2/test_uma_license_gate.py` | `hf_org="zer0pa-materials"` (3 occurrences) | Verified external HuggingFace organization | HuggingFace org `zer0pa-materials` is a separate external system; renaming it would make code inaccurate |
-| `tests/unit/adapters/l2/test_l2_falsifiers.py` | `hf_org: "zer0pa-materials"` (1 occurrence) | Same HuggingFace org as above | Same justification |
-| `tests/falsification_wave/l2/test_uma_unverified_promotion.py` | `hf_org: "zer0pa-materials"` (2 occurrences) | Same HuggingFace org as above | Same justification |
+| UMA `hf_org` fixture values | synthetic strings in UMA license-gate tests | Synthetic test data | Not a repository/package identity; the real HuggingFace org remains an operator decision at H100 cutover time |
 | Git history | all old names | Git history | PRD §Allowed Exceptions #2 |
 | `.venv-rename/` | generated artifacts | Local venv excluded from scan | PRD §Allowed Exceptions #3 |
 | `MATERIALS-WORKBENCH-RENAME-PRD.md` | all old names as historical references | Rename PRD itself | Documents the rename; references old names as "Current" identities |
@@ -191,6 +189,60 @@ $ gh repo view Zer0pa/Materials-Workbench --json nameWithOwner,url,visibility,de
 - Runpod/H100 scientific completion was **not claimed**. This rename does not advance H100 GPU execution. The workbench is ready to **start** H100 completion work; pipeline completion requires real GPU-backed artifacts surviving parity, acceptance gates, and falsification.
 - No mock-equivalent success path was introduced.
 - No compatibility shim (`zer0pa_materials` package) was created.
+
+---
+
+## Post-Review Naming Remediation
+
+Post-completion review found active runtime/display strings that were not caught by the original stale-identity scan: Typer app display name, Runpod cutover instructions, service titles, packet/RO-Crate creators, KG docstrings, and synthetic UMA fixture placeholders. These were active naming leaks, not architectural failures.
+
+Remediation applied:
+
+- CLI app display name now reports `zer0pa-materials-workbench`.
+- Runpod cutover strings now clone `https://github.com/Zer0pa/Materials-Workbench` and invoke `zer0pa-materials-workbench`.
+- Runtime titles, packet creators, KG/ontology docstrings, and package docstrings now use `Zer0pa Materials Workbench`.
+- UMA fixture org values are synthetic placeholders and no longer reuse the old package/distribution name.
+- Local ignored pre-rename `__pycache__` and egg-info remnants were removed from this checkout before verification.
+
+Verification receipts from the remediation pass:
+
+```
+$ rg -n "zer0pa-materials(?!-workbench)|zer0pa_materials(?!_workbench)|ZER0PA_MATERIALS_REPO_ROOT(?!_)|Zer0pa/Materials(?!-Workbench)|Zer0pa Materials(?! Workbench)" \
+  --pcre2 --glob '!.git/**' --glob '!.venv/**' --glob '!.venv-rename/**' \
+  --glob '!**/__pycache__/**' --glob '!.pytest_cache/**' --glob '!audit/**' \
+  --glob '!build/**' --glob '!dist/**' \
+  --glob '!MATERIALS-WORKBENCH-RENAME-PRD.md' \
+  --glob '!MATERIALS-WORKBENCH-RENAME-EXECUTION-REPORT.md' \
+  --glob '!tests/unit/test_rename_workbench.py' .
+
+0 active hits
+
+$ .venv-rename/bin/python - <<'PY'
+import importlib.util
+import zer0pa_materials_workbench
+print(zer0pa_materials_workbench.__name__)
+print(importlib.util.find_spec("zer0pa_materials"))
+PY
+zer0pa_materials_workbench
+None
+
+$ [ -x .venv-rename/bin/zer0pa-materials ] && echo OLD_CLI_PRESENT || echo OLD_CLI_ABSENT
+OLD_CLI_ABSENT
+
+$ [ -x .venv-rename/bin/zer0pa-materials-workbench ] && echo NEW_CLI_PRESENT || echo NEW_CLI_MISSING
+NEW_CLI_PRESENT
+
+$ VIRTUAL_ENV="$PWD/.venv-rename" .venv-rename/bin/python -m pytest -q \
+  tests/unit/test_rename_workbench.py \
+  tests/integration/test_cli_wiring.py \
+  tests/unit/adapters/l2/test_uma_license_gate.py \
+  tests/unit/adapters/l2/test_l2_falsifiers.py \
+  tests/falsification_wave/l2/test_uma_unverified_promotion.py
+
+99 passed
+```
+
+The final post-remediation commit SHA and README blob SHA are recorded in the handoff response to avoid a self-referential commit-hash loop.
 
 ---
 

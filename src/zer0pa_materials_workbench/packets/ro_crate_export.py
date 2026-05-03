@@ -72,7 +72,7 @@ def export_packet_to_ro_crate(
     out_dir: str | Path,
     *,
     license_spdx: str = "Proprietary",
-    creator: str = "Zer0pa Materials MVP Packet Generator (Wave 5a)",
+    creator: str = "Zer0pa Materials Workbench MVP Packet Generator (Wave 5a)",
 ) -> PacketRoCrateBundle:
     """Materialise ``packet`` as an RO-Crate 1.1 directory.
 
@@ -135,7 +135,7 @@ def export_packet_to_ro_crate(
     # 3. Write the RO-Crate manifest.
     metadata_path = write_ro_crate_metadata(
         crate_root=crate_root,
-        name=f"Zer0pa Materials Evidence Packet — {packet.objective} / {packet.candidate_id}",
+        name=f"Zer0pa Materials Workbench Evidence Packet — {packet.objective} / {packet.candidate_id}",
         description=(
             "Wave 5a publishable-paper evidence packet. Contains every layer "
             "envelope (Phase 0, L6, L1, L2, L1.5, ionic/ZT, L3, L4, L7), "

@@ -234,7 +234,7 @@ class TestUmaLicenseGate:
                 {"model": "UMA-s", "energy_eV_per_atom": -5.02, "force_rmse_eV_per_Ang": 0.05},
             ],
             uma_gate={
-                "hf_org": "zer0pa-materials",
+                "hf_org": "zer0pa-materials-workbench",
                 "hf_token_hint": "hf_...1234",
                 "aup_accepted_at": "2026-04-30T12:00:00+00:00",
             },

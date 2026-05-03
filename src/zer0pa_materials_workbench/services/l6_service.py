@@ -22,7 +22,7 @@ from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
 from zer0pa_materials_workbench.envelope.config import MaterialsConfig
 
 app = FastAPI(
-    title="Zer0pa Materials — L6 Generative Discovery Service",
+    title="Zer0pa Materials Workbench — L6 Generative Discovery Service",
     description=(
         "REST stub for L6 crystal structure generation. "
         "Research infrastructure for in silico materials science discovery. "

@@ -2,13 +2,13 @@
 
 Subcommands:
 
-* ``zer0pa-materials l1-5 phonopy-harmonic --material-id Si`` — harmonic phonon spectrum.
-* ``zer0pa-materials l1-5 phono3py-bte --material-id Bi2Te3 --temperature 300`` — κ_L.
-* ``zer0pa-materials l1-5 hiphive-fit --material-id Bi2Te3`` — HiPhive FC fit.
-* ``zer0pa-materials l1-5 boltztrap2-transport --material-id Bi2Te3`` — BoltzTraP2 S, σ, κ_e.
-* ``zer0pa-materials l1-5 amset-transport --material-id Bi2Te3`` — AMSET transport.
-* ``zer0pa-materials l1-5 zt-assemble --material-id Bi2Te3 --temperature 300`` — full ZT chain.
-* ``zer0pa-materials l1-5 serve`` — start the FastAPI service via uvicorn.
+* ``zer0pa-materials-workbench l1-5 phonopy-harmonic --material-id Si`` — harmonic phonon spectrum.
+* ``zer0pa-materials-workbench l1-5 phono3py-bte --material-id Bi2Te3 --temperature 300`` — κ_L.
+* ``zer0pa-materials-workbench l1-5 hiphive-fit --material-id Bi2Te3`` — HiPhive FC fit.
+* ``zer0pa-materials-workbench l1-5 boltztrap2-transport --material-id Bi2Te3`` — BoltzTraP2 S, σ, κ_e.
+* ``zer0pa-materials-workbench l1-5 amset-transport --material-id Bi2Te3`` — AMSET transport.
+* ``zer0pa-materials-workbench l1-5 zt-assemble --material-id Bi2Te3 --temperature 300`` — full ZT chain.
+* ``zer0pa-materials-workbench l1-5 serve`` — start the FastAPI service via uvicorn.
 
 The L1.5 CLI is intentionally thin — every command serialises the adapter or
 service result to canonical JSON for piping into the audit log.

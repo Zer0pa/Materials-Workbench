@@ -1,4 +1,4 @@
-"""Zer0pa Materials — research infrastructure for in silico materials science discovery.
+"""Zer0pa Materials Workbench — research infrastructure for in silico materials science discovery.
 
 Boundary
 --------

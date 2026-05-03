@@ -1,4 +1,4 @@
-"""Plug-swap test framework — Wave 5b (Zer0pa Materials).
+"""Plug-swap test framework — Wave 5b (Zer0pa Materials Workbench).
 
 Research infrastructure for in silico materials science discovery.
 Outputs are research artifacts. No regulatory certification claims.

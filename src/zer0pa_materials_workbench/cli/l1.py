@@ -1,4 +1,4 @@
-"""L1 DFT CLI commands (``zer0pa-materials l1 ...``).
+"""L1 DFT CLI commands (``zer0pa-materials-workbench l1 ...``).
 
 Commands
 --------
@@ -9,8 +9,8 @@ dry-run-abinit — emit an ABINIT input file without running ABINIT
 healthz      — print L1 adapter status
 
 Usage (after ``pip install -e .``):
-    zer0pa-materials l1 run-pyscf --cif fixtures/structures/H2/structure.cif
-    zer0pa-materials l1 dry-run-qe --cif fixtures/structures/Si/structure.cif
+    zer0pa-materials-workbench l1 run-pyscf --cif fixtures/structures/H2/structure.cif
+    zer0pa-materials-workbench l1 dry-run-qe --cif fixtures/structures/Si/structure.cif
 """
 
 from __future__ import annotations

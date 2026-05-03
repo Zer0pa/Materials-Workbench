@@ -229,7 +229,7 @@ class CompileProtocolRequest(BaseModel):
 
 def create_l7_app() -> FastAPI:
     app = FastAPI(
-        title="Zer0pa Materials — L7 Orchestration Service",
+        title="Zer0pa Materials Workbench — L7 Orchestration Service",
         description=(
             "REST stub for L7 campaigns and active-learning loop. "
             "Research infrastructure for in silico materials science discovery. "

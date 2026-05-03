@@ -32,7 +32,7 @@ from zer0pa_materials_workbench.boundary import RESEARCH_BOUNDARY
 __all__ = ["JobArtifact", "JobRequest", "JobStatus", "app"]
 
 app = FastAPI(
-    title="Zer0pa Materials — L1 DFT Stub Service",
+    title="Zer0pa Materials Workbench — L1 DFT Stub Service",
     description=(
         "Stub REST layer for L1 DFT jobs. "
         "All jobs run synchronously in-process. "

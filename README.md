@@ -254,11 +254,11 @@ The UMA license gate (Meta DPA-3 / MACE MLIP access) requires a HuggingFace org 
 | Item | Status |
 | --- | --- |
 | `Zer0pa` HuggingFace user | EXISTS (200) |
-| `zer0pa-materials` HuggingFace org | NOT YET REGISTERED |
+| Materials Workbench HuggingFace org | NOT YET REGISTERED; exact org name is an operator decision |
 | `UMA_HF_ORG` in `.env` | unset — UMA gate blocks honestly |
 | `UMA_HF_TOKEN` in `.env` | unset — UMA gate blocks honestly |
 
-Work required: create the HuggingFace org (operator decision on exact name), accept the Meta UMA agreement, set `UMA_HF_ORG` and `UMA_HF_TOKEN` in the Runpod `.env`, and re-run the L2 MLIP production path. The test fixtures use `hf_org="zer0pa-materials"` as a placeholder; the real org name is an operator decision at H100 cutover time. This is intentional — no HuggingFace rename is needed to unblock H100 work.
+Work required: create the HuggingFace org, accept the Meta UMA agreement, set `UMA_HF_ORG` and `UMA_HF_TOKEN` in the Runpod `.env`, and re-run the L2 MLIP production path. Test fixture `hf_org` values are synthetic license-gate placeholders, not repository/package identity.
 
 ### Package Distribution
 

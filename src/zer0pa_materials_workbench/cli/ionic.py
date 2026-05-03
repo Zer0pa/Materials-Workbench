@@ -2,15 +2,15 @@
 
 Subcommands:
 
-* ``zer0pa-materials ionic neb --fixture-id <ID>`` — print NEB envelope.
-* ``zer0pa-materials ionic md-diffusion --fixture-id <ID>`` — MLIP-MD envelope.
-* ``zer0pa-materials ionic aimd-diffusion --fixture-id <ID>`` — AIMD envelope.
-* ``zer0pa-materials ionic arrhenius-fit --temperatures-K 300,400,500 --conductivities-S-per-cm 1e-3,5e-3,1e-2`` — fit Ea.
-* ``zer0pa-materials ionic electrochemical-window --fixture-id <ID>``
-* ``zer0pa-materials ionic interface-stability --fixture-id <ID>``
-* ``zer0pa-materials ionic full-battery-evidence --fixture-id <ID>`` — bundle.
-* ``zer0pa-materials ionic promote-battery-candidate --fixture-id <ID> --candidate-id <ID>`` — decision.
-* ``zer0pa-materials ionic serve`` — start the FastAPI service via uvicorn.
+* ``zer0pa-materials-workbench ionic neb --fixture-id <ID>`` — print NEB envelope.
+* ``zer0pa-materials-workbench ionic md-diffusion --fixture-id <ID>`` — MLIP-MD envelope.
+* ``zer0pa-materials-workbench ionic aimd-diffusion --fixture-id <ID>`` — AIMD envelope.
+* ``zer0pa-materials-workbench ionic arrhenius-fit --temperatures-K 300,400,500 --conductivities-S-per-cm 1e-3,5e-3,1e-2`` — fit Ea.
+* ``zer0pa-materials-workbench ionic electrochemical-window --fixture-id <ID>``
+* ``zer0pa-materials-workbench ionic interface-stability --fixture-id <ID>``
+* ``zer0pa-materials-workbench ionic full-battery-evidence --fixture-id <ID>`` — bundle.
+* ``zer0pa-materials-workbench ionic promote-battery-candidate --fixture-id <ID> --candidate-id <ID>`` — decision.
+* ``zer0pa-materials-workbench ionic serve`` — start the FastAPI service via uvicorn.
 
 The ionic CLI is intentionally thin — every command serialises the
 adapter or service result to canonical JSON so the operator can pipe
