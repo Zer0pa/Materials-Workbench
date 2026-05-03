@@ -238,3 +238,32 @@ For a previous-role agent reconstructing the pre-execution context:
 ## Cross-Workstream Principle
 
 This workstream runs in parallel with `Zer0pa/Health` and `Zer0pa/Energy`. Each workstream is built end-to-end as an independent pipeline. **No substrate is shared during build.** Redundancy across workstreams is a deliberate asset: surplus coding capacity buys diversity of architecture, not duplicated cost. Convergence, if any, happens in a separate merge step after all three workstreams complete. See `MODUS-OPERANDI.md` § Parallel-exploration principle.
+
+## What's Next
+
+### H100 GPU Completion (primary open gate)
+
+The control plane is complete. The pipeline is not. The next concrete work is standing up real Runpod H100 endpoints, running the battery MVP campaign (LLZO, Li6PS5Cl, Li-Mg-Zr-Cl seed) and thermoelectric sidecar (Bi2Te3, PbTe, SnSe), and producing artifacts that survive parity, acceptance gates, and the falsification wave. See the H100 Completion Mandate section for the full five-step sequence and wall-clock budget.
+
+**Nothing below is pipeline-complete until real H100 artifacts survive falsification.**
+
+### HuggingFace Integration
+
+The UMA license gate (Meta DPA-3 / MACE MLIP access) requires a HuggingFace org registered under Zer0pa and UMA acceptance confirmed at that org. Current state:
+
+| Item | Status |
+| --- | --- |
+| `Zer0pa` HuggingFace user | EXISTS (200) |
+| `zer0pa-materials` HuggingFace org | NOT YET REGISTERED |
+| `UMA_HF_ORG` in `.env` | unset — UMA gate blocks honestly |
+| `UMA_HF_TOKEN` in `.env` | unset — UMA gate blocks honestly |
+
+Work required: create the HuggingFace org (operator decision on exact name), accept the Meta UMA agreement, set `UMA_HF_ORG` and `UMA_HF_TOKEN` in the Runpod `.env`, and re-run the L2 MLIP production path. The test fixtures use `hf_org="zer0pa-materials"` as a placeholder; the real org name is an operator decision at H100 cutover time. This is intentional — no HuggingFace rename is needed to unblock H100 work.
+
+### Package Distribution
+
+`zer0pa-materials-workbench` is currently an editable-install research package. No PyPI publication is planned until real GPU-backed artifacts are produced and the pipeline reaches a defensible science posture. Publication requires a public-release decision by the operator.
+
+### Cross-Workstream Convergence
+
+Convergence with `Zer0pa/Health` and `Zer0pa/Energy` is explicitly deferred until all three workstreams independently reach H100 completion. Materials Workbench does not share state with those lanes during build. A separate convergence step follows after each lane produces falsification-surviving outputs.
