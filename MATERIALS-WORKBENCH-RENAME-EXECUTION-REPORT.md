@@ -240,6 +240,11 @@ $ VIRTUAL_ENV="$PWD/.venv-rename" .venv-rename/bin/python -m pytest -q \
   tests/falsification_wave/l2/test_uma_unverified_promotion.py
 
 99 passed
+
+$ .venv-rename/bin/python -m pip install -e '.[runpod]'
+$ VIRTUAL_ENV="$PWD/.venv-rename" .venv-rename/bin/python -m pytest -q
+
+3562 passed, 2 skipped
 ```
 
 The final post-remediation commit SHA and README blob SHA are recorded in the handoff response to avoid a self-referential commit-hash loop.
