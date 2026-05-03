@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "Zer0pa Materials Workbench — research infrastructure for in silico materials science discovery"
 readme = "README.md"
 requires-python = ">=3.10"
-license = { text = "Proprietary — Zer0pa research artifact" }
+license = { text = "LicenseRef-Zer0pa-SAL-7.1" }
 authors = [{ name = "Zer0pa-Architect-Prime", email = "architects@zer0pa.ai" }]
 keywords = ["materials", "DFT", "MLIP", "CALPHAD", "phase-field", "FEM", "battery", "thermoelectric"]
 classifiers = [
@@ -41,6 +41,9 @@ dependencies = [
     "python-multipart>=0.0.9",
     "pint>=0.23",
 ]
+
+[project.urls]
+Repository = "https://github.com/Zer0pa/Materials-Workbench"
 
 [project.optional-dependencies]
 dev = [
