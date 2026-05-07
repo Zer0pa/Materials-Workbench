@@ -42,7 +42,7 @@ The repo is intentionally visible as work-in-progress. It should not be read as 
 | Identifier | Zer0pa Materials Workbench |
 | Repository | https://github.com/Zer0pa/Materials-Workbench |
 | Portfolio | Materials Workbench |
-| Visibility | INTERNAL |
+| Visibility | PUBLIC |
 | Default Branch | main |
 | Authority Source | `PRD.md`; `EXECUTION-REPORT.md`; `phases/Falsification-wave/PHASE-REPORT-WAVE-F5.md` |
 | License | Proprietary Zer0pa research artifact unless superseded by repository legal files |
