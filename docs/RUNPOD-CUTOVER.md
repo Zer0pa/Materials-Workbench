@@ -19,7 +19,7 @@ Before starting, confirm:
 1. Wave 5c parity tests pass: `.venv/bin/python -m pytest tests/parity -v`
 2. Foundation tests still pass: `.venv/bin/python -m pytest tests -q`
 3. Git status is clean on `main` (no uncommitted state).
-4. You have a Runpod.io account with sufficient credits for an A100 pod.
+4. You have a Runpod.io account with sufficient credits for an H100 pod.
 5. You have a Hugging Face account in a verified organization (required for UMA).
 
 ---
@@ -30,7 +30,6 @@ SSH into the Runpod pod and run:
 
 ```bash
 git clone https://github.com/Zer0pa/Materials-Workbench .
-cd Materials
 ```
 
 Do NOT install GPU/Docker dependencies on your local machine.
@@ -135,7 +134,7 @@ This runs LLZO, Li6PS5Cl, Li-Mg-Zr-Cl, and Bi2Te3 through every GPU-bound
 layer. The sentinel report is written to
 `phases/Runpod-cutover/sentinel-report.md`.
 
-Expected duration: ~45-90 minutes for a full run (A100 × all 9 layers × 4 seeds).
+Expected duration: ~45-90 minutes for a full run (H100 × all 9 layers × 4 seeds).
 
 ---
 
@@ -188,7 +187,7 @@ Record the promotion decision:
 
 ```bash
 python -c "
-from zer0pa_materials_workbench_workbench.runpod.cutover import RunpodCutover, ParityReport
+from zer0pa_materials_workbench.runpod.cutover import RunpodCutover, ParityReport
 c = RunpodCutover()
 r = c.promote_backend('all', 'runpod_mock', 'runpod_rest',
     parity_report=ParityReport(passed=True, schema_drifts={}, hash_mismatches={},
@@ -219,7 +218,7 @@ Rollback via API:
 
 ```bash
 python -c "
-from zer0pa_materials_workbench_workbench.runpod.cutover import RunpodCutover
+from zer0pa_materials_workbench.runpod.cutover import RunpodCutover
 c = RunpodCutover()
 result = c.rollback('decision:promote:<your-checkpoint-id>')
 print(result['instructions'])
