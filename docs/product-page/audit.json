@@ -1,0 +1,60 @@
+{
+  "url": "file:///Users/Zer0pa/Desktop/xr-product-page-build/materials/index.html",
+  "viewport_desktop": [
+    1440,
+    900
+  ],
+  "viewport_mobile": [
+    414,
+    1100
+  ],
+  "console_errors": [
+    {
+      "type": "error",
+      "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED"
+    },
+    {
+      "type": "error",
+      "text": "Failed to load resource: net::ERR_CONNECTION_REFUSED"
+    }
+  ],
+  "page_errors": [],
+  "pretext_state": "active",
+  "pretext_state_mobile": "active",
+  "headline_text": "MATERIALS YOU CAN FALSIFY.",
+  "live_lane": "LIVE LANE · 222900Z",
+  "five_metric_cards_present": 5,
+  "five_metric_values": [
+    "3,547/3,547",
+    "588PASS",
+    "7hardened",
+    "23/23",
+    "null"
+  ],
+  "all_cell_ids": [
+    "00 · MATERIALS",
+    "01 · THE GAP",
+    "03 · VALUE",
+    "04 · INSIGHT",
+    "05.0 · CURRENT TECH",
+    "05.1 · OUR TECH",
+    "06 · MEASUREMENT",
+    "07 · KEY METRICS",
+    "07.1 · CPU STRICT GATE",
+    "07.2 · RUNPOD PARITY",
+    "07.3 · RECOMPUTE GATES",
+    "07.4 · FALSIFIERS FIRED",
+    "07.5 · GPU EVIDENCE",
+    "08 · DETERMINISM",
+    "08.1 · WHAT DETERMINISTIC MEANS",
+    "08.2 · THE FIDELITY GAP",
+    "09 · POSSIBILITY",
+    "09.1 · THIS REPO'S AMBITION",
+    "09.2 · LIVE PROBE",
+    "09.3 · LIVE WORKSTREAM"
+  ],
+  "external_blank_cells": [],
+  "non_live_green_count": 0,
+  "non_live_green_offenders": [],
+  "stale_labels": []
+}
