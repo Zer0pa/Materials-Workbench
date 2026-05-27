@@ -1,5 +1,41 @@
 # Materials-Workbench
 
+## Install / Developer Commands
+
+<!-- INSTALL-DX:START -->
+#### Package Install
+
+Installable package: `python3.11 -m pip install zer0pa-materials-workbench`.
+Current release: `0.1.0` on [PyPI](https://pypi.org/project/zer0pa-materials-workbench/).
+Source: [Zer0pa/Materials-Workbench](https://github.com/Zer0pa/Materials-Workbench/).
+
+```bash
+python3.11 -m pip install zer0pa-materials-workbench
+```
+
+Import smoke:
+
+```bash
+python3.11 - <<'PY'
+import importlib.metadata as md
+import zer0pa_materials_workbench
+
+print("zer0pa-materials-workbench", md.version("zer0pa-materials-workbench"))
+PY
+```
+
+
+CLI smoke:
+
+```bash
+zer0pa-materials-workbench --help
+```
+
+Install success only proves package acquisition/import. Product scope, stale PyPI state, platform limits, and blockers remain in the front-door sections below.
+- PyPI copy is stale or pending refresh; install success is not product readiness.
+<!-- INSTALL-DX:END -->
+
+
 <table width="100%">
 <tr>
 <td width="100%" valign="top">
