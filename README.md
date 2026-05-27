@@ -1,28 +1,42 @@
-# Zer0pa Materials Workbench
+# Materials-Workbench
 
-> Live window into the Zer0pa lab. Materials Workbench is research infrastructure, not a productized materials service.
+> Product-page mirror for `/materials/Materials/`.
+> Live public repo: [Zer0pa/Materials-Workbench](https://github.com/Zer0pa/Materials-Workbench).
+> GitHub Markdown cannot reproduce the website typography, CSS, JavaScript, scroll behavior, or live bento layout; this README translates the product page into GitHub-safe Markdown evidence blocks.
 
-> Boundary: Research infrastructure for in silico materials science discovery. Outputs are research artifacts. No regulatory certification claims. No clinical or human-subject use. ITAR / weapons applications are out of scope (Meta UMA Acceptable Use Policy and operator policy).
+## 0. Install / Developer Commands
 
-## What This Is
+The product page is the positioning authority. This section is the only retained developer-surface material from the previous root README.
 
-Materials Workbench is an in silico discovery pipeline workbench for battery and thermoelectric research, now entering H100 completion.
+```bash
+* **Tests:** **3,547** passing post-Wave-F (the count grows as adversarial tests are added; run `pytest -q | tail -3` for the canonical current count), 2 skipped (pycalphad), 0 failed.
+* **Precheck:** runs `pytest` subprocesses; the literal string "Assumed pass" is a hard reject in any precheck row.
+```
 
-This repository is the Materials workstream's live engineering and research surface. It holds the CPU-side control plane for a multi-layer materials-discovery pipeline: contracts, schemas, layer adapters, audit trail, falsifiers, packet validators, Runpod dispatcher, parity tests, and H100 completion plan. The current pipeline is built around a battery MVP wedge (LLZO, Li6PS5Cl, and Li-Mg-Zr-Cl seed) with a thermoelectric sidecar (Bi2Te3, PbTe, and SnSe).
+## Product Page Mirror
 
-The repo is intentionally visible as work-in-progress. It should not be read as a finished service, a commercial materials database, a regulatory artifact, or a claim that real H100-backed discovery is complete. The next gate is real GPU-backed `runpod_rest` execution producing artifacts that survive parity, hard-failure detectors, recompute acceptance gates, packet validation, and a falsification wave.
+**Product-page title:** Materials Workbench · CPU-side in-silico materials workbench · Zer0pa
 
-## Pipeline Mechanics
+**Product-page description:** Materials Workbench · CPU-side in-silico materials research workbench · 7-layer L1-L7 battery + thermoelectric pipeline · 7 raw-evidence recompute checks · 3,547 CPU tests pass · 588 Runpod parity tests · H100 GPU evidence campaign pending · PyPI zer0pa-materials-workbench v0.1.0 stale
+
+### Hero Translation
+
+> 00 · MATERIALS · INSILICO WORKBENCHLIVE LANE · 222900Z CPU-side materials workbench. Materials lane · Materials-Workbench · PyPI zer0pa-materials-workbench v0.1.0 stale · github.com/Zer0pa/Materials-Workbench Materials Workbench is a CPU-side bench for in-silico battery and thermoelectric research. Candidate chains arrive with schemas, validators, recompute checks, and dispatch wired together, so weak chemistries are rejected at the desk before they consume cluster hours. 3,547 strict-full tests pass and 588 Runpod-sim parity tests hold; the H100 campaign is the next wave, not the current result. Real GPU evidence is not claimed yet.
+
+## Positioning
 
 | Field | Value |
 | --- | --- |
-| Architecture | Seven-layer in silico materials pipeline with audit-first orchestration |
-| Layers | Phase 0 extraction; L1 DFT; L1.5 phonon/transport; L2 MLIP; L3 CALPHAD; L4 phase-field; L5 continuum; L6 generative; L7 orchestration/lab |
-| MVP Wedge | Solid-state battery evidence chain: LLZO, Li6PS5Cl, Li-Mg-Zr-Cl seed |
-| Sidecar | Thermoelectric evidence chain: Bi2Te3, PbTe, SnSe |
-| Execution | CPU-side complete; H100 Runpod completion required for real `runpod_rest` GPU artifacts |
-| Mechanics | universal envelopes, source manifests, rights claims, KG/audit trail, parity, falsification, raw-evidence recompute gates |
-| Open Gate | Real H100 endpoint/service execution and falsification over real outputs |
+| Section | materials |
+| Product route | /materials/Materials/ |
+| Live public repository | https://github.com/Zer0pa/Materials-Workbench |
+| Repo identity used here | Materials-Workbench |
+| Website display identity | Materials |
+| Verdict | STAGED |
+| Posture | always_in_beta |
+| Headline metric | 3,547 passing tests; 16 PRD falsification failures fired correctly; CPU-side control plane post-review-hardened and Runpod-ready. |
+| Honest blocker | The pipeline is not complete until real GPU-backed H100 artifacts exist and survive parity, hard-failure detectors, acceptance gates, packet validation, and a falsification wave. |
+| Mechanics asset from product page |  |
 
 ## Key Metrics
 
@@ -30,240 +44,189 @@ The repo is intentionally visible as work-in-progress. It should not be read as 
 | --- | --- | --- |
 | Test surface | 3,547 passing; 2 pycalphad skips | post-Wave-F local verification |
 | Falsification surface | 16 PRD failures + 7 raw-evidence recompute gates | Wave F production wiring |
-| Runpod status | ready to start H100 completion; not pipeline-complete | `runpod_rest` must produce real artifacts |
+| Runpod status | ready to start H100 completion; not pipeline-complete | runpod_rest must produce real artifacts |
 | H100 completion estimate | 40-80 hours MVP; 120-250 hours hardening | single-H100 wall-clock planning |
-
-> Source: `EXECUTION-REPORT.md`, `phases/Falsification-wave/PHASE-REPORT-WAVE-F5.md`, `docs/RUNPOD-CUTOVER.md`, and the current README H100 mandate.
-
-## Repo Identity
-
-| Field | Value |
-| --- | --- |
-| Identifier | Zer0pa Materials Workbench |
-| Repository | https://github.com/Zer0pa/Materials-Workbench |
-| Portfolio | Materials Workbench |
-| Visibility | PUBLIC |
-| Default Branch | main |
-| Authority Source | `PRD.md`; `EXECUTION-REPORT.md`; `phases/Falsification-wave/PHASE-REPORT-WAVE-F5.md` |
-| License | Proprietary Zer0pa research artifact unless superseded by repository legal files |
-
-## Readiness
-
-| Field | Value |
-| --- | --- |
-| Evidence posture | CPU-side control plane complete; H100 completion pending |
-| Current gate | real `runpod_rest` endpoints must execute GPU-backed layer jobs |
-| Verified locally | tests, parity, falsification, raw-evidence recompute production wiring |
-| Not complete until | real H100 artifacts survive acceptance, packet validation, and falsification |
-| Operator posture | anti-demo; no mock-equivalent success path |
-
-### Honest Blocker
-
-The repo can begin H100 work, but the pipeline is not complete until real GPU-backed artifacts exist. A schema-valid mock, local stub, or green first-base cutover does not satisfy the workstream objective.
-
-## What We Prove
-
-- The CPU-side pipeline contracts are present: envelopes, layer schemas, source manifests, rights claims, KG/audit records, and packet validators.
-- Runpod dispatch has an honest `runpod_rest` path that blocks without credentials and tests against mock-in-rest deception.
-- Production gates include raw-evidence recomputation for L2 disagreement, source linkage, novelty, ionic back-edges, NEB barrier, L3 sovereign state, and L5 artifact sidecars.
-- The falsification wave and Wave F recompute wiring catch forged evidence chains that the older shape-only gates would have accepted.
-- The H100 completion path is explicit: stand up real layer endpoints, produce real artifacts, run parity, run falsification, then promote evidence packets.
-
-## What We Don't Claim
-
-- Materials Workbench is not a finished commercial service, certification system, regulatory submission, or human-subject/clinical workflow.
-- The repo does not claim real H100-backed discovery is already complete.
-- A `runpod_mock` envelope is not evidence of scientific completion.
-- A passing schema or first green test is not a promoted materials result.
-- No novelty, ionic-conductivity, stability, or paper-grade packet claim is valid without raw evidence and audit provenance.
-- ITAR, weapons, regulatory certification, and human-subject applications are out of scope.
-
-## Verification Status
-
-| Code | Check | Verdict |
-| --- | --- | --- |
-| V_01 | CPU-side contracts, schemas, audit, falsifiers, packets, and dispatcher present | PASS |
-| V_02 | Full local suite: 3,547 passing, 2 pycalphad skips | PASS |
-| V_03 | `zer0pa-materials-workbench runpod parity`: 588 parity tests | PASS |
-| V_04 | Mock-in-rest-report deception rejected by parity tests | PASS |
-| V_05 | Raw-evidence recompute gates wired into production paths | PASS |
-| V_06 | Real H100 outputs survive falsification wave | OPEN |
 
 ## Proof Anchors
 
 | Path | State |
 | --- | --- |
-| `PRD.md` | VERIFIED |
-| `EXECUTION-REPORT.md` | VERIFIED |
-| `docs/RUNPOD-CUTOVER.md` | VERIFIED |
-| `phases/Falsification-wave/PHASE-REPORT-WAVE-F5.md` | VERIFIED |
-| `tests/integration/test_recompute_wired_into_production.py` | VERIFIED |
-| `phases/Deep-Research/sources.jsonl` | VERIFIED |
+| PRD.md | VERIFIED |
+| EXECUTION-REPORT.md | VERIFIED |
+| docs/RUNPOD-CUTOVER.md | VERIFIED |
+| phases/Falsification-wave/PHASE-REPORT-WAVE-F5.md | VERIFIED |
+| tests/integration/test_recompute_wired_into_production.py | VERIFIED |
+| phases/Deep-Research/sources.jsonl | VERIFIED |
 
-## Repo Shape
+## What We Prove
+
+- The CPU-side pipeline contracts are present: envelopes, layer schemas, source manifests, rights claims, KG/audit records, and packet validators.
+- Runpod dispatch has an honest runpod_rest path that blocks without credentials and tests against mock-in-rest deception.
+- Production gates include raw-evidence recomputation for L2 disagreement, source linkage, novelty, ionic back-edges, NEB barrier, L3 sovereign state, and L5 artifact sidecars.
+- The falsification wave and Wave F recompute wiring catch forged evidence chains that the older shape-only gates would have accepted.
+- The H100 completion path is explicit: stand up real layer endpoints, produce real artifacts, run parity, run falsification, then promote evidence packets.
+
+## What We Do Not Claim
+
+- Materials is not a finished commercial service, certification system, regulatory submission, or human-subject/clinical workflow.
+- The repo does not claim real H100-backed discovery is already complete.
+- A runpod_mock envelope is not evidence of scientific completion.
+- A passing schema or first green test is not a promoted materials result.
+- No novelty, ionic-conductivity, stability, or paper-grade packet claim is valid without raw evidence and audit provenance.
+- ITAR, weapons, regulatory certification, and human-subject applications are out of scope.
+
+## Blockers / Failures
+
+> The pipeline is not complete until real GPU-backed H100 artifacts exist and survive parity, hard-failure detectors, acceptance gates, packet validation, and a falsification wave.
+
+## Verification Surface
+
+| Code | Check | Verdict |
+| --- | --- | --- |
+| V_01 | CPU-side contracts, schemas, audit, falsifiers, packets, and dispatcher present | PASS |
+| V_02 | Full local suite: 3,547 passing, 2 pycalphad skips | PASS |
+| V_03 | zer0pa-materials runpod parity: 588 parity tests | PASS |
+| V_04 | Mock-in-rest-report deception rejected by parity tests | PASS |
+| V_05 | Raw-evidence recompute gates wired into production paths | PASS |
+| V_06 | Real H100 outputs survive falsification wave | PENDING |
+
+## License
 
 | Field | Value |
 | --- | --- |
-| Proof Anchors | 6 display anchors |
-| Portfolio | Materials Workbench |
-| Authority Source | `PRD.md`; `EXECUTION-REPORT.md`; `phases/Falsification-wave/PHASE-REPORT-WAVE-F5.md` |
-| Pipeline Specs | `source-briefs/`; `synthesis/`; `PRD.md` |
-| Execution Surface | `src/zer0pa_materials_workbench/`; `tests/`; `fixtures/` |
-| Audit / Phases | `audit/`; `phases/`; `phases/Deep-Research/sources.jsonl` |
-| Support Sections | Build Status; H100 Completion Mandate; Workstream Contents; Read Order; Provenance; Cross-Workstream Principle |
+| License | LicenseRef-Zer0pa-OWNER_DEFERRED |
+| Authority source | PRD.md; EXECUTION-REPORT.md; phases/Falsification-wave/PHASE-REPORT-WAVE-F5.md |
 
-## Build Status
+## Upcoming Workstreams
 
-The CPU-side control plane is **complete and post-review-hardened**. That means the repo has the contracts, schemas, audit trail, falsifiers, dispatcher, parity tests, packet validators, and acceptance-gate machinery required to begin H100 completion work. It does **not** mean the materials-discovery pipeline is scientifically complete. Pipeline completion requires real GPU-backed Runpod execution, real layer artifacts, and a successful falsification wave over those real outputs.
-
-A reviewer audit caught real weaknesses (silent runpod_rest fallback, "assumed-pass" precheck, falsifier-trust-fields anti-pattern, absolute-path tests) which have been fixed in Waves A-F. Run `git log` for the canonical commit chain; latest is the HEAD of `main` on [Zer0pa/Materials-Workbench](https://github.com/Zer0pa/Materials-Workbench).
-
-* **Tests:** **3,547** passing post-Wave-F (the count grows as adversarial tests are added; run `pytest -q | tail -3` for the canonical current count), 2 skipped (pycalphad), 0 failed.
-* **Falsification wave:** 16 of 16 PRD-mandated deliberate failures fired correctly with hash-chained audit proof, plus **7 newly-hardened gates** that recompute from raw evidence.
-* **Hard gates:** scientific PASS, engineering PASS, brain-functionality PASS on the CPU control plane.
-* **runpod_rest dispatch:** real `httpx`-based REST client with `tenacity` retries when installed; honest-block when credentials are missing.
-* **Precheck:** runs `pytest` subprocesses; the literal string "Assumed pass" is a hard reject in any precheck row.
-* **Repo hygiene:** tests use repo fixtures rather than machine-specific absolute paths; `.env.*`, `*.sqlite`, `*.lock` gitignored; deep-research source manifests committed at `phases/Deep-Research/sources.jsonl`.
-
-For a 5-minute orientation see [`REVIEWER-GUIDE.md`](REVIEWER-GUIDE.md). For the full operator-facing report including the post-review remediation summary see [`EXECUTION-REPORT.md`](EXECUTION-REPORT.md). For the Runpod cutover runbook see [`docs/RUNPOD-CUTOVER.md`](docs/RUNPOD-CUTOVER.md).
-
-## H100 Completion Mandate
-
-This is not a demo, mock showcase, or first-green-test milestone. The next workstream is enterprise-grade H100 completion: every layer that claims `runpod_rest` must be backed by real GPU execution or must block honestly. No result may be promoted because a schema-compatible stub exists, and no novelty, ionic-transport, stability, or packet claim may pass without raw-evidence recomputation and audit provenance.
-
-The repository is ready to **start** H100 completion work. It is not complete until the H100 run produces real artifacts and those artifacts survive parity, hard-failure detectors, acceptance gates, packet validation, and a falsification wave.
-
-### Work Required To Complete The Pipeline
-
-1. **Runpod service layer**
-   - Stand up real `/v1/{layer}/{endpoint}` services on the H100.
-   - Wire `runpod_rest` through `RunpodDispatcher` to real jobs, not mock-compatible responses.
-   - Persist job IDs, stdout/stderr tails, resource metrics, artifact URIs, hashes, and audit rows.
-   - Make failed CUDA/package/solver calls return structured blocked or failed envelopes, never green placeholders.
-
-2. **GPU-backed layer adapters**
-   - **L1 DFT:** run real QE/CP2K/ABINIT or PySCF/GPU4PySCF jobs for sentinel structures.
-   - **L2 MLIP:** run DPA-3 + MACE ensemble inference with disagreement metrics and routing decisions derived from raw model outputs.
-   - **Ionic:** run NEB, MLIP-MD/AIMD where configured, Arrhenius fit, electrochemical-window, and interface-stability gates.
-   - **L6 generative:** run real generation or explicitly bounded seeded-candidate mode, followed by deduplication and L1/L2/ionic back-edges before any novelty claim.
-   - **L1.5/L3/L4/L5:** execute the production solver path where H100/MPI is required; otherwise record an explicit CPU-sovereign or blocked result with provenance.
-
-3. **Real campaign data and artifacts**
-   - Battery MVP: LLZO, Li6PS5Cl, and the Li-Mg-Zr-Cl seed.
-   - Thermoelectric sidecar: Bi2Te3, PbTe, and SnSe.
-   - Data intake remains manifest-first: OPTIMADE / Materials Project metadata and small fixtures only; no bulk local datasets.
-   - Every DFT output, MLIP prediction, trajectory, phase-field/FEM artifact, generated structure, and packet must have provenance, units, hashes, and falsifier rows.
-
-4. **End-to-end evidence campaign**
-   - Execute candidate generation or seeded-candidate intake.
-   - Run L1/L2 screening and disagreement routing.
-   - Run ionic evidence and promotion gates.
-   - Run L3 stability/prior checks where applicable.
-   - Generate battery and sidecar evidence packets.
-   - Run parity, hard-failure detectors, recompute acceptance gates, and falsification wave on real H100 outputs.
-   - Produce a paper-grade evidence packet only if the real artifacts pass the gates.
-
-5. **No-pass-unless gates**
-   - No mock envelope may appear in a `runpod_rest` report.
-   - No promoted candidate may lack DFT/MLIP/ionic/audit back-edges.
-   - No novelty claim may pass without deduplication plus L2, ionic, and L1 validation.
-   - No acceptance gate may trust claimed scalar fields where raw recomputation is available.
-   - No pipeline-complete claim is valid until real H100 outputs survive the falsification wave.
-
-### H100 Wall-Clock Estimate
-
-For one H100, budget the workstream as follows:
-
-| Work package | Expected H100 wall-clock |
-|---|---:|
-| Clone, environment, CUDA, Python, package reconciliation, smoke tests | 4-12 hours |
-| Real endpoint/service bring-up and `runpod_rest` health checks | 6-12 hours |
-| First real battery MVP campaign across L1/L2/ionic/core gates | 18-36 hours |
-| Parity, hard-failure detectors, packet regeneration, falsification wave | 4-8 hours |
-| Fix loop after first real failures | 12-36 hours |
-
-**Credible end-to-end MVP completion estimate:** 40-80 H100 wall-clock hours.
-
-**Enterprise hardening estimate beyond MVP:** 120-250 H100 wall-clock hours, covering repeated campaigns, convergence checks, solver failure recovery, artifact-store hardening, and falsification expansion.
-
-The H100 agent's first objective is not visible progress. Its objective is to turn the CPU-complete control plane into a real GPU-backed materials-discovery pipeline whose outputs can be defended from raw evidence through audit trail to falsification.
-
-## Workstream Contents
-
-| Path | Purpose | Author role |
-|---|---|---|
-| `MODUS-OPERANDI.md` | Reusable multi-agent pattern + parallel-exploration principle (Health, Materials, Energy run independently in parallel; convergence happens after all complete, not during) | Synthesis agent |
-| `HANDOFF-TO-ORCHESTRATOR.md` | Materials-specific brief for the next agent (the materials orchestrator) | Synthesis agent |
-| `ORCHESTRATOR-STARTUP-PROMPT.md` | Prompt the user pastes into a fresh agent session to spin up the materials orchestrator | Synthesis agent |
-| `source-briefs/` | Research-agent handover note plus two technology-landscape briefs | External research input |
-| `synthesis/` | Fresh-eyes reading of briefs and handover note | Synthesis agent |
-| `PRD.md` | Product/research requirements for overnight long-horizon execution | Materials orchestrator |
-| `HANDOFF-TO-OVERNIGHT-EXECUTOR.md` | Overnight executor brief and no-user-engagement mandate | Materials orchestrator |
-| `OVERNIGHT-EXECUTOR-STARTUP-PROMPT.md` | Paste-ready startup prompt for the dedicated overnight executor agent | Materials orchestrator |
-
-## Read Order
-
-For a fresh reviewer landing on this repo on another machine, read in this order:
-
-1. **[`README.md`](README.md)** - front door, status, proof anchors, H100 completion mandate.
-2. **[`REVIEWER-GUIDE.md`](REVIEWER-GUIDE.md)** - how to clone, install, run the test suite, and navigate the codebase.
-3. **[`EXECUTION-REPORT.md`](EXECUTION-REPORT.md)** - what was built, gate verdict, parked-for-Runpod table, open blockers, next actions.
-4. **[`docs/RUNPOD-CUTOVER.md`](docs/RUNPOD-CUTOVER.md)** - operator runbook for the Runpod machine.
-5. **[`phases/Falsification-wave/FALSIFICATION-WAVE-REPORT.md`](phases/Falsification-wave/FALSIFICATION-WAVE-REPORT.md)** - 16-case falsification wave verdict.
-6. **[`phases/Falsification-wave/PHASE-REPORT-WAVE-F5.md`](phases/Falsification-wave/PHASE-REPORT-WAVE-F5.md)** - raw-evidence recompute gates wired into production.
-7. **[`PRD.md`](PRD.md)** - original specification.
-8. **`phases/<wave-name>/PHASE-REPORT.md`** - per-wave detail.
-
-For a previous-role agent reconstructing the pre-execution context:
-
-1. `MODUS-OPERANDI.md` - multi-agent workstream pattern.
-2. `HANDOFF-TO-ORCHESTRATOR.md` - materials orchestrator brief.
-3. `source-briefs/00-research-agent-handover-note.md` - research agent self-assessment and five pending decisions.
-4. `source-briefs/01-full-technology-landscape.md` - seven-layer pipeline catalogue.
-5. `source-briefs/02-corrections-and-architecture.md` - corrections, gaps A-H, master tool table.
-6. `synthesis/01-fresh-eyes-on-materials-briefs.md` - synthesis-agent reframe.
-7. `synthesis/02-digest-of-source-briefs.md` - Wave 0 digest.
-8. `HANDOFF-TO-OVERNIGHT-EXECUTOR.md` - overnight executor brief.
-9. `phases/Pause-state-handoff/PAUSE-STATE.md` - mid-execution pause/resume handoff.
-
-## Provenance
-
-- Initial commit: 2026-04-30.
-- Research agent: Perplexity (Briefs #1 and #2 plus handover note).
-- Synthesis agent: Claude Opus 4.7 (1M context), 2026-04-29.
-- Materials orchestrator: wrote `PRD.md`, `HANDOFF-TO-OVERNIGHT-EXECUTOR.md`, and `OVERNIGHT-EXECUTOR-STARTUP-PROMPT.md`, 2026-04-30.
-- Overnight executor: implemented CPU-side control plane, falsification wave, Runpod scaffold, and post-review hardening waves.
-- H100 completion agent: next role; must produce real GPU-backed artifacts and falsification-surviving evidence.
-
-## Cross-Workstream Principle
-
-This workstream runs in parallel with `Zer0pa/Health` and `Zer0pa/Energy`. Each workstream is built end-to-end as an independent pipeline. **No substrate is shared during build.** Redundancy across workstreams is a deliberate asset: surplus coding capacity buys diversity of architecture, not duplicated cost. Convergence, if any, happens in a separate merge step after all three workstreams complete. See `MODUS-OPERANDI.md` § Parallel-exploration principle.
-
-## What's Next
-
-### H100 GPU Completion (primary open gate)
-
-The control plane is complete. The pipeline is not. The next concrete work is standing up real Runpod H100 endpoints, running the battery MVP campaign (LLZO, Li6PS5Cl, Li-Mg-Zr-Cl seed) and thermoelectric sidecar (Bi2Te3, PbTe, SnSe), and producing artifacts that survive parity, acceptance gates, and the falsification wave. See the H100 Completion Mandate section for the full five-step sequence and wall-clock budget.
-
-**Nothing below is pipeline-complete until real H100 artifacts survive falsification.**
-
-### HuggingFace Integration
-
-The UMA license gate (Meta DPA-3 / MACE MLIP access) requires a HuggingFace org registered under Zer0pa and UMA acceptance confirmed at that org. Current state:
-
-| Item | Status |
+| Category | Summary |
 | --- | --- |
-| `Zer0pa` HuggingFace user | EXISTS (200) |
-| Materials Workbench HuggingFace org | NOT YET REGISTERED; exact org name is an operator decision |
-| `UMA_HF_ORG` in `.env` | unset — UMA gate blocks honestly |
-| `UMA_HF_TOKEN` in `.env` | unset — UMA gate blocks honestly |
+| Active Engineering | H100 Runpod execution wave: stand up real layer endpoints, produce real GPU-backed artifacts, run parity and falsification wave over real outputs to promote evidence packets. |
+| Research-Deferred — Investigation Underway | Enterprise hardening beyond MVP: repeated campaigns, convergence checks, solver failure recovery, artifact-store hardening, and falsification expansion. Estimated 120-250 H100 wall-clock hours. |
 
-Work required: create the HuggingFace org, accept the Meta UMA agreement, set `UMA_HF_ORG` and `UMA_HF_TOKEN` in the Runpod `.env`, and re-run the L2 MLIP production path. Test fixture `hf_org` values are synthetic license-gate placeholders, not repository/package identity.
+## Related Repos
 
-### Package Distribution
+No related repos are declared on the product page frontmatter.
 
-`zer0pa-materials-workbench` is currently an editable-install research package. No PyPI publication is planned until real GPU-backed artifacts are produced and the pipeline reaches a defensible science posture. Publication requires a public-release decision by the operator.
+<details>
+<summary>Full Visible Product-Page Bento Translation</summary>
 
-### Cross-Workstream Convergence
+This section preserves the product page cells as Markdown text blocks. It intentionally omits shared site navigation, footer chrome, CSS, and scripts.
 
-Convergence with `Zer0pa/Health` and `Zer0pa/Energy` is explicitly deferred until all three workstreams independently reach H100 completion. Materials Workbench does not share state with those lanes during build. A separate convergence step follows after each lane produces falsification-surviving outputs.
+### Bento Cell 1
+
+> 00 · MATERIALS · INSILICO WORKBENCHLIVE LANE · 222900Z CPU-side materials workbench. Materials lane · Materials-Workbench · PyPI zer0pa-materials-workbench v0.1.0 stale · github.com/Zer0pa/Materials-Workbench Materials Workbench is a CPU-side bench for in-silico battery and thermoelectric research. Candidate chains arrive with schemas, validators, recompute checks, and dispatch wired together, so weak chemistries are rejected at the desk before they consume cluster hours. 3,547 strict-full tests pass and 588 Runpod-sim parity tests hold; the H100 campaign is the next wave, not the current result. Real GPU evidence is not claimed yet.
+
+### Bento Cell 2
+
+> 01 · THE GAPSPLIT WORKFLOWS “Most candidate chemistries reach the cluster before anyone has really vetted them.”
+
+### Bento Cell 3
+
+> 02 · MARKETSWORKFLOW FIT Battery R&D groupsfit Materials informatics teamsprimary Thermoelectric R&D groupsfit Industrial AI / MLIP teamsfit DFT / solver groupsadjacent Workflow-fit hypotheses for a CPU pre-screen bench; not adoption, not TAM, not a discovery claim.
+
+### Bento Cell 4
+
+> 03 · VALUE CPU-sidebench Best fit: materials informatics, battery, thermoelectric, and industrial AI teams that need pre-HPC candidate checks.
+
+### Bento Cell 5
+
+> 04 · INSIGHT Reject weak materials chains before any GPU runs them.
+
+### Bento Cell 6
+
+> 05.0 · CURRENT TECHSPECIALIZED SOLVERS, SPLIT HANDOFF Today's stack threads DFT, phonons, MLIP, CALPHAD, phase-field, provenance, and lab automation through separate specialised tools. The gap is not a missing solver. It is a shared candidate record that lives before H100 spend.
+
+### Bento Cell 7
+
+> 05.1 · OUR TECHRAW-EVIDENCE RECOMPUTE Materials Workbench at Zer0pa/Materials-Workbench is an installable alpha that holds schemas, validators, seven recompute checks, packet records, Runpod dispatch, and an H100 cutover path in one CPU-side bench. Battery and thermoelectric candidates run the same pre-screen on a laptop today that they will run against real GPU artifacts in the H100 wave.
+
+### Bento Cell 8
+
+> 05.2 · BENCHMARKSPOST-WAVE-F · CPU + RUNPOD-SIM Tests3,547strict-full PASS Parity588Runpod parity tests Recompute7raw-evidence checks Stress cases16plus 7 checks CPU strict3,547/3,547 Runpod parity588/588 H100 evidencepending Current status: 16/16 stress cases caught · 7 recompute checks hardened · no real GPU-backed runpod_rest artifact yet.
+
+### Bento Cell 9
+
+> 06 · MEASUREMENTRECOMPUTE + HASH HISTORY 7 recompute checks, 16 stress cases, hash history over every chain.
+
+### Bento Cell 10
+
+> 06.1 · COMPARATIVE PERFORMANCE · CPU WORKBENCH VS GPU CAMPAIGN CPU strict-full3,547 / 3,547 PASS Runpod parity588 / 588 PASS H100 real artifactcampaign pending DFT/MLIP comparatornot yet measured CPU strict-full and Runpod-sim parity hold today. H100 is the next campaign — no real GPU result has been produced yet. DFT/MLIP comparator parity sits outside the CPU bench.
+
+### Bento Cell 11
+
+> 07 · KEY METRICSMATERIALS-WORKBENCH POST-WAVE-F
+
+### Bento Cell 12
+
+> 07.1 · CPU STRICT CHECK 3,547/3,547 Strict-full pass · 2 pycalphad skips, 0 misses
+
+### Bento Cell 13
+
+> 07.2 · RUNPOD PARITY 588PASS Runpod parity tests · mock results blocked from posing as real
+
+### Bento Cell 14
+
+> 07.3 · RECOMPUTE CHECKS 7hardened Raw-evidence recompute · inputs, sources, novelty, ionic, NEB stages
+
+### Bento Cell 15
+
+> 07.4 · STRESS CASES 16/16 Replay-error breaches plus recompute checks · 0 misses
+
+### Bento Cell 16
+
+> 07.5 · GPU EVIDENCE null Metric pending · no real GPU result produced yet
+
+### Bento Cell 17
+
+> 08 · DETERMINISMRECOMPUTE BEFORE GPU Every chain replays on CPU before any GPU touches it.
+
+### Bento Cell 18
+
+> 08.1 · WHAT DETERMINISTIC MEANSRAW-EVIDENCE RECOMPUTE The seven recompute checks take a candidate chain's outputs and re-derive every layer's hash from inputs. Any divergence rejects the chain; only chains that survive the recompute move forward. The discipline runs today on CPU and on the Runpod-sim parity surface (3,547 strict-full + 588 parity). The H100 wave will run the same checks against real GPU artifacts. The unit of bit-exactness is per-chain, per-layer-hash.
+
+### Bento Cell 19
+
+> 08.2 · THE FIDELITY GAP Honest Blocker · No real GPU-backed runpod_rest artifact has been produced. Discovery of any material is not claimed. Public PyPI v0.1.0 is live but stale pending v0.1.1. License is SAL-7.1 / GitHub NOASSERTION; UMA/HF org, Materials Project credential, real endpoints, and EMMO cleanup remain open.
+
+### Bento Cell 20
+
+> 09 FIVE PATHS FROM ONE PRE-GPU BENCH.
+
+### Bento Cell 21
+
+> 09.1 · THIS REPO'S AMBITION The hinge is not one chemistry result. It is a bench where candidate generation, validators, constraints, and run history travel together from a researcher's laptop to a GPU cluster. If that path survives H100 completion, materials exploration becomes something other teams can repeat, compare, and contest.
+
+### Bento Cell 22
+
+> 09.2 · WHAT WORKS NOW Working now: candidate-bench architecture, validation route, CPU and Runpod-sim parity, H100 completion target.
+
+### Bento Cell 23
+
+> 09.3 · WHAT'S STILL OPEN Still open: H100 execution, real GPU artifact, candidate data, release evidence, and source context.
+
+### Bento Cell 24
+
+> 09.4 · LAB BUDGETS · NEAR-TERM (12–24 MO) Weak chemistries die at the desk A battery research lead can spend a Monday morning killing forty candidate chains on a laptop instead of carrying them into a Friday cluster reservation. The H100 queue starts holding fewer candidates that nobody really believed in.
+
+### Bento Cell 25
+
+> 09.5 · INFORMATICS · NEAR-TERM (12–24 MO) Every search path carries its own paper trail A materials-informatics team that ran a thermoelectric sweep last quarter can pull any candidate back up months later and see exactly which validator fired and which input drove it. The next investigator does not start from the team's slack scrollback.
+
+### Bento Cell 26
+
+> 09.6 · GPU ECONOMICS · MID-TERM (24–48 MO) H100 hours stop funding speculation When the same recompute discipline survives onto real GPU runs, a lab director can justify H100 spend against a candidate's pre-screen record. The conversation with procurement moves from “we need more cluster time” to “these forty chains earned it.”
+
+### Bento Cell 27
+
+> 09.7 · COLLABORATION · MID-TERM (24–48 MO) One candidate, not eight notebooks A battery candidate handed between two groups — a DFT specialist and a phase-field modeller — arrives as one object carrying schema, constraints, validator output, and run history. The receiving team can rerun and contest it without rebuilding the reasoning from emails.
+
+### Bento Cell 28
+
+> 09.8 · DISCOVERY DISCIPLINE · PARADIGM (48 MO+) Materials R&D inherits release discipline If candidate generation, validation, and execution stay coupled all the way through GPU scale, the center of gravity in materials discovery moves from a single hero result toward governed evidence flows that any independent group can pick up and continue.
+
+</details>
+
+---
+
+Source mapping: product route `/materials/Materials/` -> live public repo `Zer0pa/Materials-Workbench`. README generated from product-page authority plus retained install/dev commands only.
