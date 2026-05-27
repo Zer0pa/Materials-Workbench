@@ -52,7 +52,7 @@
 <table width="100%">
 <tr>
 <td width="50%" valign="top">
-<div><b>03 · VALUE</b></div>
+<div><b>03 · VALUE OF MARKET</b></div>
       <div><span>CPU-side</span> <span>bench</span></div>
       <div>Best fit: materials informatics, battery, thermoelectric, and industrial AI teams that need pre-HPC candidate checks.</div>
 </td>
