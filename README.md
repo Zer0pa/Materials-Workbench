@@ -19,6 +19,7 @@ For full install, smoke, source, and developer commands, [click here](#install-d
 <td width="100%" valign="top">
 <div><span><b>00 · MATERIALS</b> · INSILICO WORKBENCH</span> <span>RESEARCH-READY · H100 ARTIFACT OPEN</span></div>
       <h1>Seven-Layer Physics <span>Materials Workbench</span></h1>
+      <p><strong>Live experiment. Not a release. Ambition headlined. Claims bounded.</strong></p>
       <p>Materials lane &middot; Materials-Workbench &middot; PyPI <code>zer0pa-materials-workbench</code> v0.1.0 stale &middot; github.com/Zer0pa/Materials-Workbench</p>
       <p>Materials Workbench is a CPU-side bench for in-silico battery and thermoelectric research. Candidate chains arrive with schemas, validators, recompute checks, and dispatch wired together, so weak chemistries are rejected at the desk before they consume cluster hours. <strong>3,547 strict-full tests pass and 588 Runpod-sim parity tests hold;</strong> the H100 campaign is the next wave, <em>not the current result</em>. Real GPU evidence is not claimed yet.</p>
 </td>
